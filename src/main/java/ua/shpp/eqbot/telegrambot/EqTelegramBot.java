@@ -1,4 +1,4 @@
-package ua.shpp.eqbot.telegramBot;
+package ua.shpp.eqbot.telegrambot;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
