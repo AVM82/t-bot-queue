@@ -7,6 +7,10 @@ app.version=@project.version@
 telegram.bot.name=
 telegram.bot.token=
 
+#telegram properties
+telegram.bot.name=
+telegram.bot.token=
+
 #DB properties
 ######################################################
 spring.datasource.url=

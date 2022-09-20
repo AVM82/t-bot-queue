@@ -9,6 +9,7 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
 @Component
 public class EqTelegramBot extends TelegramLongPollingBot {
+    // TODO: 20.09.2022
     @Value("${telegram.bot.name}")
     private String botUsername;
 
@@ -30,7 +31,7 @@ public class EqTelegramBot extends TelegramLongPollingBot {
         try {
             execute(message);
         }catch(TelegramApiException ex){
-           // log.error("message sending error");
+            // TODO: 20.09.2022 add logger
         }
     }
 
