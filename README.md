@@ -1,23 +1,28 @@
-# A Telegram bot app that will help service providers connect with their potential customers.
+## Table of contents
 
+* [General info](#general-info)
+* [Technologies](#technologies)
+* [Setup](#setup)
+
+## General info
+
+A Telegram bot app that will help service providers connect with their potential customers.
 ## Technologies
 
-Java 11
-Maven
-Spring Boot
-PostgresSQL
-Jenkins
-logback
+Project is created with:
 
-Using the Command Line Sample
-==============================================================
+* Java 11
+* Maven
+* Spring Boot
+* PostgresSQL
+* Jenkins
+* logback
 
-Browse Online
---------------
+## Setup
 
-Setup
------
+To run this project:
 
-
-Command-line Instructions
--------------------------
+```
+$ ....
+$ ....
+```
