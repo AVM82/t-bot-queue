@@ -26,11 +26,4 @@ public class BotConfig {
         return token;
     }
 
-    public void setBotName(String botName) {
-        this.botName = botName;
-    }
-
-    public void setToken(String token) {
-        this.token = token;
-    }
 }
