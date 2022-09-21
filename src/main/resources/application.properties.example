@@ -41,7 +41,7 @@ logging.logback.rollingpolicy.max-history=7
 #The maximum size of log file before it is archived.
 logging.logback.rollingpolicy.max-file-size=10MB
 
-#The maximum size of log file before it is archived.
-logging.logback.rollingpolicy.total-size-cap=10MB
+#The maximum amount of size log archives can take before being deleted.
+logging.logback.rollingpolicy.total-size-cap=100MB
 ##################################################################
 
