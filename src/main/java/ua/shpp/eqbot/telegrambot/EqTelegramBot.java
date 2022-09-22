@@ -13,6 +13,9 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 public class EqTelegramBot extends TelegramLongPollingBot {
     private final static Logger LOGGER = LoggerFactory.getLogger(EqTelegramBot.class);
 
+    @Value("${telegram.bot.name}")
+    private String botUsername;
+
     @Value("${telegram.bot.token}")
     private String botToken;
 
@@ -35,9 +38,10 @@ public class EqTelegramBot extends TelegramLongPollingBot {
         }
     }
 
+
     @Override
     public String getBotUsername() {
-        return "QueueTBot";
+        return botUsername;
     }
 
     @Override
