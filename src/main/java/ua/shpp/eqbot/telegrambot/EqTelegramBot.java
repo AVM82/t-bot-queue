@@ -1,5 +1,7 @@
 package ua.shpp.eqbot.telegrambot;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
@@ -9,7 +11,8 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
 @Component
 public class EqTelegramBot extends TelegramLongPollingBot {
-    // TODO: 20.09.2022
+    private final static Logger LOGGER = LoggerFactory.getLogger(EqTelegramBot.class);
+
     @Value("${telegram.bot.name}")
     private String botUsername;
 
@@ -18,22 +21,23 @@ public class EqTelegramBot extends TelegramLongPollingBot {
 
     @Override
     public void onUpdateReceived(Update update) {
-        if(update.hasMessage() && update.getMessage().hasText()){
+        if (update.hasMessage() && update.getMessage().hasText()) {
             long chatId = update.getMessage().getChatId();
-            sendingResponse(chatId, update.getMessage().getText() );
+            sendingResponse(chatId, update.getMessage().getText());
         }
     }
 
-    private void sendingResponse(long chatId, String textToSend){
+    private void sendingResponse(long chatId, String textToSend) {
         SendMessage message = new SendMessage();
         message.setChatId(String.valueOf(chatId));
         message.setText(textToSend);
         try {
             execute(message);
-        }catch(TelegramApiException ex){
-            // TODO: 20.09.2022 add logger
+        } catch (TelegramApiException ex) {
+            LOGGER.error("fail execute message {}", message.getText());
         }
     }
+
 
     @Override
     public String getBotUsername() {
