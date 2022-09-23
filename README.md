@@ -49,3 +49,7 @@
 - `TBQ-xx: + add something`
 - `TBQ-xx: * change something`
 - `TBQ-xx: - remove something`
+
+#### OpenApi
+[test_version](http://tbot-env.eba-xepusj3x.eu-west-2.elasticbeanstalk.com/swagger-ui/index.html)
+
