@@ -8,20 +8,13 @@ import ua.shpp.eqbot.cache.Cache;
 import ua.shpp.eqbot.entity.Position;
 import ua.shpp.eqbot.entity.UserEntity;
 import ua.shpp.eqbot.messagesender.MessageSender;
-import ua.shpp.eqbot.service.RegistrationUser;
+
 
 @Component
 public class MessageHandler implements Handler<Message> {
     public MessageHandler(Cache<UserEntity> cache) {
         this.cache = cache;
     }
-
-    @Autowired
-    public void setRegistrationUser(RegistrationUser registrationUser) {
-        this.registrationUser = registrationUser;
-    }
-
-    private RegistrationUser registrationUser;
 
     @Autowired
     public void setMessageSender(MessageSender messageSender) {
@@ -73,8 +66,6 @@ public class MessageHandler implements Handler<Message> {
                         .text("Потрібна реестрація\nвведіть ім'я")
                         .chatId(String.valueOf(message.getChatId()))
                                 .build());
-                /*if(!registrationUser.changeregistrationUser(message.getFrom().getId())) {*/
-
             }else {
                 messageSender.sendMessage(SendMessage.builder()
                         .text("Ви зареестровані")
