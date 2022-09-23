@@ -13,11 +13,11 @@ public class RegistrationUser {
         users = new HashMap<>();
     }
 
-    private boolean changeregistrationUser(Long telegramId){
+    public boolean changeregistrationUser(Long telegramId){
         return users.get(telegramId) == null;
     }
 
-    private boolean registration (){
+    public boolean registration (){
         return true;
     }
 }

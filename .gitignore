@@ -1,5 +1,6 @@
 target/
 #.mvn/
+main/resources/aplication.properties
 !.mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
 !**/src/test/**/target/
