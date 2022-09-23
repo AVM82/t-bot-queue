@@ -6,11 +6,14 @@ import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import ua.shpp.eqbot.processors.Processor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 @Component
 public class EqTelegramBot extends TelegramLongPollingBot {
 
+    private final static Logger LOGGER = LoggerFactory.getLogger(EqTelegramBot.class);
     @Value("${telegram.bot.name}")
     private String botUsername;
 
