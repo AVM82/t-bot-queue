@@ -19,6 +19,7 @@ public class MessageHandler implements Handler<Message>{
     public void choose(Message message) {
         if(message.hasText()){
             if(message.getText().equals("/start")){
+
                 SendMessage sendMessage = new SendMessage();
                 sendMessage.setChatId(String.valueOf(message.getChatId()));
                 sendMessage.setText("Потрібна реестрація\n" +

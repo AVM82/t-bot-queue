@@ -16,4 +16,8 @@ public class RegistrationUser {
     private boolean changeregistrationUser(Long telegramId){
         return users.get(telegramId) == null;
     }
+
+    private boolean registration (){
+        return true;
+    }
 }
