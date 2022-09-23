@@ -1,16 +1,26 @@
 package ua.shpp.eqbot.entity;
 
+
 public class UserEntity {
-    private int id;
+    private Long id;
     private String name;
     private String city;
     private String phone;
+    private Position position;
+    public Position getPosition() {
+        return position;
+    }
 
-    public int getId() {
+    public UserEntity setPosition(Position position) {
+        this.position = position;
+        return this;
+    }
+
+    public Long getId() {
         return id;
     }
 
-    public UserEntity setId(int id) {
+    public UserEntity setId(Long id) {
         this.id = id;
         return this;
     }
