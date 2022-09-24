@@ -41,7 +41,7 @@ public class MessageHandler implements Handler<Message> {
         if (user == null || user.getPositionRegistration() != PositionRegistration.NONE) {
             registrationUser.registration(message);
         } else if (message.hasText() || user.getPositionMenu() == PositionMenu.MENU_START) {
-            if (message.hasText() && message.getText().trim().startsWith("/")) {
+            if (message.hasText() && message.isCommand()) {
                 commandHandler.checkCommand(message);
             }else if(user.getPositionMenu() == PositionMenu.MENU_START){
                 createStartMenu(message.getChatId());
