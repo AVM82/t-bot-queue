@@ -18,10 +18,10 @@ import java.util.*;
 
 @Component
 public class MessageHandler implements Handler<Message> {
-    private RegistrationUser registrationUser;
+    private final RegistrationUser registrationUser;
     private MessageSender messageSender;
     private final Cache<UserDto> cache;
-    private CommandHandler commandHandler;
+    private final CommandHandler commandHandler;
 
     public MessageHandler(Cache<UserDto> cache, RegistrationUser registrationUser,
                           CommandHandler commandHandler) {
@@ -43,13 +43,13 @@ public class MessageHandler implements Handler<Message> {
         } else if (message.hasText() || user.getPositionMenu() == PositionMenu.MENU_START) {
             if (message.hasText() && message.isCommand()) {
                 commandHandler.checkCommand(message);
-            }else if(user.getPositionMenu() == PositionMenu.MENU_START){
+            } else if (user.getPositionMenu() == PositionMenu.MENU_START) {
                 createStartMenu(message.getChatId());
             }
         }
     }
 
-    private void createStartMenu(Long chatId){
+    private void createStartMenu(Long chatId) {
         InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
         List<List<InlineKeyboardButton>> keyboard = new ArrayList<>();
         List<InlineKeyboardButton> buttonCreate = new ArrayList<>();

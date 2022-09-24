@@ -19,7 +19,7 @@ public class BotUserCache implements Cache<UserDto> {
 
     @Override
     public void add(UserDto userDto) {
-        if(userDto.getId() != null){
+        if (userDto.getId() != null) {
             users.put(userDto.getId(), userDto);
         }
     }

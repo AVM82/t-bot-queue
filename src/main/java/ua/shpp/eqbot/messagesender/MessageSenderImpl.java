@@ -9,7 +9,7 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import ua.shpp.eqbot.telegrambot.EqTelegramBot;
 
 @Component
-public class MessageSenderImpl implements MessageSender{
+public class MessageSenderImpl implements MessageSender {
     Logger log = LoggerFactory.getLogger(MessageSenderImpl.class);
     private EqTelegramBot bot;
 
@@ -17,7 +17,7 @@ public class MessageSenderImpl implements MessageSender{
     public void sendMessage(SendMessage message) {
         try {
             bot.execute(message);
-        }catch (TelegramApiException e) {
+        } catch (TelegramApiException e) {
             log.warn(e.getMessage());
         }
     }

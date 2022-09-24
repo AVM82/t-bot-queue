@@ -45,8 +45,6 @@
             <artifactId>telegrambots</artifactId>
             <version>6.1.0</version>
         </dependency>
-
-        <!-- https://mvnrepository.com/artifact/org.telegram/telegrambots-spring-boot-starter -->
         <dependency>
             <groupId>org.telegram</groupId>
             <artifactId>telegrambots-spring-boot-starter</artifactId>

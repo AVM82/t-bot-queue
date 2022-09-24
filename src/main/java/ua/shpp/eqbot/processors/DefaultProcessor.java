@@ -7,7 +7,7 @@ import ua.shpp.eqbot.hadlers.CallbackQueryHandler;
 import ua.shpp.eqbot.hadlers.MessageHandler;
 
 @Component
-public class DefaultProcessor implements Processor{
+public class DefaultProcessor implements Processor {
     private final CallbackQueryHandler callbackQueryHandler;
     private final MessageHandler messageHandler;
 
@@ -15,6 +15,7 @@ public class DefaultProcessor implements Processor{
         this.callbackQueryHandler = callbackQueryHandler;
         this.messageHandler = messageHandler;
     }
+
     @Override
     public void executeMessage(Message message) {
         messageHandler.choose(message);

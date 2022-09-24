@@ -9,10 +9,10 @@ public interface Processor {
 
     void executeCallbackQuery(CallbackQuery callbackQuery);
 
-    default void process(Update update){
-        if(update.hasMessage()){
-                executeMessage(update.getMessage());
-        }else if(update.hasCallbackQuery()){
+    default void process(Update update) {
+        if (update.hasMessage()) {
+            executeMessage(update.getMessage());
+        } else if (update.hasCallbackQuery()) {
             executeCallbackQuery(update.getCallbackQuery());
         }
     }

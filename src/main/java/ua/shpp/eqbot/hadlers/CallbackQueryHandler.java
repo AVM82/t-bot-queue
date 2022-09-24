@@ -9,7 +9,7 @@ import ua.shpp.eqbot.entity.PositionMenu;
 import ua.shpp.eqbot.entity.UserDto;
 
 @Component
-public class CallbackQueryHandler implements Handler<CallbackQuery>{
+public class CallbackQueryHandler implements Handler<CallbackQuery> {
     Logger log = LoggerFactory.getLogger(CallbackQueryHandler.class);
     private final Cache<UserDto> cache;
 
@@ -20,11 +20,11 @@ public class CallbackQueryHandler implements Handler<CallbackQuery>{
     @Override
     public void choose(CallbackQuery callbackQuery) {
         UserDto user = cache.findBy(callbackQuery.getMessage().getChatId());
-        if(callbackQuery.getData().equals("create_service")) {
+        if (callbackQuery.getData().equals("create_service")) {
             log.info("create_service");
             user.setPositionMenu(PositionMenu.MENU_CREATE_SERVICE);
         }
-        if(callbackQuery.getData().equals("search_service")) {
+        if (callbackQuery.getData().equals("search_service")) {
             log.info("search_service");
             user.setPositionMenu(PositionMenu.MENU_SEARCH_SERVICE);
         }

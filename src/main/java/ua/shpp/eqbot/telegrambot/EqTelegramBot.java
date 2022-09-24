@@ -16,12 +16,14 @@ public class EqTelegramBot extends TelegramLongPollingBot {
 
     @Value("${telegram.bot.token}")
     private String botToken;
-@Autowired
+
+    @Autowired
     public void setProcessor(Processor processor) {
         this.processor = processor;
     }
 
     private Processor processor;
+
     @Override
     public void onUpdateReceived(Update update) {
         processor.process(update);

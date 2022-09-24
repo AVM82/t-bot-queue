@@ -63,7 +63,7 @@ public class UserDto {
         return this;
     }
 
-    public UserDto(){
+    public UserDto() {
 
     }
 
