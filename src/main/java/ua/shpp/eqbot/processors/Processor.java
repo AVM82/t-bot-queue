@@ -11,7 +11,7 @@ public interface Processor {
 
     default void process(Update update){
         if(update.hasMessage()){
-            executeMessage(update.getMessage());
+                executeMessage(update.getMessage());
         }else if(update.hasCallbackQuery()){
             executeCallbackQuery(update.getCallbackQuery());
         }
