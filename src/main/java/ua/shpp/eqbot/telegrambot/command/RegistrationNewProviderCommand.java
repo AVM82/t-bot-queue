@@ -1,0 +1,27 @@
+package ua.shpp.eqbot.telegrambot.command;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.telegram.telegrambots.meta.api.objects.Update;
+import ua.shpp.eqbot.telegrambot.EqTelegramBot;
+import ua.shpp.eqbot.telegrambot.repository.ProviderRepository;
+import ua.shpp.eqbot.telegrambot.service.SendBotMessageService;
+
+public class RegistrationNewProviderCommand implements Command{
+
+    private final static Logger LOGGER = LoggerFactory.getLogger(EqTelegramBot.class);
+    private final SendBotMessageService sendBotMessageService;
+    private final ProviderRepository providerRepository;
+
+    public RegistrationNewProviderCommand(SendBotMessageService sendBotMessageService, ProviderRepository providerRepository) {
+        this.sendBotMessageService = sendBotMessageService;
+        this.providerRepository= providerRepository;
+    }
+
+    @Override
+    public void execute(Update update) {
+        LOGGER.info("Registered new Provider");
+        providerRepository.saveProvider(update.getMessage().getChatId());
+        sendBotMessageService.sendMessage(update.getMessage().getChatId().toString(),"Provider registered");
+    }
+}

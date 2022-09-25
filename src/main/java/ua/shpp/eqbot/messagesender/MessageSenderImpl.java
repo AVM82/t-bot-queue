@@ -10,7 +10,7 @@ import ua.shpp.eqbot.telegrambot.EqTelegramBot;
 
 @Component
 public class MessageSenderImpl implements MessageSender {
-    Logger log = LoggerFactory.getLogger(MessageSenderImpl.class);
+    private final Logger log = LoggerFactory.getLogger(MessageSenderImpl.class);
     private EqTelegramBot bot;
 
     @Override

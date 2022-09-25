@@ -9,7 +9,7 @@ import ua.shpp.eqbot.messagesender.MessageSender;
 
 @Component
 public class CommandHandler {
-    Logger log = LoggerFactory.getLogger(CommandHandler.class);
+    private final Logger log = LoggerFactory.getLogger(CommandHandler.class);
 
     @Autowired
     public void setMessageSender(MessageSender messageSender) {

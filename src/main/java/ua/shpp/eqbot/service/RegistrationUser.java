@@ -1,40 +1,63 @@
 package ua.shpp.eqbot.service;
 
-import org.springframework.stereotype.Component;
+import org.modelmapper.ModelMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;
-import ua.shpp.eqbot.cache.Cache;
-import ua.shpp.eqbot.entity.PositionMenu;
-import ua.shpp.eqbot.entity.PositionRegistration;
-import ua.shpp.eqbot.entity.UserDto;
+import ua.shpp.eqbot.hadlers.CallbackQueryHandler;
 import ua.shpp.eqbot.messagesender.MessageSender;
+import ua.shpp.eqbot.model.PositionMenu;
+import ua.shpp.eqbot.model.PositionRegistration;
+import ua.shpp.eqbot.model.UserDto;
+import ua.shpp.eqbot.model.UserEntity;
+import ua.shpp.eqbot.repository.UserRepository;
 
-@Component
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
+
+/* TODO it is possible to store temporary user data during registration*/
+@Service
 public class RegistrationUser {
-    private final MessageSender messageSender;
+    private static final Logger log = LoggerFactory.getLogger(RegistrationUser.class);
 
-    public RegistrationUser(MessageSender messageSender, Cache<UserDto> cache) {
+    private final UserRepository repository;
+    private final MessageSender messageSender;
+    private final ModelMapper modelMapper = new ModelMapper();
+    private final CallbackQueryHandler callbackQueryHandler;
+    private final Map<Long, UserDto> dtoHashMap;
+
+    @Autowired
+    public RegistrationUser(UserRepository repository, MessageSender messageSender, CallbackQueryHandler callbackQueryHandler) {
+        this.repository = repository;
         this.messageSender = messageSender;
-        this.cache = cache;
+        this.callbackQueryHandler = callbackQueryHandler;
+        dtoHashMap = callbackQueryHandler.getCache();
     }
 
-    private final Cache<UserDto> cache;
-
+    /*TODO it's complicated and something is missing here*/
     private UserDto generateUserFromMessage(Message message) {
         UserDto user = new UserDto();
         user.setName(message.getFrom().getUserName())
-                .setId(message.getChatId())
+                .setId_telegram(message.getChatId())
                 .setPositionRegistration(PositionRegistration.INPUT_USERNAME)
                 .setPositionMenu(PositionMenu.MENU_START);
         return user;
     }
 
-    public void registration(Message message) {
-        UserDto user = cache.findBy(message.getChatId());
+    /*TODO what the fuck*/
+    public boolean registration(Message message) {
+        boolean isRegistration = false;
+        UserDto user = dtoHashMap.get(message.getChatId());
         if (user == null) {
-            cache.add(generateUserFromMessage(message));
+            log.info("new user start registration");
+            user = generateUserFromMessage(message);
+            callbackQueryHandler.getCache().put(user.getId_telegram(), user);
             messageSender.sendMessage(createQuery(message.getChatId(),
-                    "Потрібна реестрація\nвведіть ім'я"));
+                    "Потрібна реєстрація\nвведіть ім'я"));
         } else {
             switch (user.getPositionRegistration()) {
                 case INPUT_USERNAME:
@@ -46,14 +69,31 @@ public class RegistrationUser {
                 case INPUT_CITY:
                     user.setCity(message.getText());
                     user.setPositionRegistration(PositionRegistration.NONE);
+                    UserEntity userEntity = convertToEntity(user);
+                    repository.save(userEntity);
+                    log.info("save entity to database {}", userEntity);
+                    isRegistration = true;
                     messageSender.sendMessage(createQuery(message.getChatId(),
-                            "Дякуємо! Ви зареестровані" +
-                                    "\nid " + user.getId() +
+                            "Дякуємо! Ви зареєстровані" +
+                                    "\nid " + user.getId_telegram() +
                                     "\nім'я " + user.getName() +
                                     "\nмісто " + user.getCity()));
                     break;
             }
         }
+        return isRegistration;
+    }
+
+    private UserEntity convertToEntity(UserDto userDto) {
+        UserEntity userEntity = modelMapper.map(userDto, UserEntity.class);
+        log.info("convert dto to entity");
+        return userEntity;
+    }
+
+    private UserDto convertToDto(UserEntity userEntity) {
+        UserDto postDto = modelMapper.map(userEntity, UserDto.class);
+        log.info("convert entity to dto");
+        return postDto;
     }
 
     private SendMessage createQuery(Long chatId, String text) {
