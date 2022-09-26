@@ -97,12 +97,6 @@ public class RegistrationNewUser implements Command {
         return userEntity;
     }
 
-    private UserDto convertToDto(UserEntity userEntity) {
-        UserDto postDto = modelMapper.map(userEntity, UserDto.class);
-        LOGGER.info("convert entity to dto");
-        return postDto;
-    }
-
     private SendMessage createQuery(Long chatId, String text) {
         return SendMessage.builder()
                 .text(text)
