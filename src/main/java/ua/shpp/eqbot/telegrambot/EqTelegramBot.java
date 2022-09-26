@@ -24,7 +24,6 @@ public class EqTelegramBot extends TelegramLongPollingBot {
     private final static Logger LOGGER = LoggerFactory.getLogger(EqTelegramBot.class);
     boolean isNewUser = true;
     private final Map<Long, UserDto> users_active_session = new HashMap<>();
-    public static String COMMAND_PREFIX = "/";
     private final CommandContainer commandContainer;
     /*TODO repository here ?*/
     private final UserRepository userRepository;
@@ -75,47 +74,51 @@ public class EqTelegramBot extends TelegramLongPollingBot {
                     update.getMessage().getChat().getFirstName(),
                     update.getMessage().getChat().getLastName(),
                     update.getMessage().getChat().getId());
-            /*TODO refactor me*/
-            String messageText = update.getMessage().getText().trim();
-            long telegram_id = update.getMessage().getChatId();
-            if (!users_active_session.containsKey(telegram_id)) {
-                LOGGER.info("user absent into cash user");
-                UserEntity userEntity = userRepository.findFirstById_telegram(telegram_id);
-                if (userEntity != null) {
-                    users_active_session.put(telegram_id, convertToDto(userEntity));
-                    isNewUser = false;
-                    LOGGER.info("user present into repo");
-                } else {
-                    isNewUser = true;
-                    LOGGER.info("new user go to registration method");
-                    boolean execute = commandContainer.retrieveCommand("/reg").execute(update);
-                    if (execute) {
-                        isNewUser = false;
-                        userEntity = userRepository.findFirstById_telegram(telegram_id);
-                        users_active_session.put(telegram_id, convertToDto(userEntity));
-                    }
-                }
+            if(!isRegistered(update)){
                 /*TODO  add logic here*/
-            } else if (!isNewUser || !messageText.equals("/reg")) {
-                /*TODO but if i don't want to register then what */
-                if (messageText.startsWith(COMMAND_PREFIX)) {
-                    String commandIdentifier = messageText.split(" ")[0].toLowerCase();
-                    LOGGER.info("new command here {}", commandIdentifier);
-                    commandContainer.retrieveCommand(commandIdentifier).execute(update);
-                } else if (messageText.equals("Change role to Provider") || messageText.equals("Реєстрація нового провайдера")) {
-                    commandContainer.retrieveCommand(messageText).execute(update);
-                } else {
-                    commandContainer.retrieveCommand(NO.getCommandName()).execute(update);
-                }
+            } else {
+
+
             }
         }
     }
 
     private void commandHandler(Update update) {
-
+        String messageText = update.getMessage().getText().trim();
+            String commandIdentifier = messageText.split(" ")[0].toLowerCase();
+            LOGGER.info("new command here {}", commandIdentifier);
+            commandContainer.retrieveCommand(commandIdentifier).execute(update);
+         if (messageText.equals("Change role to Provider") || messageText.equals("Реєстрація нового провайдера")) {
+            commandContainer.retrieveCommand(messageText).execute(update);
+        } else {
+            commandContainer.retrieveCommand(NO.getCommandName()).execute(update);
+        }
     }
 
     private void callbackQueryHandler(Update update) {
 
+    }
+
+    private boolean isRegistered(Update update) {
+        long telegram_id = update.getMessage().getChatId();
+        if (!users_active_session.containsKey(telegram_id)) {
+            LOGGER.info("user absent into cash user");
+            UserEntity userEntity = userRepository.findFirstById_telegram(telegram_id);
+            if (userEntity != null) {
+                users_active_session.put(telegram_id, convertToDto(userEntity));
+                isNewUser = false;
+                LOGGER.info("user present into repo");
+            } else {
+                isNewUser = true;
+                LOGGER.info("new user go to registration method");
+                boolean execute = commandContainer.retrieveCommand("/reg").execute(update);
+                if (execute) {
+                    isNewUser = false;
+                    userEntity = userRepository.findFirstById_telegram(telegram_id);
+                    users_active_session.put(telegram_id, convertToDto(userEntity));
+                }
+            }
+        }
+        return false;
     }
 }
