@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
+import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import ua.shpp.eqbot.command.CommandContainer;
 import ua.shpp.eqbot.model.UserDto;
@@ -30,13 +31,11 @@ public class EqTelegramBot extends TelegramLongPollingBot {
     private final UserRepository userRepository;
     private final ModelMapper modelMapper = new ModelMapper();
 
-
     @Autowired
     public EqTelegramBot(UserRepository userRepository) {
         this.userRepository = userRepository;
         this.commandContainer = new CommandContainer(new SendBotMessageServiceImpl(this), userRepository);
     }
-
 
     @Value("${telegram.bot.name}")
     private String botUsername;
@@ -46,6 +45,28 @@ public class EqTelegramBot extends TelegramLongPollingBot {
 
     @Override
     public void onUpdateReceived(Update update) {
+        if(update.hasCallbackQuery())
+            CallbackQueryHandler(update);
+        else textHandler(update);
+    }
+
+    @Override
+    public String getBotUsername() {
+        return botUsername;
+    }
+
+    @Override
+    public String getBotToken() {
+        return botToken;
+    }
+
+    private UserDto convertToDto(UserEntity userEntity) {
+        UserDto postDto = modelMapper.map(userEntity, UserDto.class);
+        LOGGER.info("convert entity to dto");
+        return postDto;
+    }
+
+    private void textHandler (Update update){
         if (update.hasMessage() && update.getMessage().hasText()) {
             LOGGER.info("Message from {} {} (id = {}).",
                     update.getMessage().getChat().getFirstName(),
@@ -85,21 +106,10 @@ public class EqTelegramBot extends TelegramLongPollingBot {
                 }
             }
         }
+
     }
 
-    @Override
-    public String getBotUsername() {
-        return botUsername;
-    }
+    private void CallbackQueryHandler(Update update){
 
-    @Override
-    public String getBotToken() {
-        return botToken;
-    }
-
-    private UserDto convertToDto(UserEntity userEntity) {
-        UserDto postDto = modelMapper.map(userEntity, UserDto.class);
-        LOGGER.info("convert entity to dto");
-        return postDto;
     }
 }
