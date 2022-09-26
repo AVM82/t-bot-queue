@@ -8,6 +8,9 @@ import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardButton;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardRow;
 import ua.shpp.eqbot.model.PositionMenu;
 import ua.shpp.eqbot.model.PositionRegistration;
 import ua.shpp.eqbot.model.UserDto;
@@ -75,6 +78,13 @@ public class RegistrationNewUser implements Command {
                 case INPUT_CITY:
                     LOGGER.info("new user phase INPUT_CITY with message text {}", message.getText());
                     user.setCity(message.getText());
+                    user.setPositionRegistration(PositionRegistration.INPUT_PHONE);
+                    sendBotMessageService.sendMessage(createQuery(message.getChatId(),
+                            "Введіть номер телефону для зв'язку"));
+                    break;
+                case INPUT_PHONE:
+                    LOGGER.info("new user phase INPUT_PHONE with message text {}", message.getText());
+                    user.setPhone(message.getText());
                     user.setPositionRegistration(PositionRegistration.NONE);
                     UserEntity userEntity = convertToEntity(user);
                     repository.save(userEntity);
@@ -84,7 +94,8 @@ public class RegistrationNewUser implements Command {
                             "Дякуємо! Ви зареєстровані" +
                                     "\nid " + user.getId_telegram() +
                                     "\nім'я " + user.getName() +
-                                    "\nмісто " + user.getCity()));
+                                    "\nмісто " + user.getCity() +
+                                    "\nтел. " + user.getPhone()));
                     break;
             }
         }
