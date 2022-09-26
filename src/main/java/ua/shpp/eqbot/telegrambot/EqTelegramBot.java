@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
-import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import ua.shpp.eqbot.command.CommandContainer;
 import ua.shpp.eqbot.model.UserDto;
@@ -45,9 +44,13 @@ public class EqTelegramBot extends TelegramLongPollingBot {
 
     @Override
     public void onUpdateReceived(Update update) {
-        if(update.hasCallbackQuery())
-            CallbackQueryHandler(update);
-        else textHandler(update);
+        if (update.hasCallbackQuery()) {
+            callbackQueryHandler(update);
+        } else if (update.getMessage().hasText() && update.getMessage().isCommand()) {
+            commandHandler(update);
+        } else {
+            textHandler(update);
+        }
     }
 
     @Override
@@ -66,7 +69,7 @@ public class EqTelegramBot extends TelegramLongPollingBot {
         return postDto;
     }
 
-    private void textHandler (Update update){
+    private void textHandler(Update update) {
         if (update.hasMessage() && update.getMessage().hasText()) {
             LOGGER.info("Message from {} {} (id = {}).",
                     update.getMessage().getChat().getFirstName(),
@@ -106,10 +109,13 @@ public class EqTelegramBot extends TelegramLongPollingBot {
                 }
             }
         }
+    }
+
+    private void commandHandler(Update update) {
 
     }
 
-    private void CallbackQueryHandler(Update update){
+    private void callbackQueryHandler(Update update) {
 
     }
 }
