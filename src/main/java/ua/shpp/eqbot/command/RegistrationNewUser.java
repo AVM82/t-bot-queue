@@ -4,10 +4,12 @@ import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
+import ua.shpp.eqbot.cache.BotUserCache;
 import ua.shpp.eqbot.cache.Cache;
 import ua.shpp.eqbot.model.PositionMenu;
 import ua.shpp.eqbot.model.PositionRegistration;
@@ -16,19 +18,19 @@ import ua.shpp.eqbot.model.UserEntity;
 import ua.shpp.eqbot.repository.UserRepository;
 import ua.shpp.eqbot.service.SendBotMessageService;
 
-@Service
+@Component
 public class RegistrationNewUser implements Command {
     private final static Logger LOGGER = LoggerFactory.getLogger(RegistrationNewUser.class);
     private final SendBotMessageService sendBotMessageService;
     private final UserRepository repository;
     private final ModelMapper modelMapper = new ModelMapper();
 
-    @Autowired
+   /* @Autowired
     public void setUserCache(Cache<UserDto> userCache) {
         this.userCache = userCache;
-    }
+    }*/
 
-    private Cache<UserDto> userCache;
+    private Cache<UserDto> userCache = new BotUserCache();
 
     @Autowired
     public RegistrationNewUser(SendBotMessageService sendBotMessageService, UserRepository repository) {
@@ -41,9 +43,7 @@ public class RegistrationNewUser implements Command {
     public boolean execute(Update update) {
         long telegram_id = update.getMessage().getChatId();
         UserDto userDto = userCache.findBy(telegram_id);
-        if (userDto != null && userDto.getPositionRegistration() == PositionRegistration.DONE) {
-            return true;
-        } else if (userDto == null) {
+        if (userDto == null) {
             LOGGER.info("user absent into cash user");
             UserEntity userEntity = repository.findFirstById_telegram(telegram_id);
             if (userEntity != null) {
@@ -52,11 +52,14 @@ public class RegistrationNewUser implements Command {
                         .setPositionRegistration(PositionRegistration.DONE));
                 return true;
             }
+            return registration(update.getMessage(), userDto);
+        } else if (userDto.getPositionRegistration() == PositionRegistration.DONE) {
+            return true;
         } else {
             LOGGER.info("new user go to registration method");
-            return registration(update.getMessage(),userDto);
+            return registration(update.getMessage(), userDto);
         }
-        return false;
+
     }
 
     private UserDto generateUserFromMessage(Message message) {
@@ -78,7 +81,7 @@ public class RegistrationNewUser implements Command {
 
     private boolean registration(Message message, UserDto userDto) {
         LOGGER.info("i try register new user");
-        boolean isRegistration =false;
+        boolean isRegistration = false;
         if (userDto == null) {
             LOGGER.info("new user start registration");
             userCache.add(generateUserFromMessage(message));
@@ -107,7 +110,7 @@ public class RegistrationNewUser implements Command {
                     UserEntity userEntity = convertToEntity(userDto);
                     repository.save(userEntity);
                     LOGGER.info("save entity to database {}", userEntity);
-                    isRegistration= true;
+                    isRegistration = true;
                     sendBotMessageService.sendMessage(createQuery(message.getChatId(),
                             "Дякуємо! Ви зареєстровані" +
                                     "\nid " + userDto.getId_telegram() +
