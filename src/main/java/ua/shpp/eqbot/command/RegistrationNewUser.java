@@ -8,9 +8,7 @@ import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
-import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
-import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardButton;
-import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardRow;
+import ua.shpp.eqbot.cache.Cache;
 import ua.shpp.eqbot.model.PositionMenu;
 import ua.shpp.eqbot.model.PositionRegistration;
 import ua.shpp.eqbot.model.UserDto;
@@ -18,17 +16,19 @@ import ua.shpp.eqbot.model.UserEntity;
 import ua.shpp.eqbot.repository.UserRepository;
 import ua.shpp.eqbot.service.SendBotMessageService;
 
-import java.util.HashMap;
-import java.util.Map;
-
 @Service
 public class RegistrationNewUser implements Command {
-
     private final static Logger LOGGER = LoggerFactory.getLogger(RegistrationNewUser.class);
     private final SendBotMessageService sendBotMessageService;
     private final UserRepository repository;
     private final ModelMapper modelMapper = new ModelMapper();
-    private final Map<Long, UserDto> dtoHashMap = new HashMap<>();
+
+    @Autowired
+    public void setUserCache(Cache<UserDto> userCache) {
+        this.userCache = userCache;
+    }
+
+    private Cache<UserDto> userCache;
 
     @Autowired
     public RegistrationNewUser(SendBotMessageService sendBotMessageService, UserRepository repository) {
@@ -36,7 +36,29 @@ public class RegistrationNewUser implements Command {
         this.repository = repository;
     }
 
-    /*TODO it's complicated and something is missing here*/
+
+    @Override
+    public boolean execute(Update update) {
+        long telegram_id = update.getMessage().getChatId();
+        UserDto userDto = userCache.findBy(telegram_id);
+        if (userDto != null && userDto.getPositionRegistration() == PositionRegistration.DONE) {
+            return true;
+        } else if (userDto == null) {
+            LOGGER.info("user absent into cash user");
+            UserEntity userEntity = repository.findFirstById_telegram(telegram_id);
+            if (userEntity != null) {
+                LOGGER.info("user present into repo");
+                userCache.add(convertToDto(userEntity)
+                        .setPositionRegistration(PositionRegistration.DONE));
+                return true;
+            }
+        } else {
+            LOGGER.info("new user go to registration method");
+            return registration(update.getMessage(),userDto);
+        }
+        return false;
+    }
+
     private UserDto generateUserFromMessage(Message message) {
         UserDto user = new UserDto();
         user.setName(message.getFrom().getUserName())
@@ -46,56 +68,52 @@ public class RegistrationNewUser implements Command {
         return user;
     }
 
-    /*TODO what the .......*/
-    @Override
-    public boolean execute(Update update) {
+    private SendMessage createQuery(Long chatId, String text) {
+        return SendMessage.builder()
+                .text(text)
+                .chatId(String.valueOf(chatId))
+                .build();
+    }
 
-        LOGGER.info("i try register new user {}", update.getMessage().getText());
-        Message message = update.getMessage();
-        UserDto user = dtoHashMap.get(message.getChatId());
-        if (repository.findFirstById_telegram(message.getChatId()) != null) {
-            LOGGER.info("don't do it");
-            return true;
-        }
-        boolean isRegistration = false;
 
-        if (user == null) {
+    private boolean registration(Message message, UserDto userDto) {
+        LOGGER.info("i try register new user");
+        boolean isRegistration =false;
+        if (userDto == null) {
             LOGGER.info("new user start registration");
-            user = generateUserFromMessage(message);
-            dtoHashMap.put(user.getId_telegram(), user);
+            userCache.add(generateUserFromMessage(message));
             sendBotMessageService.sendMessage(createQuery(message.getChatId(),
                     "Потрібна реєстрація\nвведіть ім'я"));
-
         } else {
-            switch (user.getPositionRegistration()) {
+            switch (userDto.getPositionRegistration()) {
                 case INPUT_USERNAME:
                     LOGGER.info("new user phase INPUT_USERNAME with message text {}", message.getText());
-                    user.setName(message.getText());
-                    user.setPositionRegistration(PositionRegistration.INPUT_CITY);
+                    userDto.setName(message.getText());
+                    userDto.setPositionRegistration(PositionRegistration.INPUT_CITY);
                     sendBotMessageService.sendMessage(createQuery(message.getChatId(),
                             "Введіть назву вашого міста"));
                     break;
                 case INPUT_CITY:
                     LOGGER.info("new user phase INPUT_CITY with message text {}", message.getText());
-                    user.setCity(message.getText());
-                    user.setPositionRegistration(PositionRegistration.INPUT_PHONE);
+                    userDto.setCity(message.getText());
+                    userDto.setPositionRegistration(PositionRegistration.INPUT_PHONE);
                     sendBotMessageService.sendMessage(createQuery(message.getChatId(),
                             "Введіть номер телефону для зв'язку"));
                     break;
                 case INPUT_PHONE:
                     LOGGER.info("new user phase INPUT_PHONE with message text {}", message.getText());
-                    user.setPhone(message.getText());
-                    user.setPositionRegistration(PositionRegistration.NONE);
-                    UserEntity userEntity = convertToEntity(user);
+                    userDto.setPhone(message.getText());
+                    userDto.setPositionRegistration(PositionRegistration.DONE);
+                    UserEntity userEntity = convertToEntity(userDto);
                     repository.save(userEntity);
                     LOGGER.info("save entity to database {}", userEntity);
-                    isRegistration = true;
+                    isRegistration= true;
                     sendBotMessageService.sendMessage(createQuery(message.getChatId(),
                             "Дякуємо! Ви зареєстровані" +
-                                    "\nid " + user.getId_telegram() +
-                                    "\nім'я " + user.getName() +
-                                    "\nмісто " + user.getCity() +
-                                    "\nтел. " + user.getPhone()));
+                                    "\nid " + userDto.getId_telegram() +
+                                    "\nім'я " + userDto.getName() +
+                                    "\nмісто " + userDto.getCity() +
+                                    "\nтел. " + userDto.getPhone()));
                     break;
             }
         }
@@ -108,10 +126,9 @@ public class RegistrationNewUser implements Command {
         return userEntity;
     }
 
-    private SendMessage createQuery(Long chatId, String text) {
-        return SendMessage.builder()
-                .text(text)
-                .chatId(String.valueOf(chatId))
-                .build();
+    private UserDto convertToDto(UserEntity userEntity) {
+        UserDto postDto = modelMapper.map(userEntity, UserDto.class);
+        LOGGER.info("convert entity to dto");
+        return postDto;
     }
 }
