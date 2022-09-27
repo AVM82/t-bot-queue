@@ -6,21 +6,18 @@ import javax.ws.rs.DefaultValue;
 
 public class ServiceDTO {
     @NotNull
-    private Long id_telegram;
+    private Long idTelegram;
     @Min(3)
     private String name;
     @DefaultValue("Опис")
     private String description;
 
-    public ServiceDTO() {
+    public Long getIdTelegram() {
+        return idTelegram;
     }
 
-    public Long getId_telegram() {
-        return id_telegram;
-    }
-
-    public ServiceDTO setId_telegram(Long id_telegram) {
-        this.id_telegram = id_telegram;
+    public ServiceDTO setIdTelegram(Long idTelegram) {
+        this.idTelegram = idTelegram;
         return this;
     }
 

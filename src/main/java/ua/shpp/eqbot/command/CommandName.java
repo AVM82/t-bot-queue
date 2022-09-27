@@ -7,21 +7,17 @@ public enum CommandName {
     HELP("/help"),
     SETTINGS("/settings"),
     ADD_SERVICE("/add"),
-
     CHANGE_ROLE_TO_PROVIDER("Change role to Provider"),
-
-    REGISTR_NEW_PROVIDER("Реєстрація нового провайдера"),
-
+    REGISTER_NEW_PROVIDER("Реєстрація нового провайдера"),
     NO("nocommand");
 
-
-    private final String commandName;
+    private final String command;
 
     CommandName(String commandName) {
-        this.commandName = commandName;
+        this.command = commandName;
     }
 
-    public String getCommandName() {
-        return commandName;
+    public String getCommand() {
+        return command;
     }
 }

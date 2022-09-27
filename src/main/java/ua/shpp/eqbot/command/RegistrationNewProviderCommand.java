@@ -6,22 +6,22 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 import ua.shpp.eqbot.repository.ProviderRepository;
 import ua.shpp.eqbot.service.SendBotMessageService;
 
-public class RegistrationNewProviderCommand implements Command{
+public class RegistrationNewProviderCommand implements Command {
 
-    private final static Logger LOGGER = LoggerFactory.getLogger(RegistrationNewProviderCommand.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(RegistrationNewProviderCommand.class);
     private final SendBotMessageService sendBotMessageService;
     private final ProviderRepository providerRepository;
 
     public RegistrationNewProviderCommand(SendBotMessageService sendBotMessageService, ProviderRepository providerRepository) {
         this.sendBotMessageService = sendBotMessageService;
-        this.providerRepository= providerRepository;
+        this.providerRepository = providerRepository;
     }
 
     @Override
     public boolean execute(Update update) {
         LOGGER.info("Registered new Provider");
         providerRepository.saveProvider(update.getMessage().getChatId());
-        sendBotMessageService.sendMessage(update.getMessage().getChatId().toString(),"Provider registered");
+        sendBotMessageService.sendMessage(update.getMessage().getChatId().toString(), "Provider registered");
         return true;
     }
 }

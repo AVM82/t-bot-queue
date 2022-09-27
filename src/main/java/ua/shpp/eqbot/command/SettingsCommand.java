@@ -7,13 +7,11 @@ import ua.shpp.eqbot.service.SendBotMessageService;
 
 import java.util.ArrayList;
 
-public class SettingsCommand implements Command{
-
+public class SettingsCommand implements Command {
 
     private final SendBotMessageService sendBotMessageService;
 
-    public static final String SETTINGS_MESSAGE = "Settings.\n";
-
+    public static final String SETTINGS_MESSAGE = "Change role to Provider";
 
     public SettingsCommand(SendBotMessageService sendBotMessageService) {
         this.sendBotMessageService = sendBotMessageService;
@@ -24,7 +22,7 @@ public class SettingsCommand implements Command{
         var markup = new ReplyKeyboardMarkup();
         var keyboardRows = new ArrayList<KeyboardRow>();
         KeyboardRow changeUserRole = new KeyboardRow();
-        changeUserRole.add("Change role to Provider");
+        changeUserRole.add(SETTINGS_MESSAGE);
         keyboardRows.add(changeUserRole);
         markup.setKeyboard(keyboardRows);
         markup.setResizeKeyboard(true);

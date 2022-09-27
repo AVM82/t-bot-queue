@@ -5,17 +5,13 @@ import javax.persistence.*;
 @Entity
 @Table(name = "services")
 public class ServiceEntity {
-
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    private Long id_telegram;
+    private Long idTelegram;
     private String name;
     private String description;
-
-    public ServiceEntity() {
-    }
 
     public Long getId() {
         return id;
@@ -26,12 +22,12 @@ public class ServiceEntity {
         return this;
     }
 
-    public Long getId_telegram() {
-        return id_telegram;
+    public Long getIdTelegram() {
+        return idTelegram;
     }
 
-    public ServiceEntity setId_telegram(Long id_telegram) {
-        this.id_telegram = id_telegram;
+    public ServiceEntity setIdTelegram(Long idTelegram) {
+        this.idTelegram = idTelegram;
         return this;
     }
 

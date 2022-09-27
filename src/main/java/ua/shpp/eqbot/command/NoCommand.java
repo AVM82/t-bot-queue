@@ -7,8 +7,6 @@ import ua.shpp.eqbot.service.SendBotMessageService;
 public class NoCommand implements Command {
     private final SendBotMessageService sendBotMessageService;
 
-
-
     public NoCommand(SendBotMessageService sendBotMessageService) {
         this.sendBotMessageService = sendBotMessageService;
     }

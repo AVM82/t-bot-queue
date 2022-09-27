@@ -1,0 +1,8 @@
+{
+  "properties": [
+    {
+      "name": "app.version",
+      "type": "java.lang.String",
+      "description": "Version number from pom.xml."
+  }
+] }

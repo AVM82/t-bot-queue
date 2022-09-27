@@ -23,7 +23,6 @@ public class StartCommand implements Command {
     @Override
     public boolean execute(Update update) {
         createStartMenu(update.getMessage().getChatId());
-        //sendBotMessageService.sendMessage(update.getMessage().getChatId().toString(), "Старт боту");
         return true;
     }
 

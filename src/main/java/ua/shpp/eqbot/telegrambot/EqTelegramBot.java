@@ -21,15 +21,11 @@ import static ua.shpp.eqbot.model.PositionMenu.MENU_CREATE_SERVICE;
 
 @Component
 public class EqTelegramBot extends TelegramLongPollingBot {
-    private final static Logger LOGGER = LoggerFactory.getLogger(EqTelegramBot.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(EqTelegramBot.class);
     private final CommandContainer commandContainer;
-    private final UserRepository userRepository;
-    private final ServiceRepository serviceRepository;
 
     @Autowired
     public EqTelegramBot(UserRepository userRepository, ServiceRepository serviceRepository) {
-        this.userRepository = userRepository;
-        this.serviceRepository = serviceRepository;
         this.commandContainer = new CommandContainer(new SendBotMessageServiceImpl(this), userRepository, serviceRepository);
     }
 
@@ -92,7 +88,7 @@ public class EqTelegramBot extends TelegramLongPollingBot {
             if (messageText.equals("Change role to Provider") || messageText.equals("Реєстрація нового провайдера")) {
                 commandContainer.retrieveCommand(messageText).execute(update);
             } else {
-                commandContainer.retrieveCommand(NO.getCommandName()).execute(update);
+                commandContainer.retrieveCommand(NO.getCommand()).execute(update);
             }
         }
     }

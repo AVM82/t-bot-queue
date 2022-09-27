@@ -40,11 +40,10 @@ public class RegistrationNewUser implements Command {
         UserDto userDto = BotUserCache.findBy(update.getMessage().getChatId());
         if (userDto == null) {
             LOGGER.info("user absent into cash user");
-            UserEntity userEntity = repository.findFirstById_telegram(update.getMessage().getChatId());
+            UserEntity userEntity = repository.findFirstByIdTelegram(update.getMessage().getChatId());
             if (userEntity != null) {
                 LOGGER.info("user present into repo");
-                BotUserCache.add(convertToDto(userEntity)
-                        .setPositionRegistration(PositionRegistration.DONE));
+                BotUserCache.add(convertToDto(userEntity).setPositionRegistration(PositionRegistration.DONE));
                 return true;
             }
             return registration(update.getMessage(), null);
@@ -65,17 +64,14 @@ public class RegistrationNewUser implements Command {
     private UserDto generateUserFromMessage(Message message) {
         UserDto user = new UserDto();
         user.setName(message.getFrom().getUserName())
-                .setId_telegram(message.getChatId())
+                .setIdTelegram(message.getChatId())
                 .setPositionRegistration(PositionRegistration.INPUT_USERNAME)
                 .setPositionMenu(PositionMenu.MENU_START);
         return user;
     }
 
     private SendMessage createQuery(Long chatId, String text) {
-        return SendMessage.builder()
-                .text(text)
-                .chatId(String.valueOf(chatId))
-                .build();
+        return SendMessage.builder().text(text).chatId(String.valueOf(chatId)).build();
     }
 
     /**
@@ -91,44 +87,40 @@ public class RegistrationNewUser implements Command {
         if (userDto == null) {
             LOGGER.info("new user start registration");
             BotUserCache.add(generateUserFromMessage(message));
-            sendBotMessageService.sendMessage(createQuery(message.getChatId(),
-                    "Потрібна реєстрація\nвведіть ім'я"));
+            sendBotMessageService.sendMessage(createQuery(message.getChatId(), "Потрібна реєстрація\nвведіть ім'я"));
         } else {
             switch (userDto.getPositionRegistration()) {
                 case INPUT_USERNAME:
                     LOGGER.info("new user phase INPUT_USERNAME with message text {}", message.getText());
-                    if(message.isCommand())
-                        return false;
+                    if (message.isCommand()) return false;
                     userDto.setName(message.getText());
                     userDto.setPositionRegistration(PositionRegistration.INPUT_CITY);
-                    sendBotMessageService.sendMessage(createQuery(message.getChatId(),
-                            "Введіть назву вашого міста"));
+                    sendBotMessageService.sendMessage(createQuery(message.getChatId(), "Введіть назву вашого міста"));
                     break;
                 case INPUT_CITY:
                     LOGGER.info("new user phase INPUT_CITY with message text {}", message.getText());
-                    if(message.isCommand())
-                        return false;
+                    if (message.isCommand()) return false;
                     userDto.setCity(message.getText());
                     userDto.setPositionRegistration(PositionRegistration.INPUT_PHONE);
-                    sendBotMessageService.sendMessage(createQuery(message.getChatId(),
-                            "Введіть номер телефону для зв'язку"));
+                    sendBotMessageService.sendMessage(createQuery(message.getChatId(), "Введіть номер телефону для зв'язку"));
                     break;
                 case INPUT_PHONE:
                     LOGGER.info("new user phase INPUT_PHONE with message text {}", message.getText());
-                    if(message.isCommand())
-                        return false;
+                    if (message.isCommand()) return false;
                     userDto.setPhone(message.getText());
                     userDto.setPositionRegistration(PositionRegistration.DONE);
                     UserEntity userEntity = convertToEntity(userDto);
                     repository.save(userEntity);
                     LOGGER.info("save entity to database {}", userEntity);
                     isRegistration = true;
-                    sendBotMessageService.sendMessage(createQuery(message.getChatId(),
-                            "Дякуємо! Ви зареєстровані" +
-                                    "\nid " + userDto.getId_telegram() +
-                                    "\nім'я " + userDto.getName() +
-                                    "\nмісто " + userDto.getCity() +
-                                    "\nтел. " + userDto.getPhone()));
+                    sendBotMessageService.sendMessage(createQuery(message.getChatId(), "Дякуємо! Ви зареєстровані" + "\nid "
+                            + userDto.getIdTelegram() +
+                            "\nім'я "
+                            + userDto.getName()
+                            + "\nмісто "
+                            + userDto.getCity()
+                            + "\nтел. "
+                            + userDto.getPhone()));
                     break;
                 default:
                     //do nothing

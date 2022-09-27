@@ -9,18 +9,22 @@ import java.util.List;
 import java.util.Map;
 
 @Component
-public class BotUserCache{
+public class BotUserCache {
 
-    private static Map<Long, UserDto> users = new HashMap<>();
+    private static final Map<Long, UserDto> users = new HashMap<>();
+
+    private BotUserCache() {
+
+    }
 
     public static void add(UserDto userDto) {
-        if (userDto.getId_telegram() != null) {
-            users.put(userDto.getId_telegram(), userDto);
+        if (userDto.getIdTelegram() != null) {
+            users.put(userDto.getIdTelegram(), userDto);
         }
     }
 
     public static void remove(UserDto userDto) {
-        users.remove(userDto.getId_telegram());
+        users.remove(userDto.getIdTelegram());
     }
 
     public static UserDto findBy(Long id) {

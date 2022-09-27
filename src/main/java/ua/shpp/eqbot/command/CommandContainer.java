@@ -3,7 +3,6 @@ package ua.shpp.eqbot.command;
 import com.google.common.collect.ImmutableMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ua.shpp.eqbot.repository.SaveService;
 import ua.shpp.eqbot.repository.ServiceRepository;
 import ua.shpp.eqbot.repository.UserRepository;
 import ua.shpp.eqbot.repository.ProviderRepository;
@@ -22,14 +21,14 @@ public class CommandContainer {
     public CommandContainer(SendBotMessageService sendBotMessageService, UserRepository userRepository, ServiceRepository serviceRepository) {
         ProviderRepository providerRepository = new ProviderRepository();
         commandMap = ImmutableMap.<String, Command>builder()
-                .put(CommandName.REG.getCommandName(), new RegistrationNewUser(sendBotMessageService, userRepository))
-                .put(CommandName.START.getCommandName(), new StartCommand(sendBotMessageService))
-                .put(CommandName.HELP.getCommandName(), new HelpCommand(sendBotMessageService))
-                .put(CommandName.NO.getCommandName(), new NoCommand(sendBotMessageService))
-                .put(CommandName.SETTINGS.getCommandName(), new SettingsCommand(sendBotMessageService))
-                .put(CommandName.CHANGE_ROLE_TO_PROVIDER.getCommandName(), new ChangeRoleToProviderCommand(sendBotMessageService, providerRepository))
-                .put(CommandName.REGISTR_NEW_PROVIDER.getCommandName(), new RegistrationNewProviderCommand(sendBotMessageService, providerRepository))
-                .put(CommandName.ADD_SERVICE.getCommandName(), new AddService(sendBotMessageService, serviceRepository))
+                .put(CommandName.REG.getCommand(), new RegistrationNewUser(sendBotMessageService, userRepository))
+                .put(CommandName.START.getCommand(), new StartCommand(sendBotMessageService))
+                .put(CommandName.HELP.getCommand(), new HelpCommand(sendBotMessageService))
+                .put(CommandName.NO.getCommand(), new NoCommand(sendBotMessageService))
+                .put(CommandName.SETTINGS.getCommand(), new SettingsCommand(sendBotMessageService))
+                .put(CommandName.CHANGE_ROLE_TO_PROVIDER.getCommand(), new ChangeRoleToProviderCommand(sendBotMessageService, providerRepository))
+                .put(CommandName.REGISTER_NEW_PROVIDER.getCommand(), new RegistrationNewProviderCommand(sendBotMessageService, providerRepository))
+                .put(CommandName.ADD_SERVICE.getCommand(), new AddService(sendBotMessageService, serviceRepository))
                 .build();
 
         unknownCommand = new UnknownCommand(sendBotMessageService);
