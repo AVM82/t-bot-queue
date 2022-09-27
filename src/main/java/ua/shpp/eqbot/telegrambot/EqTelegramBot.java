@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
+import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import ua.shpp.eqbot.command.CommandContainer;
 import ua.shpp.eqbot.repository.UserRepository;
@@ -79,6 +80,12 @@ public class EqTelegramBot extends TelegramLongPollingBot {
     }
 
     private void callbackQueryHandler(Update update) {
-
+        CallbackQuery callbackQuery = update.getCallbackQuery();
+        if (callbackQuery.getData().equals("create_service")) {
+            LOGGER.info("create_service");
+        }
+        if (callbackQuery.getData().equals("search_service")) {
+            LOGGER.info("search_service");
+        }
     }
 }
