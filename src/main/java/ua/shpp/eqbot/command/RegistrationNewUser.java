@@ -5,12 +5,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import ua.shpp.eqbot.cache.BotUserCache;
-import ua.shpp.eqbot.cache.Cache;
 import ua.shpp.eqbot.model.PositionMenu;
 import ua.shpp.eqbot.model.PositionRegistration;
 import ua.shpp.eqbot.model.UserDto;
@@ -25,43 +23,45 @@ public class RegistrationNewUser implements Command {
     private final UserRepository repository;
     private final ModelMapper modelMapper = new ModelMapper();
 
-   /* @Autowired
-    public void setUserCache(Cache<UserDto> userCache) {
-        this.userCache = userCache;
-    }*/
-
-    private Cache<UserDto> userCache = new BotUserCache();
-
     @Autowired
     public RegistrationNewUser(SendBotMessageService sendBotMessageService, UserRepository repository) {
         this.sendBotMessageService = sendBotMessageService;
         this.repository = repository;
     }
 
-
+    /**
+     * registration check in cache and database
+     *
+     * @param update provided {@link Update} object with all the needed data for command.
+     * @return - true if registration passed
+     */
     @Override
     public boolean execute(Update update) {
-        long telegram_id = update.getMessage().getChatId();
-        UserDto userDto = userCache.findBy(telegram_id);
+        UserDto userDto = BotUserCache.findBy(update.getMessage().getChatId());
         if (userDto == null) {
             LOGGER.info("user absent into cash user");
-            UserEntity userEntity = repository.findFirstById_telegram(telegram_id);
+            UserEntity userEntity = repository.findFirstById_telegram(update.getMessage().getChatId());
             if (userEntity != null) {
                 LOGGER.info("user present into repo");
-                userCache.add(convertToDto(userEntity)
+                BotUserCache.add(convertToDto(userEntity)
                         .setPositionRegistration(PositionRegistration.DONE));
                 return true;
             }
-            return registration(update.getMessage(), userDto);
+            return registration(update.getMessage(), null);
         } else if (userDto.getPositionRegistration() == PositionRegistration.DONE) {
             return true;
         } else {
             LOGGER.info("new user go to registration method");
             return registration(update.getMessage(), userDto);
         }
-
     }
 
+    /**
+     * creating a user from the data from the message
+     *
+     * @param message - message from user
+     * @return - initial user data
+     */
     private UserDto generateUserFromMessage(Message message) {
         UserDto user = new UserDto();
         user.setName(message.getFrom().getUserName())
@@ -78,13 +78,19 @@ public class RegistrationNewUser implements Command {
                 .build();
     }
 
-
+    /**
+     * User registration
+     *
+     * @param message - message from user
+     * @param userDto - user data to save to the database
+     * @return - true if registration is complete
+     */
     private boolean registration(Message message, UserDto userDto) {
         LOGGER.info("i try register new user");
         boolean isRegistration = false;
         if (userDto == null) {
             LOGGER.info("new user start registration");
-            userCache.add(generateUserFromMessage(message));
+            BotUserCache.add(generateUserFromMessage(message));
             sendBotMessageService.sendMessage(createQuery(message.getChatId(),
                     "Потрібна реєстрація\nвведіть ім'я"));
         } else {
@@ -117,6 +123,9 @@ public class RegistrationNewUser implements Command {
                                     "\nім'я " + userDto.getName() +
                                     "\nмісто " + userDto.getCity() +
                                     "\nтел. " + userDto.getPhone()));
+                    break;
+                default:
+                    //do nothing
                     break;
             }
         }
