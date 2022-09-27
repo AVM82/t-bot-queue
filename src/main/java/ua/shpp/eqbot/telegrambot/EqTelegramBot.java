@@ -12,6 +12,7 @@ import ua.shpp.eqbot.cache.BotUserCache;
 import ua.shpp.eqbot.command.CommandContainer;
 import ua.shpp.eqbot.model.UserDto;
 import ua.shpp.eqbot.repository.ServiceRepository;
+import ua.shpp.eqbot.model.PositionMenu;
 import ua.shpp.eqbot.repository.UserRepository;
 import ua.shpp.eqbot.service.SendBotMessageServiceImpl;
 
@@ -47,17 +48,6 @@ public class EqTelegramBot extends TelegramLongPollingBot {
         } else {
             textHandler(update);
         }
-//        if (!update.hasMessage() || !update.getMessage().hasText())
-//            return;
-//
-//        final long chatId = update.getMessage().getChatId();
-//        UserDto user = BotUserCache.findBy(chatId);
-//
-//        if (user == null) {
-//
-//        } else {
-//
-//        }
     }
 
     @Override
@@ -82,6 +72,8 @@ public class EqTelegramBot extends TelegramLongPollingBot {
             }else if (user.getPositionMenu() == MENU_CREATE_SERVICE){
                 commandContainer.retrieveCommand("/add").execute(update);
                 commandContainer.retrieveCommand("/start").execute(update);
+            } else if(user.getPositionMenu() == PositionMenu.MENU_START) {
+                    commandContainer.retrieveCommand("/start").execute(update);
             }
         }
     }
@@ -90,11 +82,18 @@ public class EqTelegramBot extends TelegramLongPollingBot {
         String messageText = update.getMessage().getText().trim();
         String commandIdentifier = messageText.split(" ")[0].toLowerCase();
         LOGGER.info("new command here {}", commandIdentifier);
-        commandContainer.retrieveCommand(commandIdentifier).execute(update);
-        if (messageText.equals("Change role to Provider") || messageText.equals("Реєстрація нового провайдера")) {
-            commandContainer.retrieveCommand(messageText).execute(update);
+
+        if (commandIdentifier.equals("/start")) {
+            if (commandContainer.retrieveCommand("/reg").execute(update)) {
+                commandContainer.retrieveCommand("/start").execute(update);
+            }
         } else {
-            commandContainer.retrieveCommand(NO.getCommandName()).execute(update);
+            commandContainer.retrieveCommand(commandIdentifier).execute(update);
+            if (messageText.equals("Change role to Provider") || messageText.equals("Реєстрація нового провайдера")) {
+                commandContainer.retrieveCommand(messageText).execute(update);
+            } else {
+                commandContainer.retrieveCommand(NO.getCommandName()).execute(update);
+            }
         }
     }
 
