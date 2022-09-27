@@ -9,7 +9,7 @@ public enum CommandName {
 
     CHANGE_ROLE_TO_PROVIDER("Change role to Provider"),
 
-    REGISTR_NEW_PROVIDER("Реєстрація нового провайдера"),
+    REGISTR_NEW_PROVIDER("реєстрація нового провайдера"),
 
     NO("nocommand");
 

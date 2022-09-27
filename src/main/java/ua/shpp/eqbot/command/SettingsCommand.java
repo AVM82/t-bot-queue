@@ -28,7 +28,6 @@ public class SettingsCommand implements Command{
         keyboardRows.add(changeUserRole);
         markup.setKeyboard(keyboardRows);
         markup.setResizeKeyboard(true);
-
         sendBotMessageService.setReplyMarkup(update.getMessage().getChatId().toString(), markup);
         return true;
     }

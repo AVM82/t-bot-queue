@@ -8,10 +8,10 @@ import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
 import org.telegram.telegrambots.meta.api.objects.Update;
-import ua.shpp.eqbot.cache.BotUserCache;
 import ua.shpp.eqbot.command.CommandContainer;
-import ua.shpp.eqbot.model.PositionMenu;
-import ua.shpp.eqbot.model.UserDto;
+import ua.shpp.eqbot.commandchain.changerole.CommandChain;
+import ua.shpp.eqbot.commandchain.changerole.RegistrationProviderChain;
+import ua.shpp.eqbot.repository.ProvideRepository;
 import ua.shpp.eqbot.repository.UserRepository;
 import ua.shpp.eqbot.service.SendBotMessageServiceImpl;
 
@@ -23,10 +23,16 @@ public class EqTelegramBot extends TelegramLongPollingBot {
     private final CommandContainer commandContainer;
     private final UserRepository userRepository;
 
+    private boolean isCommandChain = false;
+
+    private CommandChain commandChain;
+    ProvideRepository provideRepository;
+
     @Autowired
-    public EqTelegramBot(UserRepository userRepository) {
+    public EqTelegramBot(UserRepository userRepository, ProvideRepository provideRepository) {
         this.userRepository = userRepository;
-        this.commandContainer = new CommandContainer(new SendBotMessageServiceImpl(this), userRepository);
+        this.commandContainer = new CommandContainer(new SendBotMessageServiceImpl(this), userRepository, provideRepository);
+        this.provideRepository = provideRepository;
     }
 
     @Value("${telegram.bot.name}")
@@ -37,10 +43,17 @@ public class EqTelegramBot extends TelegramLongPollingBot {
 
     @Override
     public void onUpdateReceived(Update update) {
+
         if (update.hasCallbackQuery()) {
             callbackQueryHandler(update);
+        }else if(update.getMessage().getText().equals("Change role to Provider")){
+            commandContainer.retrieveCommand(update.getMessage().getText()).execute(update);
         } else if (update.getMessage().hasText() && update.getMessage().isCommand()) {
             commandHandler(update);
+        } else if (update.getMessage().getText().equals("Реєстрація нового провайдера")) {
+            createRegistrationProviderCommandChain(update);
+        } else if(isCommandChain){
+            callNextCommandInChain(update);
         } else {
             textHandler(update);
         }
@@ -62,12 +75,10 @@ public class EqTelegramBot extends TelegramLongPollingBot {
                     update.getMessage().getChat().getFirstName(),
                     update.getMessage().getChat().getLastName(),
                     update.getMessage().getChat().getId());
-            if (!commandContainer.retrieveCommand("/reg").execute(update)) {
+            if(!commandContainer.retrieveCommand("/reg").execute(update)){
                 LOGGER.info("Registration user");
-            } else {
-                UserDto user = BotUserCache.findBy(update.getMessage().getChat().getId());
-                if(user.getPositionMenu() == PositionMenu.MENU_START)
-                    commandContainer.retrieveCommand("/start").execute(update);
+            }else{
+
             }
         }
     }
@@ -76,18 +87,11 @@ public class EqTelegramBot extends TelegramLongPollingBot {
         String messageText = update.getMessage().getText().trim();
         String commandIdentifier = messageText.split(" ")[0].toLowerCase();
         LOGGER.info("new command here {}", commandIdentifier);
-
-        if (commandIdentifier.equals("/start")) {
-            if (commandContainer.retrieveCommand("/reg").execute(update)) {
-                commandContainer.retrieveCommand("/start").execute(update);
-            }
+        commandContainer.retrieveCommand(commandIdentifier).execute(update);
+        if (messageText.equals("Change role to Provider") || messageText.equals("Реєстрація нового провайдера")) {
+            commandContainer.retrieveCommand(messageText).execute(update);
         } else {
-            commandContainer.retrieveCommand(commandIdentifier).execute(update);
-            if (messageText.equals("Change role to Provider") || messageText.equals("Реєстрація нового провайдера")) {
-                commandContainer.retrieveCommand(messageText).execute(update);
-            } else {
-                commandContainer.retrieveCommand(NO.getCommandName()).execute(update);
-            }
+            commandContainer.retrieveCommand(NO.getCommandName()).execute(update);
         }
     }
 
@@ -100,4 +104,19 @@ public class EqTelegramBot extends TelegramLongPollingBot {
             LOGGER.info("search_service");
         }
     }
+
+    public void createRegistrationProviderCommandChain (Update update) {
+        commandChain = new RegistrationProviderChain(new SendBotMessageServiceImpl(this), provideRepository);
+        isCommandChain = true;
+        commandChain.nextCommand().execute(update);
+    }
+
+    public void callNextCommandInChain(Update update) {
+        if (commandChain.hasNextCommand()){
+            commandChain.nextCommand().execute(update);
+        } else {
+            isCommandChain = false;
+        }
+    }
+
 }
