@@ -13,11 +13,13 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
         version = "${app.version}",
         description = "description"))
 public class EqBotApplication {
-    private static final Logger log = LoggerFactory.getLogger(EqBotApplication.class);
+
+
+    private final static Logger LOGGER = LoggerFactory.getLogger(EqBotApplication.class);
 
     public static void main(String[] args) {
-        log.info("start application");
+        LOGGER.info("start application");
         SpringApplication.run(EqBotApplication.class, args);
-        log.info("Congratulations application started");
+        LOGGER.info("Congratulations application started");
     }
 }

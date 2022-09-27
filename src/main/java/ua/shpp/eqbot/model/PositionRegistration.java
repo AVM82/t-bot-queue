@@ -1,7 +1,8 @@
-package ua.shpp.eqbot.entity;
+package ua.shpp.eqbot.model;
 
 public enum PositionRegistration {
     INPUT_USERNAME,
     INPUT_CITY,
-    NONE
+    INPUT_PHONE,
+    DONE
 }

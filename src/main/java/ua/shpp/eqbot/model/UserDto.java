@@ -1,8 +1,8 @@
-package ua.shpp.eqbot.entity;
+package ua.shpp.eqbot.model;
 
 
 public class UserDto {
-    private Long id;
+    private Long id_telegram;
     private String name;
     private String city;
     private String phone;
@@ -18,12 +18,12 @@ public class UserDto {
         return this;
     }
 
-    public Long getId() {
-        return id;
+    public Long getId_telegram() {
+        return id_telegram;
     }
 
-    public UserDto setId(Long id) {
-        this.id = id;
+    public UserDto setId_telegram(Long id_telegram) {
+        this.id_telegram = id_telegram;
         return this;
     }
 
