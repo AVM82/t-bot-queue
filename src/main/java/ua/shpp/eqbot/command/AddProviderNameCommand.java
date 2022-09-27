@@ -26,7 +26,7 @@ public class AddProviderNameCommand implements  Command{
         providerEntity.setName(update.getMessage().getText());
         providerEntity.setId_telegram(update.getMessage().getChatId());
         provideRepository.save(providerEntity);
-        sendBotMessageService.sendMessage(update.getMessage().getChatId().toString(),"Add city");
+        sendBotMessageService.sendMessage(update.getMessage().getChatId().toString(),"Type city");
         return true;
     }
 }

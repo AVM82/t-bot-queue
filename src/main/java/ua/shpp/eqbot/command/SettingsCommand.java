@@ -26,6 +26,12 @@ public class SettingsCommand implements Command{
         KeyboardRow changeUserRole = new KeyboardRow();
         changeUserRole.add("Change role to Provider");
         keyboardRows.add(changeUserRole);
+        KeyboardRow changeLang = new KeyboardRow();
+        changeUserRole.add("Change lang");
+        keyboardRows.add(changeLang);
+        KeyboardRow changeCity = new KeyboardRow();
+        changeUserRole.add("Change city");
+        keyboardRows.add(changeCity);
         markup.setKeyboard(keyboardRows);
         markup.setResizeKeyboard(true);
         sendBotMessageService.setReplyMarkup(update.getMessage().getChatId().toString(), markup);

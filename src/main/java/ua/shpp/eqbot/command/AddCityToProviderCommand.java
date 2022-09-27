@@ -24,7 +24,7 @@ public class AddCityToProviderCommand implements Command{
         ProviderEntity providerEntity = provideRepository.findFirstById_telegram(update.getMessage().getChatId());
         providerEntity.setCity(update.getMessage().getText());
         provideRepository.save(providerEntity);
-        sendBotMessageService.sendMessage(update.getMessage().getChatId().toString(),"Ur registry");
+        sendBotMessageService.sendMessage(update.getMessage().getChatId().toString(),"Provider registered");
         return true;
     }
 }
