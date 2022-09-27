@@ -27,6 +27,7 @@ public class CommandContainer {
                 .put(CommandName.SETTINGS.getCommandName(), new SettingsCommand(sendBotMessageService))
                 .put(CommandName.CHANGE_ROLE_TO_PROVIDER.getCommandName(), new ChangeRoleToProviderCommand(sendBotMessageService, providerRepository))
                 .put(CommandName.REGISTR_NEW_PROVIDER.getCommandName(), new RegistrationNewProviderCommand(sendBotMessageService, providerRepository))
+                .put(CommandName.ADD_SERVICE.getCommandName(), new AddService(sendBotMessageService))
                 .build();
 
         unknownCommand = new UnknownCommand(sendBotMessageService);
