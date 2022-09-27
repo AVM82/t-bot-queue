@@ -40,7 +40,6 @@ public class StartCommand implements Command {
                 .text("Обрати послугу")
                 .callbackData("search_service")
                 .build());
-
         keyboard.add(buttonCreate);
         keyboard.add(buttonSearch);
         inlineKeyboardMarkup.setKeyboard(keyboard);
