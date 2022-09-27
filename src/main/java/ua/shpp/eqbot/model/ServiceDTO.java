@@ -2,12 +2,14 @@ package ua.shpp.eqbot.model;
 
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
+import javax.ws.rs.DefaultValue;
 
 public class ServiceDTO {
     @NotNull
     private Long id_telegram;
     @Min(3)
     private String name;
+    @DefaultValue("Опис")
     private String description;
 
     public ServiceDTO() {

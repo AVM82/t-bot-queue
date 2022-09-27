@@ -7,6 +7,7 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 import ua.shpp.eqbot.cache.BotUserCache;
 import ua.shpp.eqbot.model.ServiceDTO;
 import ua.shpp.eqbot.model.UserDto;
+import ua.shpp.eqbot.repository.SaveService;
 import ua.shpp.eqbot.service.SendBotMessageService;
 
 import static ua.shpp.eqbot.model.PositionMenu.MENU_START;
@@ -15,10 +16,12 @@ public class AddService implements Command {
 
     private static final Logger log = LoggerFactory.getLogger(AddService.class);
     private final SendBotMessageService sendBotMessageService;
+    private final SaveService saveService;
     public static final String ADD_SERVICE_MESSAGE = "Введіть назву послуги:\n";
 
-    public AddService(SendBotMessageService sendBotMessageService) {
+    public AddService(SendBotMessageService sendBotMessageService, SaveService saveService) {
         this.sendBotMessageService = sendBotMessageService;
+        this.saveService = saveService;
     }
 
     @Override
