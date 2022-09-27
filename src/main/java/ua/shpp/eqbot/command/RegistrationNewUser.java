@@ -18,7 +18,7 @@ import ua.shpp.eqbot.service.SendBotMessageService;
 
 @Component
 public class RegistrationNewUser implements Command {
-    private final static Logger LOGGER = LoggerFactory.getLogger(RegistrationNewUser.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(RegistrationNewUser.class);
     private final SendBotMessageService sendBotMessageService;
     private final UserRepository repository;
     private final ModelMapper modelMapper = new ModelMapper();
