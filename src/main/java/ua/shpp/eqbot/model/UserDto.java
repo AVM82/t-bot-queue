@@ -6,6 +6,7 @@ public class UserDto {
     private String name;
     private String city;
     private String phone;
+    private String language;
     private PositionRegistration positionRegistration;
     private PositionMenu positionMenu;
 
@@ -60,6 +61,15 @@ public class UserDto {
 
     public UserDto setPositionMenu(PositionMenu positionMenu) {
         this.positionMenu = positionMenu;
+        return this;
+    }
+
+    public String getLanguage() {
+        return language;
+    }
+
+    public UserDto setLanguage(String language) {
+        this.language = language;
         return this;
     }
 
