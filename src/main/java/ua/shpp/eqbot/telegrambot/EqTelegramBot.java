@@ -11,6 +11,7 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 import ua.shpp.eqbot.cache.BotUserCache;
 import ua.shpp.eqbot.command.CommandContainer;
 import ua.shpp.eqbot.model.UserDto;
+import ua.shpp.eqbot.repository.ServiceRepository;
 import ua.shpp.eqbot.repository.UserRepository;
 import ua.shpp.eqbot.service.SendBotMessageServiceImpl;
 
@@ -22,11 +23,13 @@ public class EqTelegramBot extends TelegramLongPollingBot {
     private final static Logger LOGGER = LoggerFactory.getLogger(EqTelegramBot.class);
     private final CommandContainer commandContainer;
     private final UserRepository userRepository;
+    private final ServiceRepository serviceRepository;
 
     @Autowired
-    public EqTelegramBot(UserRepository userRepository) {
+    public EqTelegramBot(UserRepository userRepository, ServiceRepository serviceRepository) {
         this.userRepository = userRepository;
-        this.commandContainer = new CommandContainer(new SendBotMessageServiceImpl(this), userRepository);
+        this.serviceRepository = serviceRepository;
+        this.commandContainer = new CommandContainer(new SendBotMessageServiceImpl(this), userRepository, serviceRepository);
     }
 
     @Value("${telegram.bot.name}")
