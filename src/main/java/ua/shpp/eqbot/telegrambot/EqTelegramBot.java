@@ -10,10 +10,13 @@ import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import ua.shpp.eqbot.cache.BotUserCache;
 import ua.shpp.eqbot.command.CommandContainer;
+import ua.shpp.eqbot.commandchain.changerole.CommandChain;
+import ua.shpp.eqbot.commandchain.changerole.RegistrationProviderChain;
 import ua.shpp.eqbot.model.UserDto;
-import ua.shpp.eqbot.model.repository.ServiceRepository;
+import ua.shpp.eqbot.repository.ProvideRepository;
+import ua.shpp.eqbot.repository.ServiceRepository;
 import ua.shpp.eqbot.model.PositionMenu;
-import ua.shpp.eqbot.model.repository.UserRepository;
+import ua.shpp.eqbot.repository.UserRepository;
 import ua.shpp.eqbot.service.SendBotMessageServiceImpl;
 
 import static ua.shpp.eqbot.command.CommandName.NO;
@@ -25,12 +28,18 @@ public class EqTelegramBot extends TelegramLongPollingBot {
     private final CommandContainer commandContainer;
     private final UserRepository userRepository;
     private final ServiceRepository serviceRepository;
+    private boolean isCommandChain = false;
+
+    private CommandChain commandChain;
+    ProvideRepository provideRepository;
+
 
     @Autowired
-    public EqTelegramBot(UserRepository userRepository, ServiceRepository serviceRepository) {
+    public EqTelegramBot(UserRepository userRepository, ServiceRepository serviceRepository, ProvideRepository provideRepository) {
         this.userRepository = userRepository;
         this.serviceRepository = serviceRepository;
-        this.commandContainer = new CommandContainer(new SendBotMessageServiceImpl(this), userRepository, serviceRepository);
+        this.provideRepository = provideRepository;
+        this.commandContainer = new CommandContainer(new SendBotMessageServiceImpl(this), userRepository, serviceRepository, provideRepository);
     }
 
     @Value("${telegram.bot.name}")
@@ -45,6 +54,8 @@ public class EqTelegramBot extends TelegramLongPollingBot {
             callbackQueryHandler(update);
         } else if (update.getMessage().hasText() && update.getMessage().isCommand()) {
             commandHandler(update);
+        } else if(isCommandChain){
+            callNextCommandInChain(update);
         } else {
             textHandler(update);
         }
@@ -61,7 +72,7 @@ public class EqTelegramBot extends TelegramLongPollingBot {
     }
 
     private void textHandler(Update update) {
-        if (update.hasMessage() && update.getMessage().hasText()) {
+         if (update.hasMessage() && update.getMessage().hasText()) {
             LOGGER.info("Message from {} {} (id = {}).",
                     update.getMessage().getChat().getFirstName(),
                     update.getMessage().getChat().getLastName(),
@@ -69,6 +80,10 @@ public class EqTelegramBot extends TelegramLongPollingBot {
             UserDto user = BotUserCache.findBy(update.getMessage().getChat().getId());
             if(!commandContainer.retrieveCommand("/reg").execute(update)){
                 LOGGER.info("Registration user");
+            }else if(update.getMessage().getText().equals("Change role to Provider")){
+                commandContainer.retrieveCommand(update.getMessage().getText()).execute(update);
+            }else if (update.getMessage().getText().equals("Реєстрація нового провайдера")) {
+                createRegistrationProviderCommandChain(update);
             }else if (user.getPositionMenu() == MENU_CREATE_SERVICE){
                 commandContainer.retrieveCommand("/add").execute(update);
                 commandContainer.retrieveCommand("/start").execute(update);
@@ -109,4 +124,20 @@ public class EqTelegramBot extends TelegramLongPollingBot {
             LOGGER.info("search_service");
         }
     }
+
+    public void createRegistrationProviderCommandChain (Update update) {
+        commandChain = new RegistrationProviderChain(new SendBotMessageServiceImpl(this), provideRepository);
+        isCommandChain = true;
+        commandChain.nextCommand().execute(update);
+    }
+
+    public void callNextCommandInChain(Update update) {
+        if (commandChain.hasNextCommand()){
+            commandChain.nextCommand().execute(update);
+            isCommandChain = commandChain.hasNextCommand();
+        } else {
+            isCommandChain = false;
+        }
+    }
+
 }

@@ -1,4 +1,4 @@
-package ua.shpp.eqbot.model.repository;
+package ua.shpp.eqbot.repository;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

@@ -52,7 +52,7 @@ public class SendBotMessageServiceImpl implements SendBotMessageService {
         SendMessage sendMessage = new SendMessage();
         sendMessage.setChatId(chatId);
         sendMessage.enableHtml(true);
-        sendMessage.setText("Choose command");
+        sendMessage.setText("Menu");
         sendMessage.setReplyMarkup(replyKeyboardMarkup);
         try {
             telegramBot.execute(sendMessage);
