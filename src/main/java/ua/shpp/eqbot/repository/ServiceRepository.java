@@ -1,4 +1,4 @@
-package ua.shpp.eqbot.model.repository;
+package ua.shpp.eqbot.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import ua.shpp.eqbot.model.ServiceEntity;
