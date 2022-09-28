@@ -12,7 +12,6 @@ public class AddCityToProviderCommand implements Command{
     private final SendBotMessageService sendBotMessageService;
     private final ProvideRepository provideRepository;
 
-
     public AddCityToProviderCommand(SendBotMessageService sendBotMessageService, ProvideRepository provideRepository) {
         this.sendBotMessageService = sendBotMessageService;
         this.provideRepository = provideRepository;
