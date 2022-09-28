@@ -48,10 +48,20 @@ public class AddService implements Command {
     @Override
     public boolean execute(Update update) {
 
+        long id ;
 
-        if (provideRepository.findById_telegram(update.getCallbackQuery().getFrom().getId()) != null)/*providerRepository.findById(update.getMessage().getChatId())*/ {
+        if (update.hasCallbackQuery()){
+            id = update.getCallbackQuery().getFrom().getId();
+        }else {
+            id = update.getMessage().getChatId();
+        }
+
+
+         if (provideRepository.findById_telegram(id)!=null)/*providerRepository.findById(update.getMessage().getChatId())*/
+         {
             UserDto user;
             ServiceDTO newService;
+             log.info("Switched to provider");
             log.info("Switched to provider");
             if (update.hasMessage()) {
                 Long idTelegram = update.getMessage().getChat().getId();
@@ -80,7 +90,7 @@ public class AddService implements Command {
         }
 
 
+            return false;
 
-        return false;
     }
 }
