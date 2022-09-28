@@ -68,7 +68,7 @@ public class AddService implements Command {
         if (provideRepository.findById_telegram(id) != null)/*providerRepository.findById(update.getMessage().getChatId())*/ {
             UserDto user = null;
             ServiceDTO newService;
-            if (!update.hasMessage()) {
+            if (!update.hasMessage() ) {
                 Long idTelegram = update.getCallbackQuery().getFrom().getId();
                 sendBotMessageService.sendMessage(SendMessage.builder().chatId(idTelegram).text(ADD_SERVICE_MESSAGE).build());
                 log.info("Add new service.");
@@ -102,6 +102,7 @@ public class AddService implements Command {
             markup.setResizeKeyboard(true);
             log.info("Didn't find provider with such id");
             sendBotMessageService.setReplyMarkup(update.getCallbackQuery().getFrom().getId().toString(), markup);
+            ServiceCache.justRegistrated=true;
         }
 
 

@@ -11,6 +11,7 @@ import java.util.Map;
 
 @Component
 public class ServiceCache {
+    public static boolean justRegistrated = false;
 
     private static Map<Long, ServiceDTO> services = new HashMap<>();
 
