@@ -51,7 +51,7 @@ public class AddService implements Command {
         if (provideRepository.findById_telegram(update.getCallbackQuery().getFrom().getId()) != null)/*providerRepository.findById(update.getMessage().getChatId())*/ {
             UserDto user;
             ServiceDTO newService;
-            sendBotMessageService.sendMessage(update.getCallbackQuery().getFrom().getId().toString(), "U switched to provider");
+            log.info("Switched to provider");
             if (update.hasMessage()) {
                 Long idTelegram = update.getMessage().getChat().getId();
                 user = BotUserCache.findBy(idTelegram);
