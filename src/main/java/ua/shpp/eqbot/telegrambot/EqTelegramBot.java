@@ -11,9 +11,9 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 import ua.shpp.eqbot.cache.BotUserCache;
 import ua.shpp.eqbot.command.CommandContainer;
 import ua.shpp.eqbot.model.UserDto;
-import ua.shpp.eqbot.repository.ServiceRepository;
+import ua.shpp.eqbot.model.repository.ServiceRepository;
 import ua.shpp.eqbot.model.PositionMenu;
-import ua.shpp.eqbot.repository.UserRepository;
+import ua.shpp.eqbot.model.repository.UserRepository;
 import ua.shpp.eqbot.service.SendBotMessageServiceImpl;
 
 import static ua.shpp.eqbot.command.CommandName.NO;

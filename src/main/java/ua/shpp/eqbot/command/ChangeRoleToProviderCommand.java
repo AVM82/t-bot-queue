@@ -6,7 +6,7 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardRow;
 import ua.shpp.eqbot.telegrambot.EqTelegramBot;
-import ua.shpp.eqbot.repository.ProviderRepository;
+import ua.shpp.eqbot.model.repository.ProviderRepository;
 import ua.shpp.eqbot.service.SendBotMessageService;
 
 import java.util.ArrayList;
