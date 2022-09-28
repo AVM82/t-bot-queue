@@ -34,19 +34,19 @@ public class StartCommand implements Command {
         List<List<InlineKeyboardButton>> keyboard = new ArrayList<>();
         List<InlineKeyboardButton> buttonCreate = new ArrayList<>();
         buttonCreate.add(InlineKeyboardButton.builder()
-                .text("Створити послугу")
+                .text(BundleLanguage.getValue(chatId, "create_service"))
                 .callbackData("create_service")
                 .build());
         List<InlineKeyboardButton> buttonSearch = new ArrayList<>();
         buttonCreate.add(InlineKeyboardButton.builder()
-                .text("Обрати послугу")
+                .text(BundleLanguage.getValue(chatId, "choose_service"))
                 .callbackData("search_service")
                 .build());
         keyboard.add(buttonCreate);
         keyboard.add(buttonSearch);
         inlineKeyboardMarkup.setKeyboard(keyboard);
         SendMessage sendMessage = new SendMessage();
-        sendMessage.setText("Оберіть варіант меню");
+        sendMessage.setText(BundleLanguage.getValue(chatId, "choose_menu_option"));
         sendMessage.setChatId(chatId);
         sendMessage.setReplyMarkup(inlineKeyboardMarkup);
         sendBotMessageService.sendMessage(sendMessage);

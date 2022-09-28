@@ -16,7 +16,7 @@ import ua.shpp.eqbot.model.UserDto;
 import ua.shpp.eqbot.repository.ProvideRepository;
 import ua.shpp.eqbot.repository.ServiceRepository;
 import ua.shpp.eqbot.model.PositionMenu;
-import ua.shpp.eqbot.repository.UserRepository;
+import ua.shpp.eqbot.model.repository.UserRepository;
 import ua.shpp.eqbot.service.SendBotMessageServiceImpl;
 
 import static ua.shpp.eqbot.command.CommandName.NO;

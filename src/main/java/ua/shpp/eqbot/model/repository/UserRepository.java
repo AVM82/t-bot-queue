@@ -1,4 +1,4 @@
-package ua.shpp.eqbot.repository;
+package ua.shpp.eqbot.model.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
