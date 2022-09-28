@@ -11,12 +11,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.GetFile;
-import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.methods.send.SendPhoto;
 import org.telegram.telegrambots.meta.api.objects.InputFile;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.PhotoSize;
-import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import ua.shpp.eqbot.telegrambot.EqTelegramBot;
 
@@ -41,7 +39,7 @@ public class ImageService {
                 .max(Comparator.comparing(PhotoSize::getFileSize)).orElse(null);
     }
 
-    public PhotoSize getBiggestImage(List<PhotoSize> photos,){
+    public PhotoSize getBiggestImage(List<PhotoSize> photos){
         return photos.stream().max(Comparator.comparing(PhotoSize::getFileSize)).orElse(null);
     }
     @Value("${aws.id}")
@@ -75,31 +73,46 @@ public class ImageService {
             return false;
         }
         PutObjectResult putObjectResult = s3Client.putObject(s3BucketName, "images/"+path, inputStream, new ObjectMetadata());
-        return true;
+        return putObjectResult.isRequesterCharged();
     }
 
-    public InputStream getImageFromAWS(String fileName){
+    public boolean sendImageFromAWS(String chatId, String imageName){
         AmazonS3 s3Client = setupAWS();
         if(s3Client==null){
-            return null;
+            return false;
         }
-        S3Object s3Object = s3Client.getObject(new GetObjectRequest(s3BucketName, "images/1"));
-        return s3Object.getObjectContent();
+        S3Object s3Object = s3Client.getObject(new GetObjectRequest(s3BucketName, "images/"+chatId+"/"+imageName));
+        if(sendImage(s3Object.getObjectContent(), chatId, imageName)==null){
+            return false;
+        }
+        log.info("Getting image from AWS");
+        return true;
     }
 
     public byte[] getArrayOfLogo(List<PhotoSize> photos){
         try(InputStream is = photoToStream(getBiggestImageSmallerThan(photos, IMAGE_MAX_WIDTH))) {
             return is.readAllBytes();
         } catch (IOException e) {
+            log.warn("Can`t convert logo to byte array", e);
             return null;
         }
     }
 
     public boolean sendBigImageToAWS(List<PhotoSize> photos, String path){
-
+        InputStream is = photoToStream(getBiggestImage(photos));
+        if(is == null){
+            log.warn("Can`t send image to AWS S3 because input stream is null");
+            return false;
+        }
+        log.info("Sending image to AWS");
+        return sendImageToAWS(is, path);
     }
 
     public InputStream photoToStream(PhotoSize photo){
+        if(photo == null){
+            log.warn("Photo must not be null");
+            return null;
+        }
         GetFile getFile = new GetFile();
         getFile.setFileId(photo.getFileId());
         org.telegram.telegrambots.meta.api.objects.File file = null;
@@ -139,20 +152,21 @@ public class ImageService {
 
     }
 
-    public Message sendImage(byte[] image, String chatId, String imageName){
+    public Message sendImageFromDB(byte[] image, String chatId, String imageName){
         SendPhoto img = new SendPhoto();
         img.setChatId(chatId);
         img.setPhoto(new InputFile(new ByteArrayInputStream(image), imageName));
         try {
-            return bot.execute(img);
+            Message message = bot.execute(img);
+            log.info("Sending image from byte array");
+            return message;
         } catch (TelegramApiException e) {
             log.warn("Can`t send image", e);
             return null;
-
         }
     }
 
-    public Message sendImage(InputStream inputStream, String chatId, String imageName){
+    public Message sendImage (InputStream inputStream, String chatId, String imageName){
         SendPhoto img = new SendPhoto();
         img.setChatId(chatId);
         img.setPhoto(new InputFile(inputStream, imageName));
