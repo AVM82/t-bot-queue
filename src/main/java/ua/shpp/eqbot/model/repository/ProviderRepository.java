@@ -1,4 +1,4 @@
-package ua.shpp.eqbot.repository;
+package ua.shpp.eqbot.model.repository;
 
 import java.util.HashMap;
 

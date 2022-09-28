@@ -9,11 +9,12 @@ import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import ua.shpp.eqbot.cache.BotUserCache;
+import ua.shpp.eqbot.internationalization.BundleLanguage;
 import ua.shpp.eqbot.model.PositionMenu;
 import ua.shpp.eqbot.model.PositionRegistration;
 import ua.shpp.eqbot.model.UserDto;
 import ua.shpp.eqbot.model.UserEntity;
-import ua.shpp.eqbot.repository.UserRepository;
+import ua.shpp.eqbot.model.repository.UserRepository;
 import ua.shpp.eqbot.service.SendBotMessageService;
 
 @Component
@@ -67,6 +68,7 @@ public class RegistrationNewUser implements Command {
         user.setName(message.getFrom().getUserName())
                 .setId_telegram(message.getChatId())
                 .setPositionRegistration(PositionRegistration.INPUT_USERNAME)
+                .setLanguage(message.getFrom().getLanguageCode())
                 .setPositionMenu(PositionMenu.MENU_START);
         return user;
     }
@@ -92,7 +94,7 @@ public class RegistrationNewUser implements Command {
             LOGGER.info("new user start registration");
             BotUserCache.add(generateUserFromMessage(message));
             sendBotMessageService.sendMessage(createQuery(message.getChatId(),
-                    "Потрібна реєстрація\nвведіть ім'я"));
+                    BundleLanguage.getValue(message.getChatId(), "input_name")));
         } else {
             switch (userDto.getPositionRegistration()) {
                 case INPUT_USERNAME:
@@ -100,14 +102,14 @@ public class RegistrationNewUser implements Command {
                     userDto.setName(message.getText());
                     userDto.setPositionRegistration(PositionRegistration.INPUT_CITY);
                     sendBotMessageService.sendMessage(createQuery(message.getChatId(),
-                            "Введіть назву вашого міста"));
+                            BundleLanguage.getValue(message.getChatId(), "input_city")));
                     break;
                 case INPUT_CITY:
                     LOGGER.info("new user phase INPUT_CITY with message text {}", message.getText());
                     userDto.setCity(message.getText());
                     userDto.setPositionRegistration(PositionRegistration.INPUT_PHONE);
                     sendBotMessageService.sendMessage(createQuery(message.getChatId(),
-                            "Введіть номер телефону для зв'язку"));
+                            BundleLanguage.getValue(message.getChatId(), "input_phone_number")));
                     break;
                 case INPUT_PHONE:
                     LOGGER.info("new user phase INPUT_PHONE with message text {}", message.getText());
@@ -118,11 +120,9 @@ public class RegistrationNewUser implements Command {
                     LOGGER.info("save entity to database {}", userEntity);
                     isRegistration = true;
                     sendBotMessageService.sendMessage(createQuery(message.getChatId(),
-                            "Дякуємо! Ви зареєстровані" +
-                                    "\nid " + userDto.getId_telegram() +
-                                    "\nім'я " + userDto.getName() +
-                                    "\nмісто " + userDto.getCity() +
-                                    "\nтел. " + userDto.getPhone()));
+                            String.format(BundleLanguage.getValue(
+                                            message.getChatId(), "registered"),
+                                    userDto.getId_telegram(), userDto.getName(), userDto.getCity(), userDto.getPhone())));
                     break;
                 default:
                     //do nothing
