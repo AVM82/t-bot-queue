@@ -6,5 +6,5 @@ import ua.shpp.eqbot.model.ServiceEntity;
 
 public interface ServiceRepository extends JpaRepository<ServiceEntity, Long> {
     @Query("select t from ServiceEntity t where t. id_telegram = ?1")
-    ServiceEntity findById_telegram(Long id);
+    ServiceEntity findByIdTelegram(Long id);
 }

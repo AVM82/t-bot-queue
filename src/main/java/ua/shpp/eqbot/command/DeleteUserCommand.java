@@ -17,11 +17,11 @@ import ua.shpp.eqbot.service.SendBotMessageService;
 
 
 public class DeleteUserCommand implements Command {
-    private static final Logger LOGGER = LoggerFactory.getLogger(RegistrationNewUser.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(DeleteUserCommand.class);
     private final SendBotMessageService sendBotMessageService;
     private final UserRepository userRepository;
     private final ProvideRepository provideRepository;
-    private ServiceRepository serviceRepository;
+    private final ServiceRepository serviceRepository;
 
     public DeleteUserCommand(SendBotMessageService sendBotMessageService, UserRepository userRepository,
                              ProvideRepository provideRepository, ServiceRepository serviceRepository) {
@@ -33,19 +33,19 @@ public class DeleteUserCommand implements Command {
 
     @Override
     public boolean execute(Update update) {
-        ServiceEntity serviceEntity = serviceRepository.findById_telegram(update.getMessage().getChatId());
+        ServiceEntity serviceEntity = serviceRepository.findByIdTelegram(update.getMessage().getChatId());
         if (serviceEntity != null) {
             LOGGER.info("deleted service");
             serviceRepository.delete(serviceEntity);
         }
 
-        ProviderEntity providerEntity = provideRepository.findFirstById_telegram(update.getMessage().getChatId());
+        ProviderEntity providerEntity = provideRepository.findFirstByIdTelegram(update.getMessage().getChatId());
         if (providerEntity != null) {
             LOGGER.info("deleted provider");
             provideRepository.delete(providerEntity);
         }
 
-        UserEntity userEntity = userRepository.findFirstById_telegram(update.getMessage().getChatId());
+        UserEntity userEntity = userRepository.findFirstByIdTelegram(update.getMessage().getChatId());
         if (userEntity != null) {
             LOGGER.info("deleted user");
             userRepository.delete(userEntity);

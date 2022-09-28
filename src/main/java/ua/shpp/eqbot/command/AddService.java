@@ -57,7 +57,7 @@ public class AddService implements Command {
         }
 
 
-         if (provideRepository.findById_telegram(id)!=null)/*providerRepository.findById(update.getMessage().getChatId())*/
+         if (provideRepository.findByIdTelegram(id)!=null)/*providerRepository.findById(update.getMessage().getChatId())*/
          {
             UserDto user;
             ServiceDTO newService;

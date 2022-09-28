@@ -20,7 +20,7 @@ public class AddCityToProviderCommand implements Command{
     @Override
     public boolean execute(Update update) {
         LOGGER.info("Added city to provider");
-        ProviderEntity providerEntity = provideRepository.findFirstById_telegram(update.getMessage().getChatId());
+        ProviderEntity providerEntity = provideRepository.findFirstByIdTelegram(update.getMessage().getChatId());
         providerEntity.setCity(update.getMessage().getText());
         provideRepository.save(providerEntity);
         sendBotMessageService.sendMessage(update.getMessage().getChatId().toString(),"Provider registered");

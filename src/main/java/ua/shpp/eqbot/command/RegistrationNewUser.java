@@ -41,7 +41,7 @@ public class RegistrationNewUser implements Command {
         UserDto userDto = BotUserCache.findBy(update.getMessage().getChatId());
         if (userDto == null) {
             LOGGER.info("user absent into cash user");
-            UserEntity userEntity = repository.findFirstById_telegram(update.getMessage().getChatId());
+            UserEntity userEntity = repository.findFirstByIdTelegram(update.getMessage().getChatId());
             if (userEntity != null) {
                 LOGGER.info("user present into repo");
                 BotUserCache.add(convertToDto(userEntity)

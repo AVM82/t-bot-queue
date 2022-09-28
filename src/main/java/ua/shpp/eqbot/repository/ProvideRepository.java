@@ -9,7 +9,7 @@ import ua.shpp.eqbot.model.ProviderEntity;
 @Repository
 public interface ProvideRepository extends JpaRepository<ProviderEntity, Long> {
     @Query("select t from ProviderEntity t where t. id_telegram = ?1")
-    ProviderEntity findFirstById_telegram(Long id);
+    ProviderEntity findFirstByIdTelegram(Long id);
     @Query("select t from ProviderEntity t where t. id_telegram = ?1")
-    ProviderEntity findById_telegram(Long id);
+    ProviderEntity findByIdTelegram(Long id);
 }
