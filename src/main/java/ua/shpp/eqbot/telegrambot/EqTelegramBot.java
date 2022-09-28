@@ -52,12 +52,8 @@ public class EqTelegramBot extends TelegramLongPollingBot {
     public void onUpdateReceived(Update update) {
         if (update.hasCallbackQuery()) {
             callbackQueryHandler(update);
-        }else if(update.getMessage().getText().equals("Change role to Provider")){
-            commandContainer.retrieveCommand(update.getMessage().getText()).execute(update);
         } else if (update.getMessage().hasText() && update.getMessage().isCommand()) {
             commandHandler(update);
-        } else if (update.getMessage().getText().equals("Реєстрація нового провайдера")) {
-            createRegistrationProviderCommandChain(update);
         } else if(isCommandChain){
             callNextCommandInChain(update);
         } else {
@@ -76,7 +72,11 @@ public class EqTelegramBot extends TelegramLongPollingBot {
     }
 
     private void textHandler(Update update) {
-        if (update.hasMessage() && update.getMessage().hasText()) {
+        if(update.getMessage().getText().equals("Change role to Provider")){
+            commandContainer.retrieveCommand(update.getMessage().getText()).execute(update);
+        } else if (update.getMessage().getText().equals("Реєстрація нового провайдера")) {
+            createRegistrationProviderCommandChain(update);
+        }else if (update.hasMessage() && update.getMessage().hasText()) {
             LOGGER.info("Message from {} {} (id = {}).",
                     update.getMessage().getChat().getFirstName(),
                     update.getMessage().getChat().getLastName(),
@@ -134,6 +134,7 @@ public class EqTelegramBot extends TelegramLongPollingBot {
     public void callNextCommandInChain(Update update) {
         if (commandChain.hasNextCommand()){
             commandChain.nextCommand().execute(update);
+            isCommandChain = commandChain.hasNextCommand();
         } else {
             isCommandChain = false;
         }
