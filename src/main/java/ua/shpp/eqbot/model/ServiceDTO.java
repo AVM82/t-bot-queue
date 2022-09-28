@@ -12,6 +12,17 @@ public class ServiceDTO {
     @DefaultValue("Опис")
     private String description;
 
+    public MenuTimeWork getMenuTimeWork() {
+        return menuTimeWork;
+    }
+
+    public ServiceDTO setMenuTimeWork(MenuTimeWork menuTimeWork) {
+        this.menuTimeWork = menuTimeWork;
+        return this;
+    }
+
+    private MenuTimeWork menuTimeWork;
+
     public ServiceDTO() {
     }
 
