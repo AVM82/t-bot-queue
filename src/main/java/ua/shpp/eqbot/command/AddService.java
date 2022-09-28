@@ -9,6 +9,8 @@ import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.PhotoSize;
 import org.telegram.telegrambots.meta.api.objects.Update;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardRow;
 import ua.shpp.eqbot.cache.BotUserCache;
 import ua.shpp.eqbot.cache.ServiceCache;
 import ua.shpp.eqbot.model.ServiceDTO;
@@ -37,7 +39,7 @@ public class AddService implements Command {
     ProvideRepository provideRepository;
 
     @Autowired
-    public AddService(SendBotMessageService sendBotMessageService, ServiceRepository serviceRepository, ImageService imageService,ProvideRepository provideRepository) {
+    public AddService(SendBotMessageService sendBotMessageService, ServiceRepository serviceRepository, ImageService imageService, ProvideRepository provideRepository) {
         this.sendBotMessageService = sendBotMessageService;
         this.serviceRepository = serviceRepository;
         this.imageService = imageService;
@@ -56,32 +58,52 @@ public class AddService implements Command {
 
     @Override
     public boolean execute(Update update) {
-        UserDto user = null;
-        ServiceDTO newService;
-        if (!update.hasMessage()) {
-            Long idTelegram = update.getCallbackQuery().getFrom().getId();
-            sendBotMessageService.sendMessage(SendMessage.builder().chatId(idTelegram).text(ADD_SERVICE_MESSAGE).build());
-            log.info("Add new service.");
-            return false;
+        long id;
+        if (update.hasCallbackQuery()) {
+            id = update.getCallbackQuery().getFrom().getId();
+        } else {
+            id = update.getMessage().getChatId();
         }
-        newService = ServiceCache.findBy(update.getMessage().getChatId());
-        Long idTelegram = update.getMessage().getChat().getId();
-        user = BotUserCache.findBy(idTelegram);
-        if (newService == null) {
-            newService = new ServiceDTO();
-            newService.setId_telegram(user.getId_telegram()).setName(update.getMessage().getText().trim());
-            sendBotMessageService.sendMessage(SendMessage.builder().chatId(idTelegram)
-                    .text("Додайте опис та зображення для сервісу").build());
-            ServiceCache.add(newService);
-        }else {
+
+        if (provideRepository.findById_telegram(id) != null)/*providerRepository.findById(update.getMessage().getChatId())*/ {
+            UserDto user = null;
+            ServiceDTO newService;
+            if (!update.hasMessage()) {
+                Long idTelegram = update.getCallbackQuery().getFrom().getId();
+                sendBotMessageService.sendMessage(SendMessage.builder().chatId(idTelegram).text(ADD_SERVICE_MESSAGE).build());
+                log.info("Add new service.");
+                return false;
+            }
             newService = ServiceCache.findBy(update.getMessage().getChatId());
-            addingDescriptionAndAvatar(update.getMessage(), newService);
-            ServiceCache.remove(newService);
-            user.setPositionMenu(MENU_START);
-            sendBotMessageService.sendMessage(SendMessage.builder().chatId(idTelegram)
-                    .text("Сервіс успішно додано").build());
-            imageService.sendImageFromAWS(update.getMessage().getChatId().toString(), newService.getName());
+            Long idTelegram = update.getMessage().getChat().getId();
+            user = BotUserCache.findBy(idTelegram);
+            if (newService == null) {
+                newService = new ServiceDTO();
+                newService.setId_telegram(user.getId_telegram()).setName(update.getMessage().getText().trim());
+                sendBotMessageService.sendMessage(SendMessage.builder().chatId(idTelegram)
+                        .text("Додайте опис та зображення для сервісу").build());
+                ServiceCache.add(newService);
+            } else {
+                newService = ServiceCache.findBy(update.getMessage().getChatId());
+                addingDescriptionAndAvatar(update.getMessage(), newService);
+                ServiceCache.remove(newService);
+                user.setPositionMenu(MENU_START);
+                sendBotMessageService.sendMessage(SendMessage.builder().chatId(idTelegram)
+                        .text("Сервіс успішно додано").build());
+                imageService.sendImageFromAWS(update.getMessage().getChatId().toString(), newService.getName());
+            }
+        } else {
+            var markup = new ReplyKeyboardMarkup();
+            var keyboardRows = new ArrayList<KeyboardRow>();
+            KeyboardRow registrationNewProvider = new KeyboardRow();
+            registrationNewProvider.add("Реєстрація нового провайдера");
+            keyboardRows.add(registrationNewProvider);
+            markup.setKeyboard(keyboardRows);
+            markup.setResizeKeyboard(true);
+            log.info("Didn't find provider with such id");
+            sendBotMessageService.setReplyMarkup(update.getCallbackQuery().getFrom().getId().toString(), markup);
         }
+
 
         return false;
     }
@@ -92,7 +114,7 @@ public class AddService implements Command {
             byte[] imageArray = imageService.getArrayOfLogo(photos);
             serviceDTO.setAvatar(imageArray);
             log.info("Adding image to DB");
-            imageService.sendBigImageToAWS(photos, message.getChatId().toString()+"/"+serviceDTO.getName());
+            imageService.sendBigImageToAWS(photos, message.getChatId().toString() + "/" + serviceDTO.getName());
             serviceDTO.setDescription(message.getCaption());
             log.info("Adding description");
         }
