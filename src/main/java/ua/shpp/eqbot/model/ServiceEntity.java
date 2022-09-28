@@ -1,5 +1,7 @@
 package ua.shpp.eqbot.model;
 
+import org.hibernate.annotations.Type;
+
 import javax.persistence.*;
 
 @Entity
@@ -13,6 +15,18 @@ public class ServiceEntity {
     private Long id_telegram;
     private String name;
     private String description;
+
+    @Lob
+    @Column(columnDefinition = "bytea")
+    private byte[] avatar;
+
+    public byte[] getAvatar() {
+        return avatar;
+    }
+
+    public void setAvatar(byte[] avatar) {
+        this.avatar = avatar;
+    }
 
     public ServiceEntity() {
     }
