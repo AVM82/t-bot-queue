@@ -30,17 +30,14 @@ public class AddService implements Command {
     private static final Logger log = LoggerFactory.getLogger(AddService.class);
     private final SendBotMessageService sendBotMessageService;
     public static final String ADD_SERVICE_MESSAGE = "input_name_service";
-    private ServiceRepository serviceRepository;
-
-    public static final String ADD_SERVICE_MESSAGE = "Введіть назву послуги:\n";
     private final ServiceRepository serviceRepository;
+
     private final ImageService imageService;
 
     ProvideRepository provideRepository;
 
     @Autowired
-    public AddService(SendBotMessageService sendBotMessageService, ServiceRepository serviceRepository, ProvideRepository provideRepository) {
-    public AddService(SendBotMessageService sendBotMessageService, ServiceRepository serviceRepository, ImageService imageService) {
+    public AddService(SendBotMessageService sendBotMessageService, ServiceRepository serviceRepository, ImageService imageService,ProvideRepository provideRepository) {
         this.sendBotMessageService = sendBotMessageService;
         this.serviceRepository = serviceRepository;
         this.imageService = imageService;

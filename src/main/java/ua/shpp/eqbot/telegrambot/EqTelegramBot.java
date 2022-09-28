@@ -37,13 +37,11 @@ public class EqTelegramBot extends TelegramLongPollingBot {
 
 
     @Autowired
-    public EqTelegramBot(UserRepository userRepository, ServiceRepository serviceRepository, @Lazy ImageService imageService) {
-    public EqTelegramBot(UserRepository userRepository, ServiceRepository serviceRepository, ProvideRepository provideRepository) {
+    public EqTelegramBot(UserRepository userRepository, ServiceRepository serviceRepository, ProvideRepository provideRepository, @Lazy ImageService imageService) {
         this.userRepository = userRepository;
         this.serviceRepository = serviceRepository;
-        this.commandContainer = new CommandContainer(new SendBotMessageServiceImpl(this), userRepository, serviceRepository, imageService);
         this.provideRepository = provideRepository;
-        this.commandContainer = new CommandContainer(new SendBotMessageServiceImpl(this), userRepository, serviceRepository, provideRepository);
+        this.commandContainer = new CommandContainer(new SendBotMessageServiceImpl(this), userRepository, serviceRepository, provideRepository,imageService);
     }
 
     @Value("${telegram.bot.name}")
