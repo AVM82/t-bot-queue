@@ -48,11 +48,8 @@ public class AddService implements Command {
     @Override
     public boolean execute(Update update) {
 
-
-        if (provideRepository.findById_telegram(update.getCallbackQuery().getFrom().getId()) != null)/*providerRepository.findById(update.getMessage().getChatId())*/ {
             UserDto user;
             ServiceDTO newService;
-            log.info("Switched to provider");
             if (update.hasMessage()) {
                 Long idTelegram = update.getMessage().getChat().getId();
                 user = BotUserCache.findBy(idTelegram);
@@ -67,20 +64,7 @@ public class AddService implements Command {
                 log.info("Add new service.");
             }
 
-        } else {
-            var markup = new ReplyKeyboardMarkup();
-            var keyboardRows = new ArrayList<KeyboardRow>();
-            KeyboardRow registrationNewProvider = new KeyboardRow();
-            registrationNewProvider.add("Реєстрація нового провайдера");
-            keyboardRows.add(registrationNewProvider);
-            markup.setKeyboard(keyboardRows);
-            markup.setResizeKeyboard(true);
-            log.info("Didn't find provider with such id");
-            sendBotMessageService.setReplyMarkup(update.getCallbackQuery().getFrom().getId().toString(), markup);
-        }
+            return false;
 
-
-
-        return false;
     }
 }
