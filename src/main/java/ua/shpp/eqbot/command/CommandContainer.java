@@ -7,6 +7,7 @@ import ua.shpp.eqbot.repository.SaveService;
 import ua.shpp.eqbot.repository.ServiceRepository;
 import ua.shpp.eqbot.repository.UserRepository;
 import ua.shpp.eqbot.repository.ProviderRepository;
+import ua.shpp.eqbot.service.ImageService;
 import ua.shpp.eqbot.service.SendBotMessageService;
 
 /**
@@ -19,7 +20,7 @@ public class CommandContainer {
     private final Command unknownCommand;
 
     @Autowired
-    public CommandContainer(SendBotMessageService sendBotMessageService, UserRepository userRepository, ServiceRepository serviceRepository) {
+    public CommandContainer(SendBotMessageService sendBotMessageService, UserRepository userRepository, ServiceRepository serviceRepository, ImageService imageService) {
         ProviderRepository providerRepository = new ProviderRepository();
         commandMap = ImmutableMap.<String, Command>builder()
                 .put(CommandName.REG.getCommandName(), new RegistrationNewUser(sendBotMessageService, userRepository))
@@ -29,7 +30,7 @@ public class CommandContainer {
                 .put(CommandName.SETTINGS.getCommandName(), new SettingsCommand(sendBotMessageService))
                 .put(CommandName.CHANGE_ROLE_TO_PROVIDER.getCommandName(), new ChangeRoleToProviderCommand(sendBotMessageService, providerRepository))
                 .put(CommandName.REGISTR_NEW_PROVIDER.getCommandName(), new RegistrationNewProviderCommand(sendBotMessageService, providerRepository))
-                .put(CommandName.ADD_SERVICE.getCommandName(), new AddService(sendBotMessageService, serviceRepository))
+                .put(CommandName.ADD_SERVICE.getCommandName(), new AddService(sendBotMessageService, serviceRepository, imageService))
                 .build();
 
         unknownCommand = new UnknownCommand(sendBotMessageService);
