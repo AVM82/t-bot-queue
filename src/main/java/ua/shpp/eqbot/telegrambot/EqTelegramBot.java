@@ -72,11 +72,7 @@ public class EqTelegramBot extends TelegramLongPollingBot {
     }
 
     private void textHandler(Update update) {
-        if(update.getMessage().getText().equals("Change role to Provider")){
-            commandContainer.retrieveCommand(update.getMessage().getText()).execute(update);
-        } else if (update.getMessage().getText().equals("Реєстрація нового провайдера")) {
-            createRegistrationProviderCommandChain(update);
-        }else if (update.hasMessage() && update.getMessage().hasText()) {
+         if (update.hasMessage() && update.getMessage().hasText()) {
             LOGGER.info("Message from {} {} (id = {}).",
                     update.getMessage().getChat().getFirstName(),
                     update.getMessage().getChat().getLastName(),
@@ -84,6 +80,10 @@ public class EqTelegramBot extends TelegramLongPollingBot {
             UserDto user = BotUserCache.findBy(update.getMessage().getChat().getId());
             if(!commandContainer.retrieveCommand("/reg").execute(update)){
                 LOGGER.info("Registration user");
+            }else if(update.getMessage().getText().equals("Change role to Provider")){
+                commandContainer.retrieveCommand(update.getMessage().getText()).execute(update);
+            }else if (update.getMessage().getText().equals("Реєстрація нового провайдера")) {
+                createRegistrationProviderCommandChain(update);
             }else if (user.getPositionMenu() == MENU_CREATE_SERVICE){
                 commandContainer.retrieveCommand("/add").execute(update);
                 commandContainer.retrieveCommand("/start").execute(update);
