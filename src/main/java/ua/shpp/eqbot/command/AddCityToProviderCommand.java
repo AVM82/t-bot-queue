@@ -8,7 +8,7 @@ import ua.shpp.eqbot.repository.ProvideRepository;
 import ua.shpp.eqbot.service.SendBotMessageService;
 
 public class AddCityToProviderCommand implements Command{
-    private final static Logger LOGGER = LoggerFactory.getLogger(AddCityToProviderCommand.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(AddCityToProviderCommand.class);
     private final SendBotMessageService sendBotMessageService;
     private final ProvideRepository provideRepository;
 

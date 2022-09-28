@@ -9,7 +9,7 @@ import ua.shpp.eqbot.service.SendBotMessageService;
 
 public class AddProviderNameCommand implements  Command{
 
-    private final static Logger LOGGER = LoggerFactory.getLogger(AddProviderNameCommand.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(AddProviderNameCommand.class);
     private final SendBotMessageService sendBotMessageService;
 
     private final ProvideRepository provideRepository;
