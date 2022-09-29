@@ -13,7 +13,6 @@ public class HelpCommand implements Command {
                     + "%s - почати работу зі ботом\n"
                     + "%s - видалити всі свої данні з боту\n"
                     + "%s - зупинити работу з ботом\n\n"
-
                     + "%s - отримати допомогу\n",
             CommandName.START.getCommandName(), CommandName.DELETE_USER.getCommandName(),
             CommandName.STOP.getCommandName(), CommandName.HELP.getCommandName());
