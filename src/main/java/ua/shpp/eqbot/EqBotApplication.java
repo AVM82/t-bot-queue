@@ -14,7 +14,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
         description = "description"))
 public class EqBotApplication {
 
-
     private final static Logger LOGGER = LoggerFactory.getLogger(EqBotApplication.class);
 
     public static void main(String[] args) {

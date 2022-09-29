@@ -149,5 +149,4 @@ public class EqTelegramBot extends TelegramLongPollingBot {
             isCommandChain = false;
         }
     }
-
 }
