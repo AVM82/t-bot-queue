@@ -16,8 +16,7 @@ public class ServiceEntity {
     private String name;
     private String description;
 
-    @Lob
-    @Column(columnDefinition = "bytea")
+
     private byte[] avatar;
 
     public byte[] getAvatar() {

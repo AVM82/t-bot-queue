@@ -69,6 +69,7 @@ public class AddService implements Command {
             UserDto user = null;
             ServiceDTO newService;
             if (!update.hasMessage() ) {
+                log.info("update don't have message");
                 Long idTelegram = update.getCallbackQuery().getFrom().getId();
                 sendBotMessageService.sendMessage(SendMessage.builder().chatId(idTelegram).text(ADD_SERVICE_MESSAGE).build());
                 log.info("Add new service.");
@@ -80,10 +81,12 @@ public class AddService implements Command {
             if (newService == null) {
                 newService = new ServiceDTO();
                 newService.setId_telegram(user.getId_telegram()).setName(update.getMessage().getText().trim());
+                log.info("i want to ask name service");
                 sendBotMessageService.sendMessage(SendMessage.builder().chatId(idTelegram)
                         .text("Додайте опис та зображення для сервісу").build());
                 ServiceCache.add(newService);
             } else {
+                log.info("service present");
                 newService = ServiceCache.findBy(update.getMessage().getChatId());
                 addingDescriptionAndAvatar(update.getMessage(), newService);
                 ServiceCache.remove(newService);
@@ -92,6 +95,7 @@ public class AddService implements Command {
                         .text("Сервіс успішно додано").build());
             }
         } else {
+            log.info("provider present");
             var markup = new ReplyKeyboardMarkup();
             var keyboardRows = new ArrayList<KeyboardRow>();
             KeyboardRow registrationNewProvider = new KeyboardRow();
@@ -109,6 +113,7 @@ public class AddService implements Command {
     }
 
     private void addingDescriptionAndAvatar(Message message, ServiceDTO serviceDTO) {
+        log.info("i want to addingDescriptionAndAvatar ");
         if (message.hasPhoto()) {
             List<PhotoSize> photos = message.getPhoto();
             byte[] imageArray = imageService.getArrayOfLogo(photos);
