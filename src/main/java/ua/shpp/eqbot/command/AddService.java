@@ -58,14 +58,13 @@ public class AddService implements Command {
 
     @Override
     public boolean execute(Update update) {
-        log.info("add service method execute start {}", update.getMessage().getText());
         long id;
         if (update.hasCallbackQuery()) {
             id = update.getCallbackQuery().getFrom().getId();
         } else {
             id = update.getMessage().getChatId();
         }
-        log.info("add service method execute callbackquery {}", update.getMessage().getText());
+        log.info("add service method execute callbackquery ");
         if (provideRepository.findById_telegram(id) != null)/*providerRepository.findById(update.getMessage().getChatId())*/ {
             UserDto user = null;
             ServiceDTO newService;
@@ -114,7 +113,7 @@ public class AddService implements Command {
     }
 
     private void addingDescriptionAndAvatar(Message message, ServiceDTO serviceDTO) {
-        log.info("i want to addingDescriptionAndAvatar {}", message.getText());
+        log.info("i want to addingDescriptionAndAvatar ");
         if (message.hasPhoto()) {
             List<PhotoSize> photos = message.getPhoto();
             byte[] imageArray = imageService.getArrayOfLogo(photos);
