@@ -11,8 +11,7 @@ import ua.shpp.eqbot.repository.ProvideRepository;
 import ua.shpp.eqbot.service.SendBotMessageService;
 
 
-
-public class AddCityToProviderCommand implements Command{
+public class AddCityToProviderCommand implements Command {
     private static final Logger LOGGER = LoggerFactory.getLogger(AddCityToProviderCommand.class);
     private final SendBotMessageService sendBotMessageService;
     private final ProvideRepository provideRepository;
@@ -28,14 +27,14 @@ public class AddCityToProviderCommand implements Command{
         ProviderEntity providerEntity = provideRepository.findFirstByIdTelegram(update.getMessage().getChatId());
         providerEntity.setCity(update.getMessage().getText());
         provideRepository.save(providerEntity);
-        sendBotMessageService.sendMessage(update.getMessage().getChatId().toString(),"Provider registered");
+        sendBotMessageService.sendMessage(update.getMessage().getChatId().toString(), "Provider registered");
 
-        if(ServiceCache.justRegistrated){
+        if (ServiceCache.justRegistrated) {
             Long idTelegram = update.getMessage().getChatId();
             String message = BundleLanguage.getValue(idTelegram, "input_name_service");
             sendBotMessageService.sendMessage(SendMessage.builder().chatId(idTelegram).text(message).build());
             LOGGER.info("Add new service.");
-            ServiceCache.justRegistrated=false;
+            ServiceCache.justRegistrated = false;
         }
         return true;
     }

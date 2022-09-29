@@ -4,7 +4,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.PhotoSize;
@@ -32,13 +31,12 @@ public class AddService implements Command {
 
     private static final Logger log = LoggerFactory.getLogger(AddService.class);
     private final SendBotMessageService sendBotMessageService;
-    ;
     private final ServiceRepository serviceRepository;
 
     private final ImageService imageService;
 
     ProvideRepository provideRepository;
-    private static boolean hasSuchName = false;
+    private boolean hasSuchName = false;
 
     @Autowired
     public AddService(SendBotMessageService sendBotMessageService, ServiceRepository serviceRepository, ImageService imageService, ProvideRepository provideRepository) {
@@ -50,7 +48,7 @@ public class AddService implements Command {
 
     public void addService(ServiceDTO service) {
         ServiceEntity serviceEntity = new ServiceEntity();
-        serviceEntity.setId_telegram(service.getId_telegram())
+        serviceEntity.setIdTelegram(service.getIdTelegram())
                 .setName(service.getName())
                 .setDescription(service.getDescription())
                 .setAvatar(service.getAvatar());
@@ -68,7 +66,7 @@ public class AddService implements Command {
         }
 
         if (provideRepository.findByIdTelegram(id) != null)/*providerRepository.findById(update.getMessage().getChatId())*/ {
-            UserDto user = null;
+            UserDto user;
             ServiceDTO newService;
             if (!update.hasMessage() || hasSuchName) {
                 createService(update);
@@ -83,7 +81,7 @@ public class AddService implements Command {
                     return false;
                 }
                 newService = new ServiceDTO();
-                newService.setId_telegram(user.getId_telegram()).setName(update.getMessage().getText().trim());
+                newService.setIdTelegram(user.getIdTelegram()).setName(update.getMessage().getText().trim());
                 log.info("i want to ask name service");
                 String message = BundleLanguage.getValue(update.getMessage().getChatId(), "add_desc_and_avatar");
                 sendBotMessageService.sendMessage(SendMessage.builder().chatId(idTelegram)
@@ -118,21 +116,21 @@ public class AddService implements Command {
     private void createService(Update update) {
         hasSuchName = false;
         Long idTelegram;
-        if(update.getMessage() != null){
-            idTelegram = update.getMessage().getChatId();}
-        else {
-            idTelegram = update.getCallbackQuery().getFrom().getId();;
+        if (update.getMessage() != null) {
+            idTelegram = update.getMessage().getChatId();
+        } else {
+            idTelegram = update.getCallbackQuery().getFrom().getId();
         }
         String message = BundleLanguage.getValue(idTelegram, "input_name_service");
         sendBotMessageService.sendMessage(SendMessage.builder().chatId(idTelegram).text(message).build());
         log.info("Add new service.");
     }
 
-    private boolean checkIfServiceExists(String name, Long id_telegram) {
-        boolean result = serviceRepository.getFirstByNameAndAndId_telegram(name, id_telegram) != null;
+    private boolean checkIfServiceExists(String name, Long idTelegram) {
+        boolean result = serviceRepository.getFirstByNameAndAndIdTelegram(name, idTelegram) != null;
         if (result) {
-            String message = BundleLanguage.getValue(id_telegram, "service_exist");
-            sendBotMessageService.sendMessage(SendMessage.builder().chatId(id_telegram)
+            String message = BundleLanguage.getValue(idTelegram, "service_exist");
+            sendBotMessageService.sendMessage(SendMessage.builder().chatId(idTelegram)
                     .text(message).build());
             hasSuchName = true;
         }
