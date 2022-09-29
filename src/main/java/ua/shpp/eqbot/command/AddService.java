@@ -90,7 +90,6 @@ public class AddService implements Command {
                 user.setPositionMenu(MENU_START);
                 sendBotMessageService.sendMessage(SendMessage.builder().chatId(idTelegram)
                         .text("Сервіс успішно додано").build());
-                imageService.sendImageFromAWS(update.getMessage().getChatId().toString(), newService.getName());
             }
         } else {
             var markup = new ReplyKeyboardMarkup();
