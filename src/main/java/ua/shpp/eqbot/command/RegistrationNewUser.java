@@ -46,7 +46,7 @@ public class RegistrationNewUser implements Command {
                 LOGGER.info("user present into repo");
                 BotUserCache.add(convertToDto(userEntity)
                         .setPositionRegistration(PositionRegistration.DONE));
-                return true;
+                  return true;
             }
             return registration(update.getMessage(), null);
         } else if (userDto.getPositionRegistration() == PositionRegistration.DONE) {

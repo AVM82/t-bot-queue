@@ -4,8 +4,10 @@ import com.google.common.collect.ImmutableMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ua.shpp.eqbot.repository.ProvideRepository;
+import ua.shpp.eqbot.repository.SaveService;
 import ua.shpp.eqbot.repository.ServiceRepository;
 import ua.shpp.eqbot.repository.UserRepository;
+import ua.shpp.eqbot.service.ImageService;
 import ua.shpp.eqbot.service.SendBotMessageService;
 
 /**
