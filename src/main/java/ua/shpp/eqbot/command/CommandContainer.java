@@ -21,7 +21,8 @@ public class CommandContainer {
 
     @Autowired
     public CommandContainer(SendBotMessageService sendBotMessageService, UserRepository userRepository,
-                            ServiceRepository serviceRepository, ProvideRepository provideRepository) {
+                            ServiceRepository serviceRepository, ProvideRepository provideRepository,
+                            ImageService imageService)  {
         commandMap = ImmutableMap.<String, Command>builder()
                 .put(CommandName.REG.getCommandName(), new RegistrationNewUser(sendBotMessageService,
                         userRepository))

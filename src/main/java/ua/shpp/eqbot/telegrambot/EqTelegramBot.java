@@ -41,7 +41,7 @@ public class EqTelegramBot extends TelegramLongPollingBot {
         this.userRepository = userRepository;
         this.serviceRepository = serviceRepository;
         this.provideRepository = provideRepository;
-        this.commandContainer = new CommandContainer(new SendBotMessageServiceImpl(this), userRepository, serviceRepository, provideRepository,imageService);
+        this.commandContainer = new CommandContainer(new SendBotMessageServiceImpl(this), userRepository, serviceRepository, provideRepository, imageService);
     }
 
     @Value("${telegram.bot.name}")
