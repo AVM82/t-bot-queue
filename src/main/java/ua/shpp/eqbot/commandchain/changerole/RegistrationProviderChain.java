@@ -23,7 +23,6 @@ public class RegistrationProviderChain implements CommandChain {
         changeRoleChain.put(RegistrationProviderStep.REG_ADD_NAME_STEP, new AddProviderNameCommand(sendBotMessageService, provideRepository));
         changeRoleChain.put(RegistrationProviderStep.REG_ADD_CITY_STEP, new AddCityToProviderCommand(sendBotMessageService,provideRepository));
         changeRoleChain.put(RegistrationProviderStep.REG_DONE, new NoCommand(sendBotMessageService));
-
     }
 
     @Override
@@ -32,7 +31,6 @@ public class RegistrationProviderChain implements CommandChain {
         thisStep = thisStep.next(thisStep);
         LOGGER.info("Call next command in ChangeRoleChain");
         return  stepCommand;
-
     }
 
     @Override

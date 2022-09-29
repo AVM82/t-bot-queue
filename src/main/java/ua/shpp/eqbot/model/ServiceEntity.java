@@ -7,16 +7,12 @@ import javax.persistence.*;
 @Entity
 @Table(name = "services")
 public class ServiceEntity {
-
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-
     private Long id_telegram;
     private String name;
     private String description;
-
-
     private byte[] avatar;
 
     public byte[] getAvatar() {

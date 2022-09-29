@@ -10,4 +10,8 @@ public interface ServiceRepository extends JpaRepository<ServiceEntity, Long> {
 
     @Query("select t from ServiceEntity t where t.name = ?1 and t.id_telegram=?2")
     ServiceEntity getFirstByNameAndAndId_telegram(String name, Long id_telegram);
+
+    @Query("select t from ServiceEntity t where t. id_telegram = ?1")
+    ServiceEntity findByIdTelegram(Long id);
+
 }
