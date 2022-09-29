@@ -31,8 +31,7 @@ public class CommandContainer {
                 .put(CommandName.SETTINGS.getCommandName(), new SettingsCommand(sendBotMessageService))
                 .put(CommandName.CHANGE_ROLE_TO_PROVIDER.getCommandName(),
                         new ChangeRoleToProviderCommand(sendBotMessageService, provideRepository))
-                .put(CommandName.ADD_SERVICE.getCommandName(),
-                        new AddService(sendBotMessageService, serviceRepository,provideRepository))
+                .put(CommandName.ADD_SERVICE.getCommandName(), new AddService(sendBotMessageService, serviceRepository,imageService,provideRepository))
                 .put(CommandName.DELETE_USER.getCommandName(), new DeleteUserCommand(sendBotMessageService,
                         userRepository, provideRepository, serviceRepository))
                 .build();
