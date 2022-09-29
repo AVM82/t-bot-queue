@@ -4,16 +4,21 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import ua.shpp.eqbot.cache.BotUserCache;
 import ua.shpp.eqbot.command.CommandContainer;
+import ua.shpp.eqbot.commandchain.changerole.CommandChain;
+import ua.shpp.eqbot.commandchain.changerole.RegistrationProviderChain;
 import ua.shpp.eqbot.model.UserDto;
+import ua.shpp.eqbot.repository.ProvideRepository;
 import ua.shpp.eqbot.repository.ServiceRepository;
 import ua.shpp.eqbot.model.PositionMenu;
 import ua.shpp.eqbot.repository.UserRepository;
+import ua.shpp.eqbot.service.ImageService;
 import ua.shpp.eqbot.service.SendBotMessageServiceImpl;
 
 import static ua.shpp.eqbot.command.CommandName.NO;
@@ -25,12 +30,18 @@ public class EqTelegramBot extends TelegramLongPollingBot {
     private final CommandContainer commandContainer;
     private final UserRepository userRepository;
     private final ServiceRepository serviceRepository;
+    private boolean isCommandChain = false;
+
+    private CommandChain commandChain;
+    ProvideRepository provideRepository;
+
 
     @Autowired
-    public EqTelegramBot(UserRepository userRepository, ServiceRepository serviceRepository) {
+    public EqTelegramBot(UserRepository userRepository, ServiceRepository serviceRepository, ProvideRepository provideRepository, @Lazy ImageService imageService) {
         this.userRepository = userRepository;
         this.serviceRepository = serviceRepository;
-        this.commandContainer = new CommandContainer(new SendBotMessageServiceImpl(this), userRepository, serviceRepository);
+        this.provideRepository = provideRepository;
+        this.commandContainer = new CommandContainer(new SendBotMessageServiceImpl(this), userRepository, serviceRepository, provideRepository, imageService);
     }
 
     @Value("${telegram.bot.name}")
@@ -45,6 +56,10 @@ public class EqTelegramBot extends TelegramLongPollingBot {
             callbackQueryHandler(update);
         } else if (update.getMessage().hasText() && update.getMessage().isCommand()) {
             commandHandler(update);
+        } else if(isCommandChain){
+            callNextCommandInChain(update);
+        } else if (update.getMessage().hasPhoto()) {
+            imageHandler(update);
         } else {
             textHandler(update);
         }
@@ -67,14 +82,24 @@ public class EqTelegramBot extends TelegramLongPollingBot {
                     update.getMessage().getChat().getLastName(),
                     update.getMessage().getChat().getId());
             UserDto user = BotUserCache.findBy(update.getMessage().getChat().getId());
-            if(!commandContainer.retrieveCommand("/reg").execute(update)){
+            if (!commandContainer.retrieveCommand("/reg").execute(update)) {
                 LOGGER.info("Registration user");
+            }else if(update.getMessage().getText().equals("Change role to Provider")){
+                commandContainer.retrieveCommand(update.getMessage().getText()).execute(update);
+            }else if (update.getMessage().getText().equals("Реєстрація нового провайдера")) {
+                createRegistrationProviderCommandChain(update);
             }else if (user.getPositionMenu() == MENU_CREATE_SERVICE){
                 commandContainer.retrieveCommand("/add").execute(update);
-                commandContainer.retrieveCommand("/start").execute(update);
             } else if(user.getPositionMenu() == PositionMenu.MENU_START) {
                     commandContainer.retrieveCommand("/start").execute(update);
             }
+        }
+    }
+
+    private void imageHandler(Update update) {
+        UserDto user = BotUserCache.findBy(update.getMessage().getChat().getId());
+        if (user.getPositionMenu() == MENU_CREATE_SERVICE) {
+            commandContainer.retrieveCommand("/add").execute(update);
         }
     }
 
@@ -107,6 +132,21 @@ public class EqTelegramBot extends TelegramLongPollingBot {
         }
         if (callbackQuery.getData().equals("search_service")) {
             LOGGER.info("search_service");
+        }
+    }
+
+    public void createRegistrationProviderCommandChain (Update update) {
+        commandChain = new RegistrationProviderChain(new SendBotMessageServiceImpl(this), provideRepository);
+        isCommandChain = true;
+        commandChain.nextCommand().execute(update);
+    }
+
+    public void callNextCommandInChain(Update update) {
+        if (commandChain.hasNextCommand()){
+            commandChain.nextCommand().execute(update);
+            isCommandChain = commandChain.hasNextCommand();
+        } else {
+            isCommandChain = false;
         }
     }
 }

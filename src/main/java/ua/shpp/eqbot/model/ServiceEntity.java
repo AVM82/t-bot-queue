@@ -1,18 +1,27 @@
 package ua.shpp.eqbot.model;
 
+import org.hibernate.annotations.Type;
+
 import javax.persistence.*;
 
 @Entity
 @Table(name = "services")
 public class ServiceEntity {
-
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-
     private Long id_telegram;
     private String name;
     private String description;
+    private byte[] avatar;
+
+    public byte[] getAvatar() {
+        return avatar;
+    }
+
+    public void setAvatar(byte[] avatar) {
+        this.avatar = avatar;
+    }
     private String startWorkInSunday;
     private String endWorkInSunday;
     private String startWorkInMonday;

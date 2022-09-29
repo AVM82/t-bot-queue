@@ -6,6 +6,7 @@ public class UserDto {
     private String name;
     private String city;
     private String phone;
+    private String language;
     private PositionRegistration positionRegistration;
     private PositionMenu positionMenu;
 
@@ -63,9 +64,15 @@ public class UserDto {
         return this;
     }
 
-    public UserDto() {
-
+    public String getLanguage() {
+        return language;
     }
 
+    public UserDto setLanguage(String language) {
+        this.language = language;
+        return this;
+    }
 
+    public UserDto() {
+    }
 }

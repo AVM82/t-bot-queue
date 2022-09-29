@@ -9,7 +9,7 @@ public class ServiceDTO {
     private Long id_telegram;
     @Min(3)
     private String name;
-    @DefaultValue("Опис")
+
     private String description;
 
     public MenuTimeWork getMenuTimeWork() {
@@ -22,6 +22,16 @@ public class ServiceDTO {
     }
 
     private MenuTimeWork menuTimeWork;
+
+    private byte[] avatar;
+
+    public byte[] getAvatar() {
+        return avatar;
+    }
+
+    public void setAvatar(byte[] avatar) {
+        this.avatar = avatar;
+    }
 
     public ServiceDTO() {
     }
