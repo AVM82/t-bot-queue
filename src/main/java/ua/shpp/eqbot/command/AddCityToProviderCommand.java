@@ -5,11 +5,11 @@ import org.slf4j.LoggerFactory;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import ua.shpp.eqbot.cache.ServiceCache;
+import ua.shpp.eqbot.internationalization.BundleLanguage;
 import ua.shpp.eqbot.model.ProviderEntity;
 import ua.shpp.eqbot.repository.ProvideRepository;
 import ua.shpp.eqbot.service.SendBotMessageService;
 
-import static ua.shpp.eqbot.command.AddService.ADD_SERVICE_MESSAGE;
 
 
 public class AddCityToProviderCommand implements Command{
@@ -32,7 +32,8 @@ public class AddCityToProviderCommand implements Command{
 
         if(ServiceCache.justRegistrated){
             Long idTelegram = update.getMessage().getChatId();
-            sendBotMessageService.sendMessage(SendMessage.builder().chatId(idTelegram).text(ADD_SERVICE_MESSAGE).build());
+            String message = BundleLanguage.getValue(idTelegram, "input_name_service");
+            sendBotMessageService.sendMessage(SendMessage.builder().chatId(idTelegram).text(message).build());
             LOGGER.info("Add new service.");
             ServiceCache.justRegistrated=false;
         }
