@@ -16,7 +16,5 @@ public enum RegistrationProviderStep {
             default:
                 return REG_DONE;
         }
-
     }
-
 }

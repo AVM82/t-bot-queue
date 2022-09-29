@@ -9,11 +9,9 @@ import java.util.ArrayList;
 
 public class SettingsCommand implements Command{
 
-
     private final SendBotMessageService sendBotMessageService;
 
     public static final String SETTINGS_MESSAGE = "Settings.\n";
-
 
     public SettingsCommand(SendBotMessageService sendBotMessageService) {
         this.sendBotMessageService = sendBotMessageService;

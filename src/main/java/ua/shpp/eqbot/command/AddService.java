@@ -64,8 +64,8 @@ public class AddService implements Command {
         } else {
             id = update.getMessage().getChatId();
         }
-        log.info("add service method execute callbackquery ");
-        if (provideRepository.findById_telegram(id) != null)/*providerRepository.findById(update.getMessage().getChatId())*/ {
+
+        if (provideRepository.findByIdTelegram(id) != null)/*providerRepository.findById(update.getMessage().getChatId())*/ {
             UserDto user = null;
             ServiceDTO newService;
             if (!update.hasMessage() ) {
