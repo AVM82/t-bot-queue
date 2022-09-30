@@ -10,4 +10,6 @@ public interface UserRepository extends JpaRepository<UserEntity, Long> {
 
     @Query("select t from UserEntity t where t. idTelegram = ?1")
     UserEntity findFirstByIdTelegram(Long id);
+
+    void deleteAllByIdTelegram(Long id);
 }
