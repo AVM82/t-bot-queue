@@ -1,93 +1,97 @@
 package ua.shpp.eqbot.model;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 @Entity
 @Table(name = "appuser")
 public class UserEntity {
-
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
-
     private Long idTelegram;
+
     private String name;
     private String city;
     private String phone;
+    private String language;
+    private LocalDateTime timeCreated;
 
-    public String getName() {
-        return name;
+    public UserEntity() {
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getCity() {
-        return city;
-    }
-
-    public void setCity(String city) {
-        this.city = city;
-    }
-
-    public String getPhone() {
-        return phone;
-    }
-
-    public void setPhone(String phone) {
-        this.phone = phone;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
+    @PrePersist
+    private void setTime() {
+        timeCreated = LocalDateTime.now();
     }
 
     public Long getIdTelegram() {
         return idTelegram;
     }
 
-    public void setIdTelegram(Long idTelegram) {
+    public UserEntity setIdTelegram(Long idTelegram) {
         this.idTelegram = idTelegram;
+        return this;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public UserEntity setName(String name) {
+        this.name = name;
+        return this;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public UserEntity setCity(String city) {
+        this.city = city;
+        return this;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public UserEntity setPhone(String phone) {
+        this.phone = phone;
+        return this;
+    }
+
+    public String getLanguage() {
+        return language;
+    }
+
+    public UserEntity setLanguage(String language) {
+        this.language = language;
+        return this;
     }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-
         UserEntity that = (UserEntity) o;
-
-        if (!Objects.equals(id, that.id)) return false;
-        if (!Objects.equals(idTelegram, that.idTelegram)) return false;
-        if (!Objects.equals(name, that.name)) return false;
-        if (!Objects.equals(city, that.city)) return false;
-        return Objects.equals(phone, that.phone);
+        return Objects.equals(idTelegram, that.idTelegram) && Objects.equals(name, that.name) && Objects.equals(city, that.city) && Objects.equals(phone, that.phone) && Objects.equals(language, that.language) && Objects.equals(timeCreated, that.timeCreated);
     }
 
     @Override
     public int hashCode() {
-        int result = id != null ? id.hashCode() : 0;
-        result = 31 * result + (idTelegram != null ? idTelegram.hashCode() : 0);
-        result = 31 * result + (name != null ? name.hashCode() : 0);
-        result = 31 * result + (city != null ? city.hashCode() : 0);
-        result = 31 * result + (phone != null ? phone.hashCode() : 0);
-        return result;
+        return Objects.hash(idTelegram, name, city, phone, language, timeCreated);
     }
 
     @Override
     public String toString() {
-        return "UserEntity{" +
-                "id=" + id +
-                ", id_telegram=" + idTelegram +
-                ", name='" + name + '\'' +
-                ", city='" + city + '\'' +
-                ", phone='" + phone + '\'' +
-                '}';
+        final StringBuilder sb = new StringBuilder("UserEntity{");
+        sb.append("idTelegram=").append(idTelegram);
+        sb.append(", name='").append(name).append('\'');
+        sb.append(", city='").append(city).append('\'');
+        sb.append(", phone='").append(phone).append('\'');
+        sb.append(", language='").append(language).append('\'');
+        sb.append(", timeCreated=").append(timeCreated);
+        sb.append('}');
+        return sb.toString();
     }
 }

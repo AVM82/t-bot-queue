@@ -8,26 +8,27 @@ import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
-import ua.shpp.eqbot.cache.BotUserCache;
 import ua.shpp.eqbot.internationalization.BundleLanguage;
 import ua.shpp.eqbot.model.PositionMenu;
 import ua.shpp.eqbot.model.PositionRegistration;
 import ua.shpp.eqbot.model.UserDto;
 import ua.shpp.eqbot.model.UserEntity;
-import ua.shpp.eqbot.repository.UserRepository;
 import ua.shpp.eqbot.service.SendBotMessageService;
+import ua.shpp.eqbot.service.UserService;
 
 @Component
 public class RegistrationNewUser implements Command {
     private static final Logger LOGGER = LoggerFactory.getLogger(RegistrationNewUser.class);
     private final SendBotMessageService sendBotMessageService;
-    private final UserRepository repository;
+    private final UserService userService;
+    private final BundleLanguage bundleLanguage;
     private final ModelMapper modelMapper = new ModelMapper();
 
     @Autowired
-    public RegistrationNewUser(SendBotMessageService sendBotMessageService, UserRepository repository) {
+    public RegistrationNewUser(SendBotMessageService sendBotMessageService, UserService userService, BundleLanguage bundleLanguage) {
         this.sendBotMessageService = sendBotMessageService;
-        this.repository = repository;
+        this.userService = userService;
+        this.bundleLanguage = bundleLanguage;
     }
 
     /**
@@ -38,14 +39,13 @@ public class RegistrationNewUser implements Command {
      */
     @Override
     public boolean execute(Update update) {
-        UserDto userDto = BotUserCache.findBy(update.getMessage().getChatId());
+        UserDto userDto = userService.getDto(update.getMessage().getChatId());
         if (userDto == null) {
             LOGGER.info("user absent into cash user");
-            UserEntity userEntity = repository.findFirstByIdTelegram(update.getMessage().getChatId());
+            UserEntity userEntity = userService.getEntity(update.getMessage().getChatId());
             if (userEntity != null) {
                 LOGGER.info("user present into repo");
-                BotUserCache.add(convertToDto(userEntity)
-                        .setPositionRegistration(PositionRegistration.DONE));
+                userService.saveDto(convertToDto(userEntity).setPositionRegistration(PositionRegistration.DONE));
                 return true;
             }
             return registration(update.getMessage(), null);
@@ -92,35 +92,36 @@ public class RegistrationNewUser implements Command {
         boolean isRegistration = false;
         if (userDto == null) {
             LOGGER.info("new user start registration");
-            BotUserCache.add(generateUserFromMessage(message));
+            userService.saveDto(generateUserFromMessage(message));
             sendBotMessageService.sendMessage(createQuery(message.getChatId(),
-                    BundleLanguage.getValue(message.getChatId(), "input_name")));
+                    bundleLanguage.getValue(message.getChatId(), "input_name")));
         } else {
+            LOGGER.info("i want to next stage registration {}", userDto);
             switch (userDto.getPositionRegistration()) {
                 case INPUT_USERNAME:
                     LOGGER.info("new user phase INPUT_USERNAME with message text {}", message.getText());
                     userDto.setName(message.getText());
                     userDto.setPositionRegistration(PositionRegistration.INPUT_CITY);
                     sendBotMessageService.sendMessage(createQuery(message.getChatId(),
-                            BundleLanguage.getValue(message.getChatId(), "input_city")));
+                            bundleLanguage.getValue(message.getChatId(), "input_city")));
                     break;
                 case INPUT_CITY:
                     LOGGER.info("new user phase INPUT_CITY with message text {}", message.getText());
                     userDto.setCity(message.getText());
                     userDto.setPositionRegistration(PositionRegistration.INPUT_PHONE);
                     sendBotMessageService.sendMessage(createQuery(message.getChatId(),
-                            BundleLanguage.getValue(message.getChatId(), "input_phone_number")));
+                            bundleLanguage.getValue(message.getChatId(), "input_phone_number")));
                     break;
                 case INPUT_PHONE:
                     LOGGER.info("new user phase INPUT_PHONE with message text {}", message.getText());
                     userDto.setPhone(message.getText());
                     userDto.setPositionRegistration(PositionRegistration.DONE);
                     UserEntity userEntity = convertToEntity(userDto);
-                    repository.save(userEntity);
+                    userService.saveEntity(userEntity);
                     LOGGER.info("save entity to database {}", userEntity);
                     isRegistration = true;
                     sendBotMessageService.sendMessage(createQuery(message.getChatId(),
-                            String.format(BundleLanguage.getValue(
+                            String.format(bundleLanguage.getValue(
                                             message.getChatId(), "registered"),
                                     userDto.getIdTelegram(), userDto.getName(), userDto.getCity(), userDto.getPhone())));
                     break;

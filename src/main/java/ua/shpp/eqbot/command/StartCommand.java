@@ -16,9 +16,11 @@ import java.util.List;
 public class StartCommand implements Command {
 
     private final SendBotMessageService sendBotMessageService;
+    private final BundleLanguage bundleLanguage;
 
-    public StartCommand(SendBotMessageService sendBotMessageService) {
+    public StartCommand(SendBotMessageService sendBotMessageService, BundleLanguage bundleLanguage) {
         this.sendBotMessageService = sendBotMessageService;
+        this.bundleLanguage = bundleLanguage;
     }
 
     @Override
@@ -32,19 +34,19 @@ public class StartCommand implements Command {
         List<List<InlineKeyboardButton>> keyboard = new ArrayList<>();
         List<InlineKeyboardButton> buttonCreate = new ArrayList<>();
         buttonCreate.add(InlineKeyboardButton.builder()
-                .text(BundleLanguage.getValue(chatId, "create_service"))
+                .text(bundleLanguage.getValue(chatId, "create_service"))
                 .callbackData("create_service")
                 .build());
         List<InlineKeyboardButton> buttonSearch = new ArrayList<>();
         buttonCreate.add(InlineKeyboardButton.builder()
-                .text(BundleLanguage.getValue(chatId, "choose_service"))
+                .text(bundleLanguage.getValue(chatId, "choose_service"))
                 .callbackData("search_service")
                 .build());
         keyboard.add(buttonCreate);
         keyboard.add(buttonSearch);
         inlineKeyboardMarkup.setKeyboard(keyboard);
         SendMessage sendMessage = new SendMessage();
-        sendMessage.setText(BundleLanguage.getValue(chatId, "choose_menu_option"));
+        sendMessage.setText(bundleLanguage.getValue(chatId, "choose_menu_option"));
         sendMessage.setChatId(chatId);
         sendMessage.setReplyMarkup(inlineKeyboardMarkup);
         sendBotMessageService.sendMessage(sendMessage);

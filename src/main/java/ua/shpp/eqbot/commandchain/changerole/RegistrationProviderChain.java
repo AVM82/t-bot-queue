@@ -3,6 +3,7 @@ package ua.shpp.eqbot.commandchain.changerole;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ua.shpp.eqbot.command.*;
+import ua.shpp.eqbot.internationalization.BundleLanguage;
 import ua.shpp.eqbot.repository.ProvideRepository;
 import ua.shpp.eqbot.service.SendBotMessageService;
 
@@ -17,10 +18,10 @@ public class RegistrationProviderChain implements CommandChain {
     private RegistrationProviderStep thisStep = RegistrationProviderStep.REG_MESSAGE_STEP;
 
 
-    public RegistrationProviderChain(SendBotMessageService sendBotMessageService, ProvideRepository provideRepository) {
+    public RegistrationProviderChain(SendBotMessageService sendBotMessageService, ProvideRepository provideRepository, BundleLanguage bundleLanguage) {
         changeRoleChain.put(RegistrationProviderStep.REG_MESSAGE_STEP, new RegistrationNewProviderCommand(sendBotMessageService));
         changeRoleChain.put(RegistrationProviderStep.REG_ADD_NAME_STEP, new AddProviderNameCommand(sendBotMessageService, provideRepository));
-        changeRoleChain.put(RegistrationProviderStep.REG_ADD_CITY_STEP, new AddCityToProviderCommand(sendBotMessageService, provideRepository));
+        changeRoleChain.put(RegistrationProviderStep.REG_ADD_CITY_STEP, new AddCityToProviderCommand(sendBotMessageService, provideRepository, bundleLanguage));
         changeRoleChain.put(RegistrationProviderStep.REG_DONE, new NoCommand(sendBotMessageService));
     }
 
