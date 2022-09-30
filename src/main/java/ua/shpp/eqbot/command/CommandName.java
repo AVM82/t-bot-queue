@@ -9,6 +9,7 @@ public enum CommandName {
     ADD_SERVICE("/add"),
     CHANGE_ROLE_TO_PROVIDER("Change role to Provider"),
     DELETE_USER("/delete"),
+    MAIN_MENU("mainMenu"),
     NO("nocommand");
 
 
