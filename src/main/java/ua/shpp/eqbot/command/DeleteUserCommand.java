@@ -15,6 +15,8 @@ import ua.shpp.eqbot.repository.UserRepository;
 import ua.shpp.eqbot.service.SendBotMessageService;
 import ua.shpp.eqbot.service.UserService;
 
+import java.util.List;
+
 
 public class DeleteUserCommand implements Command {
     private static final Logger LOGGER = LoggerFactory.getLogger(DeleteUserCommand.class);
@@ -35,16 +37,16 @@ public class DeleteUserCommand implements Command {
 
     @Override
     public boolean execute(Update update) {
-        ServiceEntity serviceEntity = serviceRepository.findByIdTelegram(update.getMessage().getChatId());
-        if (serviceEntity != null) {
+        List<ServiceEntity> serviceEntityList = serviceRepository.findAllByIdTelegram(update.getMessage().getChatId());
+        if (!serviceEntityList.isEmpty()) {
             LOGGER.info("deleted service");
-            serviceRepository.delete(serviceEntity);
+            serviceRepository.deleteAllInBatch(serviceEntityList);
         }
 
-        ProviderEntity providerEntity = provideRepository.findFirstByIdTelegram(update.getMessage().getChatId());
-        if (providerEntity != null) {
+        List<ProviderEntity> providerEntityList = provideRepository.findAllByIdTelegram(update.getMessage().getChatId());
+        if (!providerEntityList.isEmpty()) {
             LOGGER.info("deleted provider");
-            provideRepository.delete(providerEntity);
+            provideRepository.deleteAllInBatch(providerEntityList);
         }
 
         userService.remove(update.getMessage().getChatId());

@@ -5,6 +5,8 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import ua.shpp.eqbot.model.ProviderEntity;
 
+import java.util.List;
+
 
 @Repository
 public interface ProvideRepository extends JpaRepository<ProviderEntity, Long> {
@@ -13,4 +15,7 @@ public interface ProvideRepository extends JpaRepository<ProviderEntity, Long> {
 
     @Query("select t from ProviderEntity t where t. idTelegram = ?1")
     ProviderEntity findByIdTelegram(Long id);
+
+    @Query("select t from ProviderEntity t where t. idTelegram = ?1")
+    List<ProviderEntity> findAllByIdTelegram(Long id);
 }
