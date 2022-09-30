@@ -10,24 +10,26 @@ import java.util.ResourceBundle;
 @Component
 public class BundleLanguage {
 
-    public static String getValue(long userId, String value) {
+    private static final Logger LOGGER = LoggerFactory.getLogger(BundleLanguage.class);
 
-        UserDto user =null;
-        String language;
+    private final UserService userService;
 
-        if (user == null)
-            language = "uk";
-        else
+    public BundleLanguage(UserService userService) {
+        this.userService = userService;
+    }
+
+    public String getValue(long userTelegramId, String value) {
+        LOGGER.info("i try set user language");
+        UserEntity user = userService.getEntity(userTelegramId);
+        String language = "uk";
+        if (user != null)
             language = user.getLanguage();
 
         ResourceBundle resourceBundle = ResourceBundle.getBundle(
                 "language",
                 new Locale(language, value)
         );
+        LOGGER.info("user language is {}", language);
         return resourceBundle.getString(value);
-    }
-
-    //instance of this class is not needed
-    private BundleLanguage() {
     }
 }

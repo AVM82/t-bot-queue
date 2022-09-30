@@ -12,6 +12,7 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 import ua.shpp.eqbot.command.CommandContainer;
 import ua.shpp.eqbot.commandchain.changerole.CommandChain;
 import ua.shpp.eqbot.commandchain.changerole.RegistrationProviderChain;
+import ua.shpp.eqbot.internationalization.BundleLanguage;
 import ua.shpp.eqbot.model.PositionMenu;
 import ua.shpp.eqbot.model.UserDto;
 import ua.shpp.eqbot.repository.ProvideRepository;
@@ -38,12 +39,12 @@ public class EqTelegramBot extends TelegramLongPollingBot {
 
 
     @Autowired
-    public EqTelegramBot(UserRepository userRepository, ServiceRepository serviceRepository, ProvideRepository provideRepository, @Lazy ImageService imageService, UserService userService) {
+    public EqTelegramBot(UserRepository userRepository, ServiceRepository serviceRepository, ProvideRepository provideRepository, @Lazy ImageService imageService, UserService userService, BundleLanguage bundleLanguage) {
         this.userRepository = userRepository;
         this.serviceRepository = serviceRepository;
         this.provideRepository = provideRepository;
         this.userService = userService;
-        this.commandContainer = new CommandContainer(new SendBotMessageServiceImpl(this), serviceRepository, provideRepository, imageService, userService);
+        this.commandContainer = new CommandContainer(new SendBotMessageServiceImpl(this), serviceRepository, provideRepository, imageService, userService, bundleLanguage);
     }
 
     @Value("${telegram.bot.name}")

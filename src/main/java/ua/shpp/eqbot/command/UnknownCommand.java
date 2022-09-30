@@ -6,16 +6,18 @@ import ua.shpp.eqbot.service.SendBotMessageService;
 
 public class UnknownCommand implements Command {
     private final SendBotMessageService sendBotMessageService;
+    private final BundleLanguage bundleLanguage;
 
-    public UnknownCommand(SendBotMessageService sendBotMessageService) {
+    public UnknownCommand(SendBotMessageService sendBotMessageService, BundleLanguage bundleLanguage) {
         this.sendBotMessageService = sendBotMessageService;
+        this.bundleLanguage = bundleLanguage;
     }
 
     public static final String UNKNOWN_MESSAGE = "not_understand";
 
     @Override
     public boolean execute(Update update) {
-        sendBotMessageService.sendMessage(update.getMessage().getChatId().toString(), BundleLanguage.getValue(update.getMessage().getChatId(), UNKNOWN_MESSAGE));
+        sendBotMessageService.sendMessage(update.getMessage().getChatId().toString(), bundleLanguage.getValue(update.getMessage().getChatId(), UNKNOWN_MESSAGE));
         return true;
     }
 }
