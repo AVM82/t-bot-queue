@@ -4,6 +4,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import ua.shpp.eqbot.model.ServiceEntity;
 
+import java.util.List;
+
 public interface ServiceRepository extends JpaRepository<ServiceEntity, Long> {
 
     ServiceEntity getFirstByName(String name);
@@ -13,5 +15,8 @@ public interface ServiceRepository extends JpaRepository<ServiceEntity, Long> {
 
     @Query("select t from ServiceEntity t where t. idTelegram = ?1")
     ServiceEntity findByIdTelegram(Long id);
+
+    @Query("select t from ServiceEntity t where t. idTelegram = ?1")
+    List<ServiceEntity> findAllByIdTelegram(Long id);
 
 }
