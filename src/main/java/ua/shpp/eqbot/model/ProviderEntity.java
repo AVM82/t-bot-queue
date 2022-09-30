@@ -9,16 +9,9 @@ import java.util.Objects;
 @Entity
 public class ProviderEntity {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
-
     private Long id_telegram;
     private String name;
     private String city;
-
-    public Long getId() {
-        return id;
-    }
 
     public void setName(String name) {
         this.name = name;
@@ -49,22 +42,12 @@ public class ProviderEntity {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         ProviderEntity that = (ProviderEntity) o;
-        return Objects.equals(id, that.id);
+        return Objects.equals(id_telegram, that.id_telegram) && Objects.equals(name, that.name) && Objects.equals(city, that.city);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id);
-    }
-
-    @Override
-    public String toString() {
-        return "ProviderEntity{" +
-                "id=" + id +
-                ", id_telegram=" + id_telegram +
-                ", name='" + name + '\'' +
-                ", city='" + city + '\'' +
-                '}';
+        return Objects.hash(id_telegram, name, city);
     }
 
     @Override

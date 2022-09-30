@@ -1,8 +1,12 @@
 package ua.shpp.eqbot.internationalization;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
-import ua.shpp.eqbot.cache.BotUserCache;
+import ua.shpp.eqbot.command.RegistrationNewUser;
 import ua.shpp.eqbot.model.UserDto;
+import ua.shpp.eqbot.model.UserEntity;
+import ua.shpp.eqbot.service.UserService;
 
 import java.util.Locale;
 import java.util.ResourceBundle;

@@ -18,6 +18,8 @@ public class UserService {
     private final UserRepository userRepository;
 
     private final String dtoCacheName = "cacheDto";
+    private final CacheManager cacheManager;
+
     private final ModelMapper modelMapper = new ModelMapper();
 
     public UserService(UserRepository userRepository, CacheManager cacheManager) {
@@ -40,13 +42,13 @@ public class UserService {
     @CachePut(cacheNames = dtoCacheName, key = "#userDto.id_telegram")
     public UserDto saveDto(UserDto userDto) {
         LOGGER.info("save userDto " + userDto);
-        return convertToDto(userRepository.save(convertToEntity(userDto)));
+        return userDto;//****
     }
 
     @Cacheable(cacheNames = dtoCacheName, key = "#id")
     public UserDto getDto(Long id) {
         LOGGER.info("get userDto by id " + id);
-        return convertToDto(get(id));
+        return null;
     }
 
     /**
@@ -54,8 +56,8 @@ public class UserService {
      */
     private void saveDto(UserEntity userEntity) {
         Cache cache = cacheManager.getCache(dtoCacheName);
-        if (cache != null) {
-            Cache.ValueWrapper valueWrapper = cache.get(userEntity.getId());
+        if (cache != null) { // first attempt ?
+            Cache.ValueWrapper valueWrapper = cache.get(userEntity.getId_telegram());
             UserDto userDto;
             if (valueWrapper == null) {
                 userDto = convertToDto(userEntity);
@@ -66,7 +68,7 @@ public class UserService {
                         .setCity(userEntity.getCity())
                         .setPhone(userEntity.getPhone());
             }
-            cache.put(userEntity.getId(), userDto);
+            cache.put(userEntity.getId_telegram(), userDto);
         }
     }
 

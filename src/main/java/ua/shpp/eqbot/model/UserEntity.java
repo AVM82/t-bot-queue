@@ -1,30 +1,27 @@
 package ua.shpp.eqbot.model;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
+import java.util.Objects;
+
 @Entity
 @Table(name = "appuser")
 public class UserEntity {
-
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
-
     private Long id_telegram;
+
     private String name;
     private String city;
     private String phone;
     private String language;
+    private LocalDateTime timeCreated;
 
     public UserEntity() {
     }
 
-    public Long getId() {
-        return id;
-    }
-
-    public UserEntity setId(Long id) {
-        this.id = id;
-        return this;
+    @PrePersist
+    private void setTime() {
+        timeCreated = LocalDateTime.now();
     }
 
     public Long getId_telegram() {
@@ -76,35 +73,13 @@ public class UserEntity {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-
         UserEntity that = (UserEntity) o;
-
-        if (id != null ? !id.equals(that.id) : that.id != null) return false;
-        if (id_telegram != null ? !id_telegram.equals(that.id_telegram) : that.id_telegram != null) return false;
-        if (name != null ? !name.equals(that.name) : that.name != null) return false;
-        if (city != null ? !city.equals(that.city) : that.city != null) return false;
-        return phone != null ? phone.equals(that.phone) : that.phone == null;
+        return Objects.equals(id_telegram, that.id_telegram) && Objects.equals(name, that.name) && Objects.equals(city, that.city) && Objects.equals(phone, that.phone) && Objects.equals(language, that.language) && Objects.equals(timeCreated, that.timeCreated);
     }
 
     @Override
     public int hashCode() {
-        int result = id != null ? id.hashCode() : 0;
-        result = 31 * result + (id_telegram != null ? id_telegram.hashCode() : 0);
-        result = 31 * result + (name != null ? name.hashCode() : 0);
-        result = 31 * result + (city != null ? city.hashCode() : 0);
-        result = 31 * result + (phone != null ? phone.hashCode() : 0);
-        return result;
-    }
-
-    @Override
-    public String toString() {
-        return "UserEntity{" +
-                "id=" + id +
-                ", id_telegram=" + id_telegram +
-                ", name='" + name + '\'' +
-                ", city='" + city + '\'' +
-                ", phone='" + phone + '\'' +
-                '}';
+        return Objects.hash(id_telegram, name, city, phone, language, timeCreated);
     }
 
     @Override

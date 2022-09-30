@@ -96,6 +96,7 @@ public class RegistrationNewUser implements Command {
             sendBotMessageService.sendMessage(createQuery(message.getChatId(),
                     bundleLanguage.getValue(message.getChatId(), "input_name")));
         } else {
+            LOGGER.info("i want to next stage registration {}", userDto);
             switch (userDto.getPositionRegistration()) {
                 case INPUT_USERNAME:
                     LOGGER.info("new user phase INPUT_USERNAME with message text {}", message.getText());
