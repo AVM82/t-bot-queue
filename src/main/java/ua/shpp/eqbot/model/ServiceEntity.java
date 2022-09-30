@@ -1,16 +1,20 @@
 package ua.shpp.eqbot.model;
 
 import javax.persistence.*;
+import java.util.Arrays;
+import java.util.Objects;
 
 @Entity
 @Table(name = "services")
 public class ServiceEntity {
+
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
     private Long idTelegram;
     private String name;
     private String description;
+
+    @Lob
+    @Column(columnDefinition = "bytea")
     private byte[] avatar;
 
     public byte[] getAvatar() {
@@ -21,14 +25,9 @@ public class ServiceEntity {
         this.avatar = avatar;
     }
 
-    public Long getId() {
-        return id;
+    public ServiceEntity() {
     }
 
-    public ServiceEntity setId(Long id) {
-        this.id = id;
-        return this;
-    }
 
     public Long getIdTelegram() {
         return idTelegram;
@@ -55,5 +54,31 @@ public class ServiceEntity {
     public ServiceEntity setDescription(String description) {
         this.description = description;
         return this;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ServiceEntity that = (ServiceEntity) o;
+        return Objects.equals(idTelegram, that.idTelegram) && Objects.equals(name, that.name) && Objects.equals(description, that.description) && Arrays.equals(avatar, that.avatar);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = Objects.hash(idTelegram, name, description);
+        result = 31 * result + Arrays.hashCode(avatar);
+        return result;
+    }
+
+    @Override
+    public String toString() {
+        final StringBuilder sb = new StringBuilder("ServiceEntity{");
+        sb.append("idTelegram=").append(idTelegram);
+        sb.append(", name='").append(name).append('\'');
+        sb.append(", description='").append(description).append('\'');
+        sb.append(", avatar=").append(Arrays.toString(avatar));
+        sb.append('}');
+        return sb.toString();
     }
 }

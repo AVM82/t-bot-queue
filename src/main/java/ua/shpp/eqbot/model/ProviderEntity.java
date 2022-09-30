@@ -1,24 +1,15 @@
 package ua.shpp.eqbot.model;
 
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import java.util.Objects;
 
 @Entity
 public class ProviderEntity {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
-
     private Long idTelegram;
     private String name;
     private String city;
-
-    public Long getId() {
-        return id;
-    }
 
     public void setName(String name) {
         this.name = name;
@@ -49,21 +40,21 @@ public class ProviderEntity {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         ProviderEntity that = (ProviderEntity) o;
-        return Objects.equals(id, that.id);
+        return Objects.equals(idTelegram, that.idTelegram) && Objects.equals(name, that.name) && Objects.equals(city, that.city);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id);
+        return Objects.hash(idTelegram, name, city);
     }
 
     @Override
     public String toString() {
-        return "ProviderEntity{" +
-                "id=" + id +
-                ", id_telegram=" + idTelegram +
-                ", name='" + name + '\'' +
-                ", city='" + city + '\'' +
-                '}';
+        final StringBuilder sb = new StringBuilder("ProviderEntity{");
+        sb.append("idTelegram=").append(idTelegram);
+        sb.append(", name='").append(name).append('\'');
+        sb.append(", city='").append(city).append('\'');
+        sb.append('}');
+        return sb.toString();
     }
 }

@@ -72,4 +72,7 @@ public class UserDto {
         this.language = language;
         return this;
     }
+
+    public UserDto() {
+    }
 }
