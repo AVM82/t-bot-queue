@@ -5,9 +5,9 @@ import org.slf4j.LoggerFactory;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import ua.shpp.eqbot.service.SendBotMessageService;
 
-public class RegistrationNewProviderCommand implements Command{
+public class RegistrationNewProviderCommand implements Command {
 
-    private final static Logger LOGGER = LoggerFactory.getLogger(RegistrationNewProviderCommand.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(RegistrationNewProviderCommand.class);
     private final SendBotMessageService sendBotMessageService;
 
     public RegistrationNewProviderCommand(SendBotMessageService sendBotMessageService) {
@@ -17,7 +17,7 @@ public class RegistrationNewProviderCommand implements Command{
     @Override
     public boolean execute(Update update) {
         LOGGER.info("Registered new Provider");
-        sendBotMessageService.sendMessage(update.getMessage().getChatId().toString(),"Type Company's Name");
+        sendBotMessageService.sendMessage(update.getMessage().getChatId().toString(), "Type Company's Name");
         return true;
     }
 }

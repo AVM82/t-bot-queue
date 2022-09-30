@@ -12,7 +12,7 @@ public class ProviderEntity {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    private Long id_telegram;
+    private Long idTelegram;
     private String name;
     private String city;
 
@@ -36,12 +36,12 @@ public class ProviderEntity {
         return city;
     }
 
-    public void setId_telegram(Long id_telegram) {
-        this.id_telegram = id_telegram;
+    public void setIdTelegram(Long idTelegram) {
+        this.idTelegram = idTelegram;
     }
 
-    public Long getId_telegram() {
-        return id_telegram;
+    public Long getIdTelegram() {
+        return idTelegram;
     }
 
     @Override
@@ -61,7 +61,7 @@ public class ProviderEntity {
     public String toString() {
         return "ProviderEntity{" +
                 "id=" + id +
-                ", id_telegram=" + id_telegram +
+                ", id_telegram=" + idTelegram +
                 ", name='" + name + '\'' +
                 ", city='" + city + '\'' +
                 '}';

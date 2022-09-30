@@ -1,6 +1,8 @@
 package ua.shpp.eqbot.model;
 
 import javax.persistence.*;
+import java.util.Objects;
+
 @Entity
 @Table(name = "appuser")
 public class UserEntity {
@@ -9,13 +11,10 @@ public class UserEntity {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    private Long id_telegram;
+    private Long idTelegram;
     private String name;
     private String city;
     private String phone;
-
-    public UserEntity() {
-    }
 
     public String getName() {
         return name;
@@ -49,12 +48,12 @@ public class UserEntity {
         this.id = id;
     }
 
-    public Long getId_telegram() {
-        return id_telegram;
+    public Long getIdTelegram() {
+        return idTelegram;
     }
 
-    public void setId_telegram(Long id_telegram) {
-        this.id_telegram = id_telegram;
+    public void setIdTelegram(Long idTelegram) {
+        this.idTelegram = idTelegram;
     }
 
     @Override
@@ -64,17 +63,17 @@ public class UserEntity {
 
         UserEntity that = (UserEntity) o;
 
-        if (id != null ? !id.equals(that.id) : that.id != null) return false;
-        if (id_telegram != null ? !id_telegram.equals(that.id_telegram) : that.id_telegram != null) return false;
-        if (name != null ? !name.equals(that.name) : that.name != null) return false;
-        if (city != null ? !city.equals(that.city) : that.city != null) return false;
-        return phone != null ? phone.equals(that.phone) : that.phone == null;
+        if (!Objects.equals(id, that.id)) return false;
+        if (!Objects.equals(idTelegram, that.idTelegram)) return false;
+        if (!Objects.equals(name, that.name)) return false;
+        if (!Objects.equals(city, that.city)) return false;
+        return Objects.equals(phone, that.phone);
     }
 
     @Override
     public int hashCode() {
         int result = id != null ? id.hashCode() : 0;
-        result = 31 * result + (id_telegram != null ? id_telegram.hashCode() : 0);
+        result = 31 * result + (idTelegram != null ? idTelegram.hashCode() : 0);
         result = 31 * result + (name != null ? name.hashCode() : 0);
         result = 31 * result + (city != null ? city.hashCode() : 0);
         result = 31 * result + (phone != null ? phone.hashCode() : 0);
@@ -85,7 +84,7 @@ public class UserEntity {
     public String toString() {
         return "UserEntity{" +
                 "id=" + id +
-                ", id_telegram=" + id_telegram +
+                ", id_telegram=" + idTelegram +
                 ", name='" + name + '\'' +
                 ", city='" + city + '\'' +
                 ", phone='" + phone + '\'' +

@@ -2,7 +2,6 @@ package ua.shpp.eqbot.cache;
 
 import org.springframework.stereotype.Component;
 import ua.shpp.eqbot.model.ServiceDTO;
-import ua.shpp.eqbot.model.UserDto;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -13,16 +12,19 @@ import java.util.Map;
 public class ServiceCache {
     public static boolean justRegistrated = false;
 
-    private static Map<Long, ServiceDTO> services = new HashMap<>();
+    private static final Map<Long, ServiceDTO> services = new HashMap<>();
+
+    private ServiceCache() {
+    }
 
     public static void add(ServiceDTO serviceDTO) {
-        if (serviceDTO.getId_telegram() != null) {
-            services.put(serviceDTO.getId_telegram(), serviceDTO);
+        if (serviceDTO.getIdTelegram() != null) {
+            services.put(serviceDTO.getIdTelegram(), serviceDTO);
         }
     }
 
     public static void remove(ServiceDTO serviceDTO) {
-        services.remove(serviceDTO.getId_telegram());
+        services.remove(serviceDTO.getIdTelegram());
     }
 
     public static ServiceDTO findBy(Long id) {
