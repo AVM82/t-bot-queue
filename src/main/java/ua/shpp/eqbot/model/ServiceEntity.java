@@ -1,5 +1,7 @@
 package ua.shpp.eqbot.model;
 
+import org.hibernate.annotations.Type;
+
 import javax.persistence.*;
 import java.util.Arrays;
 import java.util.Objects;
@@ -13,7 +15,7 @@ public class ServiceEntity {
     private String name;
     private String description;
 
-    @Lob
+    @Type(type="org.hibernate.type.BinaryType")
     @Column(columnDefinition = "bytea")
     private byte[] avatar;
 
