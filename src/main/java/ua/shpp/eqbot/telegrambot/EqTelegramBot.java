@@ -98,6 +98,7 @@ public class EqTelegramBot extends TelegramLongPollingBot {
             } else if (user.getPositionMenu() == MENU_CREATE_SERVICE) {
                 commandContainer.retrieveCommand("/add").execute(update);
             } else if (user.getPositionMenu() == PositionMenu.MENU_START) {
+                commandContainer.retrieveCommand("mainMenu").execute(update);
                 commandContainer.retrieveCommand("/start").execute(update);
             }
         }
