@@ -24,7 +24,6 @@ public class BundleLanguage {
         String language = "uk";
         if (user != null)
             language = user.getLanguage();
-
         ResourceBundle resourceBundle = ResourceBundle.getBundle(
                 "language",
                 new Locale(language, value)

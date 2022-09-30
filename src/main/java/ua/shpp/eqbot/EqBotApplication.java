@@ -15,8 +15,6 @@ import org.springframework.cache.annotation.EnableCaching;
         description = "description"))
 @EnableCaching
 public class EqBotApplication {
-
-
     private final static Logger LOGGER = LoggerFactory.getLogger(EqBotApplication.class);
 
     public static void main(String[] args) {
