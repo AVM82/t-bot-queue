@@ -31,14 +31,6 @@ public class ServiceEntity {
     public ServiceEntity() {
     }
 
-    public Long getId() {
-        return id;
-    }
-
-    public ServiceEntity setId(Long id) {
-        this.id = id;
-        return this;
-    }
 
     public Long getId_telegram() {
         return id_telegram;
@@ -65,5 +57,31 @@ public class ServiceEntity {
     public ServiceEntity setDescription(String description) {
         this.description = description;
         return this;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ServiceEntity that = (ServiceEntity) o;
+        return Objects.equals(id_telegram, that.id_telegram) && Objects.equals(name, that.name) && Objects.equals(description, that.description) && Arrays.equals(avatar, that.avatar);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = Objects.hash(id_telegram, name, description);
+        result = 31 * result + Arrays.hashCode(avatar);
+        return result;
+    }
+
+    @Override
+    public String toString() {
+        final StringBuilder sb = new StringBuilder("ServiceEntity{");
+        sb.append("id_telegram=").append(id_telegram);
+        sb.append(", name='").append(name).append('\'');
+        sb.append(", description='").append(description).append('\'');
+        sb.append(", avatar=").append(Arrays.toString(avatar));
+        sb.append('}');
+        return sb.toString();
     }
 }

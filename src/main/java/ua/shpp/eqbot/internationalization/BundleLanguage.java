@@ -12,7 +12,7 @@ public class BundleLanguage {
 
     public static String getValue(long userId, String value) {
 
-        UserDto user = BotUserCache.findBy(userId);
+        UserDto user =null;
         String language;
 
         if (user == null)

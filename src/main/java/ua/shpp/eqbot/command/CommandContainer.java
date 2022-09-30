@@ -20,15 +20,15 @@ public class CommandContainer {
     private final Command unknownCommand;
 
     @Autowired
-    public CommandContainer(SendBotMessageService sendBotMessageService, UserRepository userRepository, ServiceRepository serviceRepository, ProvideRepository provideRepository, ImageService imageService, UserService userService) {
+    public CommandContainer(SendBotMessageService sendBotMessageService, ServiceRepository serviceRepository, ProvideRepository provideRepository, ImageService imageService, UserService userService) {
         commandMap = ImmutableMap.<String, Command>builder()
-                .put(CommandName.REG.getCommandName(), new RegistrationNewUser(sendBotMessageService, userRepository, userService))
+                .put(CommandName.REG.getCommandName(), new RegistrationNewUser(sendBotMessageService, userService))
                 .put(CommandName.START.getCommandName(), new StartCommand(sendBotMessageService))
                 .put(CommandName.HELP.getCommandName(), new HelpCommand(sendBotMessageService))
                 .put(CommandName.NO.getCommandName(), new NoCommand(sendBotMessageService))
                 .put(CommandName.SETTINGS.getCommandName(), new SettingsCommand(sendBotMessageService))
                 .put(CommandName.CHANGE_ROLE_TO_PROVIDER.getCommandName(), new ChangeRoleToProviderCommand(sendBotMessageService, provideRepository))
-                .put(CommandName.ADD_SERVICE.getCommandName(), new AddService(sendBotMessageService, serviceRepository,imageService,provideRepository))
+                .put(CommandName.ADD_SERVICE.getCommandName(), new AddService(sendBotMessageService, serviceRepository, imageService, provideRepository, userService))
                 .build();
 
         unknownCommand = new UnknownCommand(sendBotMessageService);

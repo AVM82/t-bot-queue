@@ -106,4 +106,17 @@ public class UserEntity {
                 ", phone='" + phone + '\'' +
                 '}';
     }
+
+    @Override
+    public String toString() {
+        final StringBuilder sb = new StringBuilder("UserEntity{");
+        sb.append("id_telegram=").append(id_telegram);
+        sb.append(", name='").append(name).append('\'');
+        sb.append(", city='").append(city).append('\'');
+        sb.append(", phone='").append(phone).append('\'');
+        sb.append(", language='").append(language).append('\'');
+        sb.append(", timeCreated=").append(timeCreated);
+        sb.append('}');
+        return sb.toString();
+    }
 }

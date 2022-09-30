@@ -29,7 +29,8 @@ public class UserService {
 
     public UserEntity getEntity(Long id) {
         LOGGER.info("get userEntity by id " + id);
-        return userRepository.findFirstById_telegram(id);
+        UserDto dto = getDto(id);
+        return dto != null ? convertToEntity(dto) : userRepository.findFirstById_telegram(id);
     }
 
     public UserEntity saveEntity(UserEntity userEntity) {
