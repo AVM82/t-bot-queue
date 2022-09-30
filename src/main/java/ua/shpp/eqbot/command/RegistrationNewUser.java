@@ -100,6 +100,7 @@ public class RegistrationNewUser implements Command {
             switch (userDto.getPositionRegistration()) {
                 case INPUT_USERNAME:
                     LOGGER.info("new user phase INPUT_USERNAME with message text {}", message.getText());
+                    if(message.isCommand()) break;
                     userDto.setName(message.getText());
                     userDto.setPositionRegistration(PositionRegistration.INPUT_CITY);
                     sendBotMessageService.sendMessage(createQuery(message.getChatId(),
@@ -107,6 +108,7 @@ public class RegistrationNewUser implements Command {
                     break;
                 case INPUT_CITY:
                     LOGGER.info("new user phase INPUT_CITY with message text {}", message.getText());
+                    if(message.isCommand()) break;
                     userDto.setCity(message.getText());
                     userDto.setPositionRegistration(PositionRegistration.INPUT_PHONE);
                     sendBotMessageService.sendMessage(createQuery(message.getChatId(),
@@ -114,6 +116,7 @@ public class RegistrationNewUser implements Command {
                     break;
                 case INPUT_PHONE:
                     LOGGER.info("new user phase INPUT_PHONE with message text {}", message.getText());
+                    if(message.isCommand()) break;
                     userDto.setPhone(message.getText());
                     userDto.setPositionRegistration(PositionRegistration.DONE);
                     UserEntity userEntity = convertToEntity(userDto);
