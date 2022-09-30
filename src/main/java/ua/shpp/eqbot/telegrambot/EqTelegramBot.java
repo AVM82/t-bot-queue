@@ -9,10 +9,8 @@ import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
 import org.telegram.telegrambots.meta.api.objects.Update;
-import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import ua.shpp.eqbot.cache.BotUserCache;
 import ua.shpp.eqbot.command.CommandContainer;
-import ua.shpp.eqbot.command.MainMenu;
 import ua.shpp.eqbot.commandchain.changerole.CommandChain;
 import ua.shpp.eqbot.commandchain.changerole.RegistrationProviderChain;
 import ua.shpp.eqbot.model.UserDto;
@@ -95,12 +93,6 @@ public class EqTelegramBot extends TelegramLongPollingBot {
             } else if (user.getPositionMenu() == PositionMenu.MENU_START) {
                 commandContainer.retrieveCommand("/start").execute(update);
                 commandContainer.retrieveCommand("mainMenu").execute(update);
-//                MainMenu menu = new MainMenu();
-//                try {
-//                    this.execute(menu.addCommand());
-//                } catch (TelegramApiException e) {
-//                    LOGGER.info("no created main menu.");
-//                }
             }
         }
     }
