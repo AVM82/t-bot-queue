@@ -2,11 +2,10 @@ package ua.shpp.eqbot.model;
 
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
-import javax.ws.rs.DefaultValue;
 
 public class ServiceDTO {
     @NotNull
-    private Long id_telegram;
+    private Long idTelegram;
     @Min(3)
     private String name;
 
@@ -33,15 +32,12 @@ public class ServiceDTO {
         this.avatar = avatar;
     }
 
-    public ServiceDTO() {
+    public Long getIdTelegram() {
+        return idTelegram;
     }
 
-    public Long getId_telegram() {
-        return id_telegram;
-    }
-
-    public ServiceDTO setId_telegram(Long id_telegram) {
-        this.id_telegram = id_telegram;
+    public ServiceDTO setIdTelegram(Long idTelegram) {
+        this.idTelegram = idTelegram;
         return this;
     }
 

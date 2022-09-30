@@ -12,13 +12,13 @@ public enum CommandName {
     NO("nocommand");
 
 
-    private final String commandName;
+    private final String nameCommand;
 
     CommandName(String commandName) {
-        this.commandName = commandName;
+        this.nameCommand = commandName;
     }
 
-    public String getCommandName() {
-        return commandName;
+    public String getNameCommand() {
+        return nameCommand;
     }
 }
