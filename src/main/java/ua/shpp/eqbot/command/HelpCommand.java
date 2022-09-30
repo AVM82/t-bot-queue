@@ -8,12 +8,13 @@ public class HelpCommand implements Command {
     private final SendBotMessageService sendBotMessageService;
 
     public static final String HELP_MESSAGE = String.format("✨<b>Доступні команди</b>✨\n\n"
-
                     + "<b>Почати\\закінчити работу з ботом</b>\n"
                     + "%s - почати работу зі ботом\n"
+                    + "%s - видалити всі свої данні з боту\n"
                     + "%s - зупинити работу з ботом\n\n"
                     + "%s - отримати допомогу\n",
-            CommandName.START.getCommandName(), CommandName.STOP.getCommandName(), CommandName.HELP.getCommandName());
+            CommandName.START.getNameCommand(), CommandName.DELETE_USER.getNameCommand(),
+            CommandName.STOP.getNameCommand(), CommandName.HELP.getNameCommand());
 
     public HelpCommand(SendBotMessageService sendBotMessageService) {
         this.sendBotMessageService = sendBotMessageService;

@@ -7,7 +7,6 @@ import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import com.amazonaws.services.s3.model.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.GetFile;
@@ -27,21 +26,25 @@ import java.util.List;
 @Component
 public class ImageService {
 
-    @Autowired
-    EqTelegramBot bot;
+    final EqTelegramBot bot;
 
     Logger log = LoggerFactory.getLogger(ImageService.class);
-    public final int IMAGE_MAX_WIDTH = 100;
+    public static final int IMAGE_MAX_WIDTH = 100;
     public static final int TIMEOUT = 5000;
 
-    public PhotoSize getBiggestImageSmallerThan (List<PhotoSize> photos, int sizeLimit){
-        return photos.stream().filter(x -> x.getWidth()<sizeLimit).filter(x->x.getHeight()<sizeLimit)
+    public ImageService(EqTelegramBot bot) {
+        this.bot = bot;
+    }
+
+    public PhotoSize getBiggestImageSmallerThan(List<PhotoSize> photos, int sizeLimit) {
+        return photos.stream().filter(x -> x.getWidth() < sizeLimit).filter(x -> x.getHeight() < sizeLimit)
                 .max(Comparator.comparing(PhotoSize::getFileSize)).orElse(null);
     }
 
-    public PhotoSize getBiggestImage(List<PhotoSize> photos){
+    public PhotoSize getBiggestImage(List<PhotoSize> photos) {
         return photos.stream().max(Comparator.comparing(PhotoSize::getFileSize)).orElse(null);
     }
+
     @Value("${aws.id}")
     private String awsId;
 
@@ -54,53 +57,53 @@ public class ImageService {
     @Value("${aws.s3.bucket_name}")
     private String s3BucketName;
 
-    private AmazonS3 setupAWS(){
+    private AmazonS3 setupAWS() {
         AWSCredentials credentials = new BasicAWSCredentials(awsId, awsAccessKey);
         AmazonS3 s3client = AmazonS3ClientBuilder.standard()
                 .withCredentials(new AWSStaticCredentialsProvider(credentials))
                 .withRegion(awsRegion)
                 .build();
-        if(!s3client.doesBucketExistV2(s3BucketName)){
+        if (!s3client.doesBucketExistV2(s3BucketName)) {
             log.warn("Bucket with such name is not exists");
             return null;
         }
         return s3client;
     }
 
-    public boolean sendImageToAWS(InputStream inputStream, String path){
+    public boolean sendImageToAWS(InputStream inputStream, String path) {
         AmazonS3 s3Client = setupAWS();
-        if(s3Client==null){
+        if (s3Client == null) {
             return false;
         }
-        PutObjectResult putObjectResult = s3Client.putObject(s3BucketName, "images/"+path, inputStream, new ObjectMetadata());
+        PutObjectResult putObjectResult = s3Client.putObject(s3BucketName, "images/" + path, inputStream, new ObjectMetadata());
         return putObjectResult.isRequesterCharged();
     }
 
-    public boolean sendImageFromAWS(String chatId, String imageName){
+    public boolean sendImageFromAWS(String chatId, String imageName) {
         AmazonS3 s3Client = setupAWS();
-        if(s3Client==null){
+        if (s3Client == null) {
             return false;
         }
-        S3Object s3Object = s3Client.getObject(new GetObjectRequest(s3BucketName, "images/"+chatId+"/"+imageName));
-        if(sendImage(s3Object.getObjectContent(), chatId, imageName)==null){
+        S3Object s3Object = s3Client.getObject(new GetObjectRequest(s3BucketName, "images/" + chatId + "/" + imageName));
+        if (sendImage(s3Object.getObjectContent(), chatId, imageName) == null) {
             return false;
         }
         log.info("Getting image from AWS");
         return true;
     }
 
-    public byte[] getArrayOfLogo(List<PhotoSize> photos){
-        try(InputStream is = photoToStream(getBiggestImageSmallerThan(photos, IMAGE_MAX_WIDTH))) {
+    public byte[] getArrayOfLogo(List<PhotoSize> photos) {
+        try (InputStream is = photoToStream(getBiggestImageSmallerThan(photos, IMAGE_MAX_WIDTH))) {
             return is.readAllBytes();
         } catch (IOException e) {
             log.warn("Can`t convert logo to byte array", e);
-            return null;
+            return new byte[0];
         }
     }
 
-    public boolean sendBigImageToAWS(List<PhotoSize> photos, String path){
+    public boolean sendBigImageToAWS(List<PhotoSize> photos, String path) {
         InputStream is = photoToStream(getBiggestImage(photos));
-        if(is == null){
+        if (is == null) {
             log.warn("Can`t send image to AWS S3 because input stream is null");
             return false;
         }
@@ -108,28 +111,28 @@ public class ImageService {
         return sendImageToAWS(is, path);
     }
 
-    public InputStream photoToStream(PhotoSize photo){
-        if(photo == null){
+    public InputStream photoToStream(PhotoSize photo) {
+        if (photo == null) {
             log.warn("Photo must not be null");
             return null;
         }
         GetFile getFile = new GetFile();
         getFile.setFileId(photo.getFileId());
-        org.telegram.telegrambots.meta.api.objects.File file = null;
+        org.telegram.telegrambots.meta.api.objects.File file;
         try {
             file = bot.execute(getFile);
         } catch (TelegramApiException e) {
             log.warn("Can`t get file from bot", e);
             return null;
         }
-        URL url = null;
+        URL url;
         try {
             url = new URL(file.getFileUrl(bot.getBotToken()));
         } catch (MalformedURLException e) {
             log.warn("Can't create URL", e);
             return null;
         }
-        HttpURLConnection conn = null;
+        HttpURLConnection conn;
         try {
             conn = (HttpURLConnection) url.openConnection();
         } catch (IOException e) {
@@ -142,9 +145,9 @@ public class ImageService {
             log.warn("Can`t make request", e);
         }
         conn.setConnectTimeout(TIMEOUT);
-        InputStream inStream = null;
+
         try {
-            return  conn.getInputStream();
+            return conn.getInputStream();
         } catch (IOException e) {
             log.warn("Can`t get input stream", e);
             return null;
@@ -152,7 +155,7 @@ public class ImageService {
 
     }
 
-    public Message sendImageFromDB(byte[] image, String chatId, String imageName){
+    public Message sendImageFromDB(byte[] image, String chatId, String imageName) {
         SendPhoto img = new SendPhoto();
         img.setChatId(chatId);
         img.setPhoto(new InputFile(new ByteArrayInputStream(image), imageName));
@@ -166,7 +169,7 @@ public class ImageService {
         }
     }
 
-    public Message sendImage (InputStream inputStream, String chatId, String imageName){
+    public Message sendImage(InputStream inputStream, String chatId, String imageName) {
         SendPhoto img = new SendPhoto();
         img.setChatId(chatId);
         img.setPhoto(new InputFile(inputStream, imageName));
@@ -178,4 +181,3 @@ public class ImageService {
         }
     }
 }
-

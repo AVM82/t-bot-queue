@@ -7,7 +7,7 @@ import ua.shpp.eqbot.model.ProviderEntity;
 import ua.shpp.eqbot.repository.ProvideRepository;
 import ua.shpp.eqbot.service.SendBotMessageService;
 
-public class AddProviderNameCommand implements  Command{
+public class AddProviderNameCommand implements Command {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AddProviderNameCommand.class);
     private final SendBotMessageService sendBotMessageService;
@@ -24,9 +24,9 @@ public class AddProviderNameCommand implements  Command{
         LOGGER.info("Call addNameProvider");
         ProviderEntity providerEntity = new ProviderEntity();
         providerEntity.setName(update.getMessage().getText());
-        providerEntity.setId_telegram(update.getMessage().getChatId());
+        providerEntity.setIdTelegram(update.getMessage().getChatId());
         provideRepository.save(providerEntity);
-        sendBotMessageService.sendMessage(update.getMessage().getChatId().toString(),"Type city");
+        sendBotMessageService.sendMessage(update.getMessage().getChatId().toString(), "Type city");
         return true;
     }
 }

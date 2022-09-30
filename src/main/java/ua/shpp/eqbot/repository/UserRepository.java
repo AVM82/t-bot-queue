@@ -8,6 +8,6 @@ import ua.shpp.eqbot.model.UserEntity;
 @Repository
 public interface UserRepository extends JpaRepository<UserEntity, Long> {
 
-    @Query("select t from UserEntity t where t. id_telegram = ?1")
-    UserEntity findFirstById_telegram(Long id);
+    @Query("select t from UserEntity t where t. idTelegram = ?1")
+    UserEntity findFirstByIdTelegram(Long id);
 }

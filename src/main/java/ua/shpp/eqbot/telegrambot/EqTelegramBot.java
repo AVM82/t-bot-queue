@@ -27,24 +27,25 @@ import static ua.shpp.eqbot.model.PositionMenu.MENU_CREATE_SERVICE;
 
 @Component
 public class EqTelegramBot extends TelegramLongPollingBot {
-    private final static Logger LOGGER = LoggerFactory.getLogger(EqTelegramBot.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(EqTelegramBot.class);
     private final CommandContainer commandContainer;
     private final UserRepository userRepository;
     private final ServiceRepository serviceRepository;
     private final UserService userService;
     private boolean isCommandChain = false;
-
     private CommandChain commandChain;
     ProvideRepository provideRepository;
 
 
     @Autowired
-    public EqTelegramBot(UserRepository userRepository, ServiceRepository serviceRepository, ProvideRepository provideRepository, @Lazy ImageService imageService, UserService userService, BundleLanguage bundleLanguage) {
-        this.userRepository = userRepository;
-        this.serviceRepository = serviceRepository;
+    public EqTelegramBot(UserRepository userRepository, ServiceRepository serviceRepository, ProvideRepository provideRepository, @Lazy ImageService imageService) {
         this.provideRepository = provideRepository;
-        this.userService = userService;
-        this.commandContainer = new CommandContainer(new SendBotMessageServiceImpl(this), serviceRepository, provideRepository, imageService, userService, bundleLanguage);
+        this.commandContainer = new CommandContainer(
+                new SendBotMessageServiceImpl(this),
+                userRepository,
+                serviceRepository,
+                provideRepository,
+                imageService);
     }
 
     @Value("${telegram.bot.name}")
@@ -120,7 +121,7 @@ public class EqTelegramBot extends TelegramLongPollingBot {
             if (messageText.equals("Change role to Provider") || messageText.equals("Реєстрація нового провайдера")) {
                 commandContainer.retrieveCommand(messageText).execute(update);
             } else {
-                commandContainer.retrieveCommand(NO.getCommandName()).execute(update);
+                commandContainer.retrieveCommand(NO.getNameCommand()).execute(update);
             }
         }
     }
@@ -152,5 +153,4 @@ public class EqTelegramBot extends TelegramLongPollingBot {
             isCommandChain = false;
         }
     }
-
 }
