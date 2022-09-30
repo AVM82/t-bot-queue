@@ -4,11 +4,11 @@ import com.google.common.collect.ImmutableMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ua.shpp.eqbot.repository.ProvideRepository;
-import ua.shpp.eqbot.repository.SaveService;
 import ua.shpp.eqbot.repository.ServiceRepository;
 import ua.shpp.eqbot.repository.UserRepository;
 import ua.shpp.eqbot.service.ImageService;
 import ua.shpp.eqbot.service.SendBotMessageService;
+import ua.shpp.eqbot.service.UserService;
 
 /**
  * Container of the {@link Command}s, which are using for handling telegram commands.
@@ -20,9 +20,9 @@ public class CommandContainer {
     private final Command unknownCommand;
 
     @Autowired
-    public CommandContainer(SendBotMessageService sendBotMessageService, UserRepository userRepository, ServiceRepository serviceRepository, ProvideRepository provideRepository, ImageService imageService) {
+    public CommandContainer(SendBotMessageService sendBotMessageService, UserRepository userRepository, ServiceRepository serviceRepository, ProvideRepository provideRepository, ImageService imageService, UserService userService) {
         commandMap = ImmutableMap.<String, Command>builder()
-                .put(CommandName.REG.getCommandName(), new RegistrationNewUser(sendBotMessageService, userRepository))
+                .put(CommandName.REG.getCommandName(), new RegistrationNewUser(sendBotMessageService, userRepository, userService))
                 .put(CommandName.START.getCommandName(), new StartCommand(sendBotMessageService))
                 .put(CommandName.HELP.getCommandName(), new HelpCommand(sendBotMessageService))
                 .put(CommandName.NO.getCommandName(), new NoCommand(sendBotMessageService))

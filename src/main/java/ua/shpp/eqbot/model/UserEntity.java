@@ -13,48 +13,63 @@ public class UserEntity {
     private String name;
     private String city;
     private String phone;
+    private String language;
 
     public UserEntity() {
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getCity() {
-        return city;
-    }
-
-    public void setCity(String city) {
-        this.city = city;
-    }
-
-    public String getPhone() {
-        return phone;
-    }
-
-    public void setPhone(String phone) {
-        this.phone = phone;
     }
 
     public Long getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public UserEntity setId(Long id) {
         this.id = id;
+        return this;
     }
 
     public Long getId_telegram() {
         return id_telegram;
     }
 
-    public void setId_telegram(Long id_telegram) {
+    public UserEntity setId_telegram(Long id_telegram) {
         this.id_telegram = id_telegram;
+        return this;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public UserEntity setName(String name) {
+        this.name = name;
+        return this;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public UserEntity setCity(String city) {
+        this.city = city;
+        return this;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public UserEntity setPhone(String phone) {
+        this.phone = phone;
+        return this;
+    }
+
+    public String getLanguage() {
+        return language;
+    }
+
+    public UserEntity setLanguage(String language) {
+        this.language = language;
+        return this;
     }
 
     @Override
