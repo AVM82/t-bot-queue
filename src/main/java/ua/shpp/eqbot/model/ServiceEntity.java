@@ -33,8 +33,8 @@ public class ServiceEntity {
         return idTelegram;
     }
 
-    public ServiceEntity setIdTelegram(Long id_telegram) {
-        this.idTelegram = id_telegram;
+    public ServiceEntity setIdTelegram(Long idTelegram) {
+        this.idTelegram = idTelegram;
         return this;
     }
 
@@ -74,7 +74,7 @@ public class ServiceEntity {
     @Override
     public String toString() {
         final StringBuilder sb = new StringBuilder("ServiceEntity{");
-        sb.append("id_telegram=").append(idTelegram);
+        sb.append("idTelegram=").append(idTelegram);
         sb.append(", name='").append(name).append('\'');
         sb.append(", description='").append(description).append('\'');
         sb.append(", avatar=").append(Arrays.toString(avatar));

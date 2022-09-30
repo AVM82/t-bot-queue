@@ -23,8 +23,8 @@ public class UserDto {
         return idTelegram;
     }
 
-    public UserDto setIdTelegram(Long id_telegram) {
-        this.idTelegram = id_telegram;
+    public UserDto setIdTelegram(Long idTelegram) {
+        this.idTelegram = idTelegram;
         return this;
     }
 

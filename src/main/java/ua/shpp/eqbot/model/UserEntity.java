@@ -28,8 +28,8 @@ public class UserEntity {
         return idTelegram;
     }
 
-    public UserEntity setIdTelegram(Long id_telegram) {
-        this.idTelegram = id_telegram;
+    public UserEntity setIdTelegram(Long idTelegram) {
+        this.idTelegram = idTelegram;
         return this;
     }
 
@@ -85,7 +85,7 @@ public class UserEntity {
     @Override
     public String toString() {
         final StringBuilder sb = new StringBuilder("UserEntity{");
-        sb.append("id_telegram=").append(idTelegram);
+        sb.append("idTelegram=").append(idTelegram);
         sb.append(", name='").append(name).append('\'');
         sb.append(", city='").append(city).append('\'');
         sb.append(", phone='").append(phone).append('\'');

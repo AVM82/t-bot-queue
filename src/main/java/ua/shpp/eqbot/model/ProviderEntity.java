@@ -27,8 +27,8 @@ public class ProviderEntity {
         return city;
     }
 
-    public void setIdTelegram(Long id_telegram) {
-        this.idTelegram = id_telegram;
+    public void setIdTelegram(Long idTelegram) {
+        this.idTelegram = idTelegram;
     }
 
     public Long getIdTelegram() {
@@ -51,7 +51,7 @@ public class ProviderEntity {
     @Override
     public String toString() {
         final StringBuilder sb = new StringBuilder("ProviderEntity{");
-        sb.append("id_telegram=").append(idTelegram);
+        sb.append("idTelegram=").append(idTelegram);
         sb.append(", name='").append(name).append('\'');
         sb.append(", city='").append(city).append('\'');
         sb.append('}');
