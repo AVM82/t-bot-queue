@@ -8,6 +8,7 @@ public enum CommandName {
     SETTINGS("/settings"),
     ADD_SERVICE("/add"),
     CHANGE_ROLE_TO_PROVIDER("Change role to Provider"),
+    MAIN_MENU("mainMenu"),
     DELETE_USER("/delete"),
     NO("nocommand");
 

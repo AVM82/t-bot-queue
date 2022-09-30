@@ -34,6 +34,7 @@ public class CommandContainer {
                         new AddService(sendBotMessageService, serviceRepository, imageService, provideRepository))
                 .put(CommandName.DELETE_USER.getNameCommand(), new DeleteUserCommand(sendBotMessageService,
                         userRepository, provideRepository, serviceRepository))
+                .put(CommandName.MAIN_MENU.getNameCommand(), new MainMenu(sendBotMessageService))
                 .build();
 
         unknownCommand = new UnknownCommand(sendBotMessageService);
