@@ -9,6 +9,7 @@ import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ua.shpp.eqbot.model.UserDto;
 import ua.shpp.eqbot.model.UserEntity;
 import ua.shpp.eqbot.repository.UserRepository;
@@ -51,6 +52,7 @@ public class UserService {
         return null;
     }
 
+    @Transactional
     @CacheEvict(cacheNames = dtoCacheName, key = "#id")
     public boolean remove(Long id) {
         LOGGER.info("delete userDto and All entity");
