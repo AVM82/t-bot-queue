@@ -66,7 +66,7 @@ public class RegistrationNewUser implements Command {
     private UserDto generateUserFromMessage(Message message) {
         UserDto user = new UserDto();
         user.setName(message.getFrom().getUserName())
-                .setId_telegram(message.getChatId())
+                .setIdTelegram(message.getChatId())
                 .setPositionRegistration(PositionRegistration.INPUT_USERNAME)
                 .setLanguage(message.getFrom().getLanguageCode())
                 .setPositionMenu(PositionMenu.MENU_START);
@@ -123,7 +123,7 @@ public class RegistrationNewUser implements Command {
                     sendBotMessageService.sendMessage(createQuery(message.getChatId(),
                             String.format(bundleLanguage.getValue(
                                             message.getChatId(), "registered"),
-                                    userDto.getId_telegram(), userDto.getName(), userDto.getCity(), userDto.getPhone())));
+                                    userDto.getIdTelegram(), userDto.getName(), userDto.getCity(), userDto.getPhone())));
                     break;
                 default:
                     //do nothing

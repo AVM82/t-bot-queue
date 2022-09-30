@@ -8,7 +8,7 @@ import java.util.Objects;
 @Table(name = "appuser")
 public class UserEntity {
     @Id
-    private Long id_telegram;
+    private Long idTelegram;
 
     private String name;
     private String city;
@@ -24,12 +24,12 @@ public class UserEntity {
         timeCreated = LocalDateTime.now();
     }
 
-    public Long getId_telegram() {
-        return id_telegram;
+    public Long getIdTelegram() {
+        return idTelegram;
     }
 
-    public UserEntity setId_telegram(Long id_telegram) {
-        this.id_telegram = id_telegram;
+    public UserEntity setIdTelegram(Long id_telegram) {
+        this.idTelegram = id_telegram;
         return this;
     }
 
@@ -74,18 +74,18 @@ public class UserEntity {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         UserEntity that = (UserEntity) o;
-        return Objects.equals(id_telegram, that.id_telegram) && Objects.equals(name, that.name) && Objects.equals(city, that.city) && Objects.equals(phone, that.phone) && Objects.equals(language, that.language) && Objects.equals(timeCreated, that.timeCreated);
+        return Objects.equals(idTelegram, that.idTelegram) && Objects.equals(name, that.name) && Objects.equals(city, that.city) && Objects.equals(phone, that.phone) && Objects.equals(language, that.language) && Objects.equals(timeCreated, that.timeCreated);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id_telegram, name, city, phone, language, timeCreated);
+        return Objects.hash(idTelegram, name, city, phone, language, timeCreated);
     }
 
     @Override
     public String toString() {
         final StringBuilder sb = new StringBuilder("UserEntity{");
-        sb.append("id_telegram=").append(id_telegram);
+        sb.append("id_telegram=").append(idTelegram);
         sb.append(", name='").append(name).append('\'');
         sb.append(", city='").append(city).append('\'');
         sb.append(", phone='").append(phone).append('\'');

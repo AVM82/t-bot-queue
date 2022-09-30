@@ -5,6 +5,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
@@ -19,7 +20,6 @@ public class UserService {
 
     private final String dtoCacheName = "cacheDto";
     private final CacheManager cacheManager;
-
     private final ModelMapper modelMapper = new ModelMapper();
 
     public UserService(UserRepository userRepository, CacheManager cacheManager) {
@@ -30,7 +30,7 @@ public class UserService {
     public UserEntity getEntity(Long id) {
         LOGGER.info("get userEntity by id " + id);
         UserDto dto = getDto(id);
-        return dto != null ? convertToEntity(dto) : userRepository.findFirstById_telegram(id);
+        return dto != null ? convertToEntity(dto) : userRepository.findFirstByIdTelegram(id);
     }
 
     public UserEntity saveEntity(UserEntity userEntity) {
@@ -39,7 +39,7 @@ public class UserService {
         return userRepository.save(userEntity);
     }
 
-    @CachePut(cacheNames = dtoCacheName, key = "#userDto.id_telegram")
+    @CachePut(cacheNames = dtoCacheName, key = "#userDto.idTelegram")
     public UserDto saveDto(UserDto userDto) {
         LOGGER.info("save userDto " + userDto);
         return userDto;//****
@@ -51,13 +51,20 @@ public class UserService {
         return null;
     }
 
+    @CacheEvict(cacheNames = dtoCacheName, key = "#id")
+    public boolean remove(Long id) {
+        LOGGER.info("delete userDto and All entity");
+        userRepository.deleteAllByIdTelegram(id);
+        return true;
+    }
+
     /**
      * its need modificate
      */
     private void saveDto(UserEntity userEntity) {
         Cache cache = cacheManager.getCache(dtoCacheName);
         if (cache != null) { // first attempt ?
-            Cache.ValueWrapper valueWrapper = cache.get(userEntity.getId_telegram());
+            Cache.ValueWrapper valueWrapper = cache.get(userEntity.getIdTelegram());
             UserDto userDto;
             if (valueWrapper == null) {
                 userDto = convertToDto(userEntity);
@@ -68,7 +75,7 @@ public class UserService {
                         .setCity(userEntity.getCity())
                         .setPhone(userEntity.getPhone());
             }
-            cache.put(userEntity.getId_telegram(), userDto);
+            cache.put(userEntity.getIdTelegram(), userDto);
         }
     }
 

@@ -2,7 +2,7 @@ package ua.shpp.eqbot.model;
 
 
 public class UserDto {
-    private Long id_telegram;
+    private Long idTelegram;
     private String name;
     private String city;
     private String phone;
@@ -19,12 +19,12 @@ public class UserDto {
         return this;
     }
 
-    public Long getId_telegram() {
-        return id_telegram;
+    public Long getIdTelegram() {
+        return idTelegram;
     }
 
-    public UserDto setId_telegram(Long id_telegram) {
-        this.id_telegram = id_telegram;
+    public UserDto setIdTelegram(Long id_telegram) {
+        this.idTelegram = id_telegram;
         return this;
     }
 

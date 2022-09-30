@@ -4,7 +4,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
-import ua.shpp.eqbot.cache.BotUserCache;
 import ua.shpp.eqbot.internationalization.BundleLanguage;
 import ua.shpp.eqbot.model.ProviderEntity;
 import ua.shpp.eqbot.model.ServiceEntity;
@@ -14,19 +13,22 @@ import ua.shpp.eqbot.repository.ProvideRepository;
 import ua.shpp.eqbot.repository.ServiceRepository;
 import ua.shpp.eqbot.repository.UserRepository;
 import ua.shpp.eqbot.service.SendBotMessageService;
+import ua.shpp.eqbot.service.UserService;
 
 
 public class DeleteUserCommand implements Command {
     private static final Logger LOGGER = LoggerFactory.getLogger(DeleteUserCommand.class);
     private final SendBotMessageService sendBotMessageService;
-    private final UserRepository userRepository;
+    private final UserService userService;
+    private final BundleLanguage bundleLanguage;
     private final ProvideRepository provideRepository;
     private final ServiceRepository serviceRepository;
 
     public DeleteUserCommand(SendBotMessageService sendBotMessageService, UserRepository userRepository,
-                             ProvideRepository provideRepository, ServiceRepository serviceRepository) {
+                             UserService userService, BundleLanguage bundleLanguage, ProvideRepository provideRepository, ServiceRepository serviceRepository) {
         this.sendBotMessageService = sendBotMessageService;
-        this.userRepository = userRepository;
+        this.userService = userService;
+        this.bundleLanguage = bundleLanguage;
         this.provideRepository = provideRepository;
         this.serviceRepository = serviceRepository;
     }
@@ -45,21 +47,13 @@ public class DeleteUserCommand implements Command {
             provideRepository.delete(providerEntity);
         }
 
-        UserEntity userEntity = userRepository.findFirstByIdTelegram(update.getMessage().getChatId());
-        if (userEntity != null) {
-            LOGGER.info("deleted user");
-            userRepository.delete(userEntity);
-        }
+        userService.remove(update.getMessage().getChatId());
 
-        UserDto userDto = BotUserCache.findBy(update.getMessage().getChatId());
-        if (userDto != null) {
-            LOGGER.info("deleted user in cache");
-            sendBotMessageService.sendMessage(SendMessage.builder()
-                    .text(BundleLanguage.getValue(update.getMessage().getChatId(), "user_deleted"))
-                    .chatId(update.getMessage().getChatId())
-                    .build());
-            BotUserCache.remove(userDto);
-        }
+        sendBotMessageService.sendMessage(SendMessage.builder()
+                .text(bundleLanguage.getValue(update.getMessage().getChatId(), "user_deleted"))
+                .chatId(update.getMessage().getChatId())
+                .build());
+
         return true;
     }
 }

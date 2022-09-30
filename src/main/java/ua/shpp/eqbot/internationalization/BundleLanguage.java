@@ -37,5 +37,4 @@ public class BundleLanguage {
     }
 
     //instance of this class is not needed
-    private BundleLanguage() {}
 }

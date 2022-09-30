@@ -9,7 +9,7 @@ import java.util.Objects;
 public class ServiceEntity {
 
     @Id
-    private Long id_telegram;
+    private Long idTelegram;
     private String name;
     private String description;
 
@@ -29,12 +29,12 @@ public class ServiceEntity {
     }
 
 
-    public Long getId_telegram() {
-        return id_telegram;
+    public Long getIdTelegram() {
+        return idTelegram;
     }
 
-    public ServiceEntity setId_telegram(Long id_telegram) {
-        this.id_telegram = id_telegram;
+    public ServiceEntity setIdTelegram(Long id_telegram) {
+        this.idTelegram = id_telegram;
         return this;
     }
 
@@ -61,12 +61,12 @@ public class ServiceEntity {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         ServiceEntity that = (ServiceEntity) o;
-        return Objects.equals(id_telegram, that.id_telegram) && Objects.equals(name, that.name) && Objects.equals(description, that.description) && Arrays.equals(avatar, that.avatar);
+        return Objects.equals(idTelegram, that.idTelegram) && Objects.equals(name, that.name) && Objects.equals(description, that.description) && Arrays.equals(avatar, that.avatar);
     }
 
     @Override
     public int hashCode() {
-        int result = Objects.hash(id_telegram, name, description);
+        int result = Objects.hash(idTelegram, name, description);
         result = 31 * result + Arrays.hashCode(avatar);
         return result;
     }
@@ -74,7 +74,7 @@ public class ServiceEntity {
     @Override
     public String toString() {
         final StringBuilder sb = new StringBuilder("ServiceEntity{");
-        sb.append("id_telegram=").append(id_telegram);
+        sb.append("id_telegram=").append(idTelegram);
         sb.append(", name='").append(name).append('\'');
         sb.append(", description='").append(description).append('\'');
         sb.append(", avatar=").append(Arrays.toString(avatar));

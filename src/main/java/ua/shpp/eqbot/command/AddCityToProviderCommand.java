@@ -15,10 +15,12 @@ public class AddCityToProviderCommand implements Command {
     private static final Logger LOGGER = LoggerFactory.getLogger(AddCityToProviderCommand.class);
     private final SendBotMessageService sendBotMessageService;
     private final ProvideRepository provideRepository;
+    private final BundleLanguage bundleLanguage;
 
-    public AddCityToProviderCommand(SendBotMessageService sendBotMessageService, ProvideRepository provideRepository) {
+    public AddCityToProviderCommand(SendBotMessageService sendBotMessageService, ProvideRepository provideRepository, BundleLanguage bundleLanguage) {
         this.sendBotMessageService = sendBotMessageService;
         this.provideRepository = provideRepository;
+        this.bundleLanguage = bundleLanguage;
     }
 
     @Override
@@ -31,7 +33,7 @@ public class AddCityToProviderCommand implements Command {
 
         if (ServiceCache.justRegistrated) {
             Long idTelegram = update.getMessage().getChatId();
-            String message = BundleLanguage.getValue(idTelegram, "input_name_service");
+            String message = bundleLanguage.getValue(idTelegram, "input_name_service");
             sendBotMessageService.sendMessage(SendMessage.builder().chatId(idTelegram).text(message).build());
             LOGGER.info("Add new service.");
             ServiceCache.justRegistrated = false;
