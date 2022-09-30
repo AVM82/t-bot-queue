@@ -2,6 +2,7 @@ package ua.shpp.eqbot.internationalization;
 
 import org.springframework.stereotype.Component;
 import ua.shpp.eqbot.cache.BotUserCache;
+import ua.shpp.eqbot.model.UserDto;
 
 import java.util.Locale;
 import java.util.ResourceBundle;
@@ -10,9 +11,15 @@ import java.util.ResourceBundle;
 public class BundleLanguage {
 
     public static String getValue(long userId, String value) {
-        String language = BotUserCache.findBy(userId).getLanguage();
-        if (language == null)
+
+        UserDto user = BotUserCache.findBy(userId);
+        String language;
+
+        if (user == null)
             language = "uk";
+        else
+            language = user.getLanguage();
+
         ResourceBundle resourceBundle = ResourceBundle.getBundle(
                 "language",
                 new Locale(language, value)
@@ -21,5 +28,6 @@ public class BundleLanguage {
     }
 
     //instance of this class is not needed
-    private BundleLanguage() {}
+    private BundleLanguage() {
+    }
 }
