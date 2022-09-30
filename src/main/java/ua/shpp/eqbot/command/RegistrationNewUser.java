@@ -13,7 +13,6 @@ import ua.shpp.eqbot.model.PositionMenu;
 import ua.shpp.eqbot.model.PositionRegistration;
 import ua.shpp.eqbot.model.UserDto;
 import ua.shpp.eqbot.model.UserEntity;
-import ua.shpp.eqbot.repository.UserRepository;
 import ua.shpp.eqbot.service.SendBotMessageService;
 import ua.shpp.eqbot.service.UserService;
 
@@ -21,14 +20,12 @@ import ua.shpp.eqbot.service.UserService;
 public class RegistrationNewUser implements Command {
     private static final Logger LOGGER = LoggerFactory.getLogger(RegistrationNewUser.class);
     private final SendBotMessageService sendBotMessageService;
-    private final UserRepository repository;
     private final UserService userService;
     private final ModelMapper modelMapper = new ModelMapper();
 
     @Autowired
-    public RegistrationNewUser(SendBotMessageService sendBotMessageService, UserRepository repository, UserService userService) {
+    public RegistrationNewUser(SendBotMessageService sendBotMessageService, UserService userService) {
         this.sendBotMessageService = sendBotMessageService;
-        this.repository = repository;
         this.userService = userService;
     }
 

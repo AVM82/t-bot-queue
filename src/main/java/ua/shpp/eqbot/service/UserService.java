@@ -12,8 +12,6 @@ import ua.shpp.eqbot.model.UserDto;
 import ua.shpp.eqbot.model.UserEntity;
 import ua.shpp.eqbot.repository.UserRepository;
 
-import java.util.Objects;
-
 @Service
 public class UserService {
     private static final Logger LOGGER = LoggerFactory.getLogger(UserService.class);
