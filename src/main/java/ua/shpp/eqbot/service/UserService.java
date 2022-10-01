@@ -18,7 +18,6 @@ import ua.shpp.eqbot.repository.UserRepository;
 public class UserService {
     private static final Logger LOGGER = LoggerFactory.getLogger(UserService.class);
     private final UserRepository userRepository;
-
     private final String dtoCacheName = "cacheDto";
     private final CacheManager cacheManager;
     private final ModelMapper modelMapper = new ModelMapper();
