@@ -6,12 +6,14 @@ import org.springframework.stereotype.Repository;
 import ua.shpp.eqbot.model.ProviderEntity;
 
 import java.util.List;
+import java.util.Optional;
 
 
 @Repository
 public interface ProvideRepository extends JpaRepository<ProviderEntity, Long> {
 //    @Query("select t from ProviderEntity t where t. id = ?1")
 //    Optional<ProviderEntity> findById(Long id);
+
 
     Optional<ProviderEntity> findById(Long id);
 

@@ -94,4 +94,5 @@ public class UserEntity {
         sb.append('}');
         return sb.toString();
     }
+
 }

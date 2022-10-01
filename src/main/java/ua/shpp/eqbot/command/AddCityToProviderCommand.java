@@ -30,11 +30,9 @@ public class AddCityToProviderCommand implements Command {
         LOGGER.info("Added city to provider");
         ProviderEntity providerEntity = null;
 //        Optional<ProviderEntity> providerEntity1 = provideRepository.findById(update.getMessage().getChatId());
-        Optional<ProviderEntity> providerEntity1 =  provideRepository
-                .findPleaseProviderEntitiesByIdTelegramAAndName(update.getMessage().getChatId(), "lol");
-        if (providerEntity1.isPresent()) {
-         providerEntity = providerEntity1.get();
-        }
+        ProviderEntity providerEntity1 =  provideRepository
+                .findAllByIdTelegram(update.getMessage().getChatId()).get(0); /////
+
         LOGGER.info("========= {}", providerEntity);
         providerEntity.setCity(update.getMessage().getText());
         provideRepository.save(providerEntity);

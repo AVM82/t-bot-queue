@@ -52,11 +52,11 @@ public class UserService {
         return null;
     }
 
-    @Transactional
+
     @CacheEvict(cacheNames = dtoCacheName, key = "#id")
     public boolean remove(Long id) {
         LOGGER.info("delete userDto and All entity");
-        userRepository.deleteAllByIdTelegram(id);
+        userRepository.delete(getEntity(id));
         return true;
     }
 

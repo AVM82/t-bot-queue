@@ -44,7 +44,7 @@ class UserServiceTest {
 
     @BeforeEach
     void setUp() {
-
+        userService = new UserService(userRepository, cacheManager);
     }
 
     private UserEntity convertToEntity(UserDto userDto) {
@@ -62,7 +62,6 @@ class UserServiceTest {
         UserEntity dto = userService.getEntity(1L);
 
         assertThat(dto.getName(), is("kolobok"));
-
     }
 
     @Test
