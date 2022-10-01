@@ -28,6 +28,7 @@ public class AddCityToProviderCommand implements Command {
     @Override
     public boolean execute(Update update) {
         LOGGER.info("Added city to provider");
+        String city = update.getMessage().getText();
         ProviderEntity providerEntity = null;
 //        Optional<ProviderEntity> providerEntity1 = provideRepository.findById(update.getMessage().getChatId());
         ProviderEntity providerEntity1 =  provideRepository
