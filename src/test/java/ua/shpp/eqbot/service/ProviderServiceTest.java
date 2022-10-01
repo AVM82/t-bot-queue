@@ -7,8 +7,10 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.telegram.telegrambots.starter.TelegramBotInitializer;
 import ua.shpp.eqbot.command.AddService;
 import ua.shpp.eqbot.command.CommandContainer;
+import ua.shpp.eqbot.command.RegistrationNewUser;
 import ua.shpp.eqbot.model.ProviderEntity;
 import ua.shpp.eqbot.repository.ProvideRepository;
+import ua.shpp.eqbot.telegrambot.EqTelegramBot;
 
 import java.util.List;
 import java.util.Optional;
@@ -17,7 +19,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 
 @TestMethodOrder(MethodOrderer.DisplayName.class)
-@SpringBootTest
+@SpringBootTest(properties = { "application.properties" })
 class ProviderServiceTest {
     @MockBean
     AddService addService;
@@ -27,6 +29,12 @@ class ProviderServiceTest {
     ImageService imageService;
     @MockBean
     TelegramBotInitializer telegramBotInitializer;
+    @MockBean
+    RegistrationNewUser registrationNewUser;
+    @MockBean
+    SendBotMessageServiceImpl sendBotMessageService;
+    @MockBean
+    EqTelegramBot eqTelegramBot;
 
     @Autowired
     private ProvideRepository provideRepository;

@@ -17,6 +17,7 @@ import ua.shpp.eqbot.command.CommandContainer;
 import ua.shpp.eqbot.model.UserDto;
 import ua.shpp.eqbot.model.UserEntity;
 import ua.shpp.eqbot.repository.UserRepository;
+import ua.shpp.eqbot.telegrambot.EqTelegramBot;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
@@ -33,7 +34,8 @@ class UserServiceTest {
     @MockBean
     TelegramBotInitializer telegramBotInitializer;
     private final ModelMapper modelMapper = new ModelMapper();
-
+    @MockBean
+    EqTelegramBot eqTelegramBot;
     @Autowired
     private CacheManager cacheManager;
 
