@@ -10,12 +10,13 @@ import java.util.List;
 
 @Repository
 public interface ProvideRepository extends JpaRepository<ProviderEntity, Long> {
-    @Query("select t from ProviderEntity t where t. idTelegram = ?1")
-    ProviderEntity findFirstByIdTelegram(Long id);
+//    @Query("select t from ProviderEntity t where t. id = ?1")
+//    Optional<ProviderEntity> findById(Long id);
 
-    @Query("select t from ProviderEntity t where t. idTelegram = ?1")
-    ProviderEntity findByIdTelegram(Long id);
+    Optional<ProviderEntity> findById(Long id);
 
     @Query("select t from ProviderEntity t where t. idTelegram = ?1")
     List<ProviderEntity> findAllByIdTelegram(Long id);
+    @Query("select t from ProviderEntity t where t. id = ?1 and t.city = ?2")
+    Optional<ProviderEntity> findPleaseProviderEntitiesByIdTelegramAAndName(Long id, String name);
 }

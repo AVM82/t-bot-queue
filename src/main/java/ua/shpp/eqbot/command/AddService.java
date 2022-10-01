@@ -38,7 +38,6 @@ public class AddService implements Command {
     private final BundleLanguage bundleLanguage;
 
     private final ProvideRepository provideRepository;
-    private boolean hasSuchName = false;
 
     @Autowired
     public AddService(SendBotMessageService sendBotMessageService, ServiceRepository serviceRepository, ImageService imageService, ProvideRepository provideRepository, UserService userService, BundleLanguage bundleLanguage) {
@@ -70,7 +69,7 @@ public class AddService implements Command {
             id = update.getMessage().getChatId();
         }
 
-        if (provideRepository.findByIdTelegram(id) != null)/*providerRepository.findById(update.getMessage().getChatId())*/ {
+        if (provideRepository.findById(id).isPresent())/*providerRepository.findById(update.getMessage().getChatId())*/ {
             ServiceDTO newService;
             if (!update.hasMessage()) {
                 Long idTelegram = update.getCallbackQuery().getFrom().getId();
@@ -120,7 +119,6 @@ public class AddService implements Command {
     }
 
     private void createService(Update update) {
-        hasSuchName = false;
         Long idTelegram;
         if (update.getMessage() != null) {
             idTelegram = update.getMessage().getChatId();
@@ -133,12 +131,11 @@ public class AddService implements Command {
     }
 
     private boolean checkIfServiceExists(String name, Long idTelegram) {
-        boolean result = serviceRepository.getFirstByNameAndAndIdTelegram(name, idTelegram) != null;
+        boolean result = serviceRepository.getFirstByNameAndId(name, idTelegram) != null;
         if (result) {
             String message = bundleLanguage.getValue(idTelegram, "service_exist");
             sendBotMessageService.sendMessage(SendMessage.builder().chatId(idTelegram)
                     .text(message).build());
-            hasSuchName = true;
         }
         return result;
     }

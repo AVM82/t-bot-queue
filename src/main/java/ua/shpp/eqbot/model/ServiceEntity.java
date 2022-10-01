@@ -2,15 +2,18 @@ package ua.shpp.eqbot.model;
 
 import org.hibernate.annotations.Type;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
 import java.util.Arrays;
-import java.util.Objects;
 
 @Entity
 @Table(name = "services")
 public class ServiceEntity {
-
     @Id
+    private Long id;
+
     private Long idTelegram;
     private String name;
     private String description;
@@ -58,29 +61,46 @@ public class ServiceEntity {
         return this;
     }
 
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
+
         ServiceEntity that = (ServiceEntity) o;
-        return Objects.equals(idTelegram, that.idTelegram) && Objects.equals(name, that.name) && Objects.equals(description, that.description) && Arrays.equals(avatar, that.avatar);
+
+        if (id != null ? !id.equals(that.id) : that.id != null) return false;
+        if (idTelegram != null ? !idTelegram.equals(that.idTelegram) : that.idTelegram != null) return false;
+        if (name != null ? !name.equals(that.name) : that.name != null) return false;
+        if (description != null ? !description.equals(that.description) : that.description != null) return false;
+        return Arrays.equals(avatar, that.avatar);
     }
 
     @Override
     public int hashCode() {
-        int result = Objects.hash(idTelegram, name, description);
+        int result = id != null ? id.hashCode() : 0;
+        result = 31 * result + (idTelegram != null ? idTelegram.hashCode() : 0);
+        result = 31 * result + (name != null ? name.hashCode() : 0);
+        result = 31 * result + (description != null ? description.hashCode() : 0);
         result = 31 * result + Arrays.hashCode(avatar);
         return result;
     }
 
     @Override
     public String toString() {
-        final StringBuilder sb = new StringBuilder("ServiceEntity{");
-        sb.append("idTelegram=").append(idTelegram);
-        sb.append(", name='").append(name).append('\'');
-        sb.append(", description='").append(description).append('\'');
-        sb.append(", avatar=").append(Arrays.toString(avatar));
-        sb.append('}');
-        return sb.toString();
+        return "ServiceEntity{" +
+                "id=" + id +
+                ", idTelegram=" + idTelegram +
+                ", name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                ", avatar=" + Arrays.toString(avatar) +
+                '}';
     }
 }

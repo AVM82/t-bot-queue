@@ -27,7 +27,7 @@ public class ChangeRoleToProviderCommand implements Command {
 
     @Override
     public boolean execute(Update update) {
-        if (provideRepository.findByIdTelegram(update.getMessage().getChatId()) != null)/*providerRepository.findById(update.getMessage().getChatId())*/ {
+        if (provideRepository.findById(update.getMessage().getChatId()).isPresent())/*providerRepository.findById(update.getMessage().getChatId())*/ {
             LOGGER.info("Find provider with such id and enroll as a provider");
             sendBotMessageService.sendMessage(update.getMessage().getChatId().toString(), "U switched to provider");
         } else {

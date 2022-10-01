@@ -10,6 +10,8 @@ import ua.shpp.eqbot.model.ProviderEntity;
 import ua.shpp.eqbot.repository.ProvideRepository;
 import ua.shpp.eqbot.service.SendBotMessageService;
 
+import java.util.Optional;
+
 
 public class AddCityToProviderCommand implements Command {
     private static final Logger LOGGER = LoggerFactory.getLogger(AddCityToProviderCommand.class);
@@ -26,7 +28,14 @@ public class AddCityToProviderCommand implements Command {
     @Override
     public boolean execute(Update update) {
         LOGGER.info("Added city to provider");
-        ProviderEntity providerEntity = provideRepository.findFirstByIdTelegram(update.getMessage().getChatId());
+        ProviderEntity providerEntity = null;
+//        Optional<ProviderEntity> providerEntity1 = provideRepository.findById(update.getMessage().getChatId());
+        Optional<ProviderEntity> providerEntity1 =  provideRepository
+                .findPleaseProviderEntitiesByIdTelegramAAndName(update.getMessage().getChatId(), "lol");
+        if (providerEntity1.isPresent()) {
+         providerEntity = providerEntity1.get();
+        }
+        LOGGER.info("========= {}", providerEntity);
         providerEntity.setCity(update.getMessage().getText());
         provideRepository.save(providerEntity);
         sendBotMessageService.sendMessage(update.getMessage().getChatId().toString(), "Provider registered");

@@ -7,9 +7,20 @@ import java.util.Objects;
 @Entity
 public class ProviderEntity {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
     private Long idTelegram;
     private String name;
     private String city;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
 
     public void setName(String name) {
         this.name = name;
@@ -39,22 +50,33 @@ public class ProviderEntity {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
+
         ProviderEntity that = (ProviderEntity) o;
-        return Objects.equals(idTelegram, that.idTelegram) && Objects.equals(name, that.name) && Objects.equals(city, that.city);
+
+        if (id != null ? !id.equals(that.id) : that.id != null) return false;
+        if (idTelegram != null ? !idTelegram.equals(that.idTelegram) : that.idTelegram != null) return false;
+        if (name != null ? !name.equals(that.name) : that.name != null) return false;
+        return city != null ? city.equals(that.city) : that.city == null;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(idTelegram, name, city);
+        int result = id != null ? id.hashCode() : 0;
+        result = 31 * result + (idTelegram != null ? idTelegram.hashCode() : 0);
+        result = 31 * result + (name != null ? name.hashCode() : 0);
+        result = 31 * result + (city != null ? city.hashCode() : 0);
+        return result;
     }
 
     @Override
     public String toString() {
-        final StringBuilder sb = new StringBuilder("ProviderEntity{");
-        sb.append("idTelegram=").append(idTelegram);
-        sb.append(", name='").append(name).append('\'');
-        sb.append(", city='").append(city).append('\'');
-        sb.append('}');
-        return sb.toString();
+        return "ProviderEntity{" +
+                "id=" + id +
+                ", idTelegram=" + idTelegram +
+                ", name='" + name + '\'' +
+                ", city='" + city + '\'' +
+                '}';
     }
+
+
 }

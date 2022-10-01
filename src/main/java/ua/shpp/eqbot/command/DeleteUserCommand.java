@@ -7,8 +7,6 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 import ua.shpp.eqbot.internationalization.BundleLanguage;
 import ua.shpp.eqbot.model.ProviderEntity;
 import ua.shpp.eqbot.model.ServiceEntity;
-import ua.shpp.eqbot.model.UserDto;
-import ua.shpp.eqbot.model.UserEntity;
 import ua.shpp.eqbot.repository.ProvideRepository;
 import ua.shpp.eqbot.repository.ServiceRepository;
 import ua.shpp.eqbot.repository.UserRepository;
@@ -37,7 +35,7 @@ public class DeleteUserCommand implements Command {
 
     @Override
     public boolean execute(Update update) {
-        List<ServiceEntity> serviceEntityList = serviceRepository.findAllByIdTelegram(update.getMessage().getChatId());
+        List<ServiceEntity> serviceEntityList = serviceRepository.findAllById(update.getMessage().getChatId());
         if (!serviceEntityList.isEmpty()) {
             LOGGER.info("deleted service");
             serviceRepository.deleteAllInBatch(serviceEntityList);

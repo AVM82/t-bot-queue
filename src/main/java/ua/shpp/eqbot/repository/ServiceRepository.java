@@ -8,15 +8,10 @@ import java.util.List;
 
 public interface ServiceRepository extends JpaRepository<ServiceEntity, Long> {
 
-    ServiceEntity getFirstByName(String name);
+    @Query("select t from ServiceEntity t where t.name = ?1 and t.id=?2")
+    ServiceEntity getFirstByNameAndId(String name, Long id);
 
-    @Query("select t from ServiceEntity t where t.name = ?1 and t.idTelegram=?2")
-    ServiceEntity getFirstByNameAndAndIdTelegram(String name, Long idTelegram);
-
-    @Query("select t from ServiceEntity t where t. idTelegram = ?1")
-    ServiceEntity findByIdTelegram(Long id);
-
-    @Query("select t from ServiceEntity t where t. idTelegram = ?1")
-    List<ServiceEntity> findAllByIdTelegram(Long id);
+    @Query("select t from ServiceEntity t where t. id = ?1")
+    List<ServiceEntity> findAllById(Long id);
 
 }
