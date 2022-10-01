@@ -19,7 +19,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 
 @TestMethodOrder(MethodOrderer.DisplayName.class)
-@SpringBootTest(properties = { "application.properties" })
+@SpringBootTest(properties = {"application.properties"})
 class ProviderServiceTest {
     @MockBean
     AddService addService;
@@ -35,7 +35,6 @@ class ProviderServiceTest {
     SendBotMessageServiceImpl sendBotMessageService;
     @MockBean
     EqTelegramBot eqTelegramBot;
-
 
     @Autowired
     private ProvideRepository provideRepository;
@@ -108,7 +107,7 @@ class ProviderServiceTest {
         providerService.save(providerEntity);
 
         Optional<ProviderEntity> providerEntity1 = providerService
-                .getByNameAndIdTelegram(ID_PROVIDER, CITY_PROVIDER);
+                .getByNameAndIdTelegram(ID_PROVIDER, "provider");
 
         ProviderEntity result = new ProviderEntity();
         if (providerEntity1.isPresent()) {

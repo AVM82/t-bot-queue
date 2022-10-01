@@ -20,5 +20,7 @@ public interface ProvideRepository extends JpaRepository<ProviderEntity, Long> {
     @Query("select t from ProviderEntity t where t. idTelegram = ?1")
     List<ProviderEntity> findAllByIdTelegram(Long id);
 
-    Optional<ProviderEntity> findPleaseProviderEntitiesByIdTelegramAAndCity(Long idTelegram, String name);
+    Optional<ProviderEntity> findProviderEntitiesByIdTelegramAndName(Long idTelegram, String name);
+
+//    ProviderEntity findPleaseProviderEntitiesByIdTelegramAAndCity(Long idTelegram, String name);
 }

@@ -27,8 +27,12 @@ public class ProviderService {
         return provideRepository.findAllByIdTelegram(idTelegram);
     }
 
-    public Optional<ProviderEntity> getByNameAndIdTelegram(Long idTelegram, String name) {
-        return provideRepository.findPleaseProviderEntitiesByIdTelegramAAndCity(idTelegram, name);
+    public Optional<ProviderEntity> getByNameAndIdTelegram(Long id_provider, String city_provider) {
+        return provideRepository.findProviderEntitiesByIdTelegramAndName(id_provider, city_provider);
     }
+
+//    public ProviderEntity getByNameAndIdTelegram(Long idTelegram, String name) {
+//        return provideRepository.findPleaseProviderEntitiesByIdTelegramAAndCity(idTelegram, name);
+//    }
 
 }

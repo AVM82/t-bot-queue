@@ -16,6 +16,7 @@ import ua.shpp.eqbot.command.AddService;
 import ua.shpp.eqbot.command.CommandContainer;
 import ua.shpp.eqbot.model.UserDto;
 import ua.shpp.eqbot.model.UserEntity;
+import ua.shpp.eqbot.repository.ProvideRepository;
 import ua.shpp.eqbot.repository.UserRepository;
 import ua.shpp.eqbot.telegrambot.EqTelegramBot;
 
@@ -36,6 +37,11 @@ class UserServiceTest {
     private final ModelMapper modelMapper = new ModelMapper();
     @MockBean
     EqTelegramBot eqTelegramBot;
+    @MockBean
+    ProviderService providerService;
+    @MockBean
+    ProvideRepository provideRepository;
+
     @Autowired
     private CacheManager cacheManager;
 
