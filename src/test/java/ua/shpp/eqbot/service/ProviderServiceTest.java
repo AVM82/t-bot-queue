@@ -36,6 +36,7 @@ class ProviderServiceTest {
     @MockBean
     EqTelegramBot eqTelegramBot;
 
+
     @Autowired
     private ProvideRepository provideRepository;
 
