@@ -112,7 +112,9 @@ public class AddService implements Command {
             markup.setKeyboard(keyboardRows);
             markup.setResizeKeyboard(true);
             LOGGER.info("Didn't find provider with such id");
-            sendBotMessageService.setReplyMarkup(update.getCallbackQuery().getFrom().getId().toString(), markup);
+            if (update.getCallbackQuery() != null) {
+                sendBotMessageService.setReplyMarkup(update.getCallbackQuery().getFrom().getId().toString(), markup);
+            }
             ServiceCache.justRegistrated = true;
         }
         return false;
