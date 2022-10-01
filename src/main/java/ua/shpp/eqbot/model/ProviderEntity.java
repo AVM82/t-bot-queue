@@ -7,32 +7,37 @@ import java.util.Objects;
 @Entity
 public class ProviderEntity {
     @Id
+
+    private Long id;
     private Long idTelegram;
     private String name;
     private String city;
 
-    public void setName(String name) {
-        this.name = name;
+    public Long getIdTelegram() {
+        return idTelegram;
+    }
+
+    public ProviderEntity setIdTelegram(Long idTelegram) {
+        this.idTelegram = idTelegram;
+        return this;
     }
 
     public String getName() {
         return name;
     }
 
-    public void setCity(String city) {
-        this.city = city;
+    public ProviderEntity setName(String name) {
+        this.name = name;
+        return this;
     }
 
     public String getCity() {
         return city;
     }
 
-    public void setIdTelegram(Long idTelegram) {
-        this.idTelegram = idTelegram;
-    }
-
-    public Long getIdTelegram() {
-        return idTelegram;
+    public ProviderEntity setCity(String city) {
+        this.city = city;
+        return this;
     }
 
     @Override
