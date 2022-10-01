@@ -30,9 +30,4 @@ public class ProviderService {
     public Optional<ProviderEntity> getByNameAndIdTelegram(Long id_provider, String city_provider) {
         return provideRepository.findProviderEntitiesByIdTelegramAndName(id_provider, city_provider);
     }
-
-//    public ProviderEntity getByNameAndIdTelegram(Long idTelegram, String name) {
-//        return provideRepository.findPleaseProviderEntitiesByIdTelegramAAndCity(idTelegram, name);
-//    }
-
 }
