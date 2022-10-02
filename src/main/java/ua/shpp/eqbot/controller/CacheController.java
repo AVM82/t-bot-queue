@@ -9,8 +9,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import ua.shpp.eqbot.cache.ServiceCache;
+import ua.shpp.eqbot.model.ServiceDTO;
 
 import java.util.Collection;
+import java.util.Map;
 import java.util.concurrent.ConcurrentMap;
 
 @RestController
@@ -23,7 +26,6 @@ public class CacheController {
     public CacheController(CacheManager cacheManager) {
         this.cacheManager = cacheManager;
     }
-
 
     @GetMapping("/name")
     public Collection<String> getCacheNames() {
@@ -43,4 +45,9 @@ public class CacheController {
         LOGGER.info("return cache");
         return json;
     }
+
+
+    @GetMapping("/services")
+        public Map<Long, ServiceDTO> getAllservices(){
+            return ServiceCache.getAll();}
 }

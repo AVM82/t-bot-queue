@@ -69,6 +69,14 @@ public class UserEntity {
         return this;
     }
 
+    public LocalDateTime getTimeCreated() {
+        return timeCreated;
+    }
+
+    public void setTimeCreated(LocalDateTime timeCreated) {
+        this.timeCreated = timeCreated;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

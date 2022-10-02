@@ -117,7 +117,7 @@ class ProviderServiceTest {
             result = providerEntity1.get();
         }
 
-        assertThat(result.getId(), is(ID_PROVIDER));
+        assertThat(result.getIdTelegram(), is(ID_PROVIDER));
         assertThat(result.getCity(), is(CITY_PROVIDER));
     }
 }
