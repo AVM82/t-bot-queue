@@ -1,0 +1,88 @@
+package ua.shpp.eqbot.command;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
+import org.telegram.telegrambots.meta.api.objects.Update;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
+import ua.shpp.eqbot.internationalization.BundleLanguage;
+import ua.shpp.eqbot.model.ProviderDto;
+import ua.shpp.eqbot.model.ProviderEntity;
+import ua.shpp.eqbot.service.ProviderService;
+import ua.shpp.eqbot.service.SendBotMessageService;
+import ua.shpp.eqbot.stage.PositionRegistrationProvider;
+
+import java.util.ArrayList;
+import java.util.List;
+
+public class CheckProviderRegistrationCommand implements Command {
+    private static final Logger LOGGER = LoggerFactory.getLogger(CheckProviderRegistrationCommand.class);
+    private final SendBotMessageService sendBotMessageService;
+    private final ProviderService providerService;
+    private final BundleLanguage bundleLanguage;
+
+    public CheckProviderRegistrationCommand(SendBotMessageService sendBotMessageService,
+                                            ProviderService providerService, BundleLanguage bundleLanguage) {
+        this.sendBotMessageService = sendBotMessageService;
+        this.providerService = providerService;
+        this.bundleLanguage = bundleLanguage;
+    }
+
+
+    @Override
+    public boolean execute(Update update) {
+        Long id = null;
+        if(update.hasCallbackQuery())
+            id = update.getCallbackQuery().getFrom().getId();
+        else if(update.hasMessage())
+            id = update.getMessage().getChatId();
+        ProviderDto providerDto = providerService.getProviderDto(id);
+        if (providerDto == null) {
+            LOGGER.info("the provider is not in the cache");
+            List<ProviderEntity> providerEntityList = providerService.getEntity(id);
+            if (!providerEntityList.isEmpty()) {
+                LOGGER.info("there is provider in the database");
+                printListProvider(id);
+                addRequest(id);
+                return true;
+            }
+            return new AddNewProviderCommand(sendBotMessageService, providerService, bundleLanguage).execute(update);
+        }
+        return new AddNewProviderCommand(sendBotMessageService, providerService, bundleLanguage).execute(update);
+    }
+
+    private void printListProvider(Long id) {
+        List<ProviderEntity> providerEntityList = providerService.getEntity(id);
+        for (ProviderEntity entity : providerEntityList) {
+            sendBotMessageService.sendMessage(SendMessage.builder()
+                    .chatId(id)
+                    .text(bundleLanguage.getValue(id, "company_name") + ": " + entity.getName() +
+                            bundleLanguage.getValue(id, "city") + ": " + entity.getCity())
+                    .build());
+        }
+    }
+
+    private void addRequest(Long id){
+        InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
+        List<List<InlineKeyboardButton>> keyboard = new ArrayList<>();
+        List<InlineKeyboardButton> buttonAddProvider = new ArrayList<>();
+        buttonAddProvider.add(InlineKeyboardButton.builder()
+                .text(bundleLanguage.getValue(id, "add_provider"))
+                .callbackData("add_provider")
+                .build());
+        List<InlineKeyboardButton> buttonChangeProvider = new ArrayList<>();
+        buttonAddProvider.add(InlineKeyboardButton.builder()
+                .text(bundleLanguage.getValue(id, "change_provider_details"))
+                .callbackData("change_provider_details")
+                .build());
+        keyboard.add(buttonAddProvider);
+        keyboard.add(buttonChangeProvider);
+        inlineKeyboardMarkup.setKeyboard(keyboard);
+        SendMessage sendMessage = new SendMessage();
+        sendMessage.setText(bundleLanguage.getValue(id, "choose_menu_option"));
+        sendMessage.setChatId(id);
+        sendMessage.setReplyMarkup(inlineKeyboardMarkup);
+        sendBotMessageService.sendMessage(sendMessage);
+    }
+}

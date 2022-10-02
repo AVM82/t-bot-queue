@@ -1,11 +1,8 @@
-package ua.shpp.eqbot.model;
+package ua.shpp.eqbot.stage;
 
-import ua.shpp.eqbot.commandchain.changerole.RegistrationProviderStep;
-
-import java.util.ArrayList;
-import java.util.List;
-
-public enum MenuTimeWork {
+public enum MenuRegistrationService {
+    INPUT_SERVICE_NAME,
+    INPUT_PICTURE,
     START_WORK_IN_SUNDAY,
     END_WORK_IN_SUNDAY,
     START_WORK_IN_MONDAY,
@@ -21,13 +18,13 @@ public enum MenuTimeWork {
     START_WORK_IN_SATURDAY,
     END_WORK_IN_SATURDAY,
     TIME_BETWEEN_CLIENTS,
-    DONE;
+    DONE
 
 
-    public MenuTimeWork nextState(MenuTimeWork menuTimeWork) {
-        if (menuTimeWork == MenuTimeWork.DONE)
-            return menuTimeWork;
-        switch (menuTimeWork) {
+    /*public MenuRegistrationService nextState(MenuRegistrationService menuRegistrationService) {
+        if (menuRegistrationService == MenuRegistrationService.DONE)
+            return menuRegistrationService;
+        switch (menuRegistrationService) {
             case START_WORK_IN_SUNDAY:
                 return END_WORK_IN_SUNDAY;
             case END_WORK_IN_SUNDAY:
@@ -53,5 +50,5 @@ public enum MenuTimeWork {
 
         }
         return DONE;
-        }
+        }*/
     }

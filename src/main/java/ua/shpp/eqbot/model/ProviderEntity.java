@@ -10,7 +10,6 @@ public class ProviderEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     private Long idTelegram;
     private String name;
     private String city;
@@ -82,6 +81,4 @@ public class ProviderEntity {
                 ", city='" + city + '\'' +
                 '}';
     }
-
-
 }

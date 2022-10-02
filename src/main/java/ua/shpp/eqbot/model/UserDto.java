@@ -1,6 +1,9 @@
 package ua.shpp.eqbot.model;
 
 
+import ua.shpp.eqbot.stage.PositionMenu;
+import ua.shpp.eqbot.stage.PositionRegistration;
+
 public class UserDto {
     private Long idTelegram;
     private String name;

@@ -1,5 +1,7 @@
 package ua.shpp.eqbot.model;
 
+import ua.shpp.eqbot.stage.MenuRegistrationService;
+
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
@@ -11,16 +13,16 @@ public class ServiceDTO {
 
     private String description;
 
-    public MenuTimeWork getMenuTimeWork() {
-        return menuTimeWork;
+    public MenuRegistrationService getMenuTimeWork() {
+        return menuRegistrationService;
     }
 
-    public ServiceDTO setMenuTimeWork(MenuTimeWork menuTimeWork) {
-        this.menuTimeWork = menuTimeWork;
+    public ServiceDTO setMenuTimeWork(MenuRegistrationService menuRegistrationService) {
+        this.menuRegistrationService = menuRegistrationService;
         return this;
     }
 
-    private MenuTimeWork menuTimeWork;
+    private MenuRegistrationService menuRegistrationService;
 
     private byte[] avatar;
 

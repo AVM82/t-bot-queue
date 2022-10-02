@@ -9,6 +9,11 @@ import ua.shpp.eqbot.internationalization.BundleLanguage;
 import ua.shpp.eqbot.model.ServiceDTO;
 import ua.shpp.eqbot.service.SendBotMessageService;
 
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
 public class AddProviderTimeWorkCommand implements Command{
     private static final Logger LOGGER = LoggerFactory.getLogger(AddProviderTimeWorkCommand.class);
     private final SendBotMessageService sendBotMessageService;
@@ -29,8 +34,10 @@ public class AddProviderTimeWorkCommand implements Command{
         return false;
     }
 
-    private void nextStep(){
-
+    private void nextStep(Long chatId){
+        List<String> listOfQuestions = new ArrayList<>();
+        listOfQuestions.add(bundleLanguage.getValue(chatId, "company_name"));
+        listOfQuestions.add(bundleLanguage.getValue(chatId, "company_name"));
     }
 
 }

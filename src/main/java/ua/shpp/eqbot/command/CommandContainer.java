@@ -8,6 +8,7 @@ import ua.shpp.eqbot.repository.ProvideRepository;
 import ua.shpp.eqbot.repository.ServiceRepository;
 import ua.shpp.eqbot.repository.UserRepository;
 import ua.shpp.eqbot.service.ImageService;
+import ua.shpp.eqbot.service.ProviderService;
 import ua.shpp.eqbot.service.SendBotMessageService;
 import ua.shpp.eqbot.service.UserService;
 
@@ -23,7 +24,8 @@ public class CommandContainer {
     @Autowired
     public CommandContainer(SendBotMessageService sendBotMessageService, UserRepository userRepository,
                             ServiceRepository serviceRepository, ProvideRepository provideRepository,
-                            ImageService imageService, BundleLanguage bundleLanguage, UserService userService) {
+                            ImageService imageService, BundleLanguage bundleLanguage, UserService userService,
+                            ProviderService providerService) {
         commandMap = ImmutableMap.<String, Command>builder()
                 .put(CommandName.REG.getNameCommand(), new RegistrationNewUser(sendBotMessageService, userService, bundleLanguage))
                 .put(CommandName.START.getNameCommand(), new StartCommand(sendBotMessageService, bundleLanguage))
@@ -37,6 +39,10 @@ public class CommandContainer {
                 .put(CommandName.DELETE_USER.getNameCommand(), new DeleteUserCommand(sendBotMessageService,
                         userRepository, userService, bundleLanguage, provideRepository, serviceRepository))
                 .put(CommandName.MAIN_MENU.getNameCommand(), new MainMenu(sendBotMessageService))
+                .put(CommandName.CHECK_PROVIDER.getNameCommand(),
+                        new CheckProviderRegistrationCommand(sendBotMessageService, providerService, bundleLanguage))
+                .put(CommandName.ADD_PROVIDER.getNameCommand(),
+                        new AddNewProviderCommand(sendBotMessageService, providerService, bundleLanguage))
                 .build();
 
         unknownCommand = new UnknownCommand(sendBotMessageService, bundleLanguage);

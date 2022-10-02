@@ -13,7 +13,9 @@ import ua.shpp.eqbot.command.CommandContainer;
 import ua.shpp.eqbot.commandchain.changerole.CommandChain;
 import ua.shpp.eqbot.commandchain.changerole.RegistrationProviderChain;
 import ua.shpp.eqbot.internationalization.BundleLanguage;
-import ua.shpp.eqbot.model.PositionMenu;
+import ua.shpp.eqbot.model.ProviderDto;
+import ua.shpp.eqbot.service.ProviderService;
+import ua.shpp.eqbot.stage.PositionMenu;
 import ua.shpp.eqbot.model.UserDto;
 import ua.shpp.eqbot.repository.ProvideRepository;
 import ua.shpp.eqbot.repository.ServiceRepository;
@@ -23,7 +25,7 @@ import ua.shpp.eqbot.service.SendBotMessageServiceImpl;
 import ua.shpp.eqbot.service.UserService;
 
 import static ua.shpp.eqbot.command.CommandName.NO;
-import static ua.shpp.eqbot.model.PositionMenu.MENU_CREATE_SERVICE;
+import static ua.shpp.eqbot.stage.PositionMenu.MENU_CREATE_SERVICE;
 
 @Component
 public class EqTelegramBot extends TelegramLongPollingBot {
@@ -34,13 +36,15 @@ public class EqTelegramBot extends TelegramLongPollingBot {
     private CommandChain commandChain;
     private final BundleLanguage bundleLanguage;
     ProvideRepository provideRepository;
+    private final ProviderService providerService;
 
 
     @Autowired
-    public EqTelegramBot(UserRepository userRepository, ServiceRepository serviceRepository, ProvideRepository provideRepository, @Lazy ImageService imageService, BundleLanguage bundleLanguage, ServiceRepository serviceRepository1, UserService userService) {
+    public EqTelegramBot(UserRepository userRepository, ServiceRepository serviceRepository, ProvideRepository provideRepository, @Lazy ImageService imageService, BundleLanguage bundleLanguage, ServiceRepository serviceRepository1, UserService userService, ProviderService providerService) {
         this.provideRepository = provideRepository;
         this.userService = userService;
         this.bundleLanguage = bundleLanguage;
+        this.providerService = providerService;
         this.commandContainer = new CommandContainer(
                 new SendBotMessageServiceImpl(this),
                 userRepository,
@@ -48,7 +52,8 @@ public class EqTelegramBot extends TelegramLongPollingBot {
                 provideRepository,
                 imageService,
                 bundleLanguage,
-                userService);
+                userService,
+                providerService);
     }
 
     @Value("${telegram.bot.name}")
@@ -84,6 +89,7 @@ public class EqTelegramBot extends TelegramLongPollingBot {
 
     private void textHandler(Update update) {
         if (update.hasMessage() && update.getMessage().hasText()) {
+            ProviderDto providerDto = providerService.getProviderDto(update.getMessage().getChatId());
             LOGGER.info("Message from {} {} (id = {}).",
                     update.getMessage().getChat().getFirstName(),
                     update.getMessage().getChat().getLastName(),
@@ -95,11 +101,13 @@ public class EqTelegramBot extends TelegramLongPollingBot {
                 commandContainer.retrieveCommand(update.getMessage().getText()).execute(update);
             } else if (update.getMessage().getText().equals("Реєстрація нового провайдера")) {
                 createRegistrationProviderCommandChain(update, bundleLanguage);
-            } else if (user.getPositionMenu() == MENU_CREATE_SERVICE) {
-                commandContainer.retrieveCommand("/add").execute(update);
+            /*} else if (user.getPositionMenu() == MENU_CREATE_SERVICE) {
+                commandContainer.retrieveCommand("/add").execute(update);*/
             } else if (user.getPositionMenu() == PositionMenu.MENU_START) {
                 commandContainer.retrieveCommand("mainMenu").execute(update);
                 commandContainer.retrieveCommand("/start").execute(update);
+            }else if(providerDto != null){
+                commandContainer.retrieveCommand("/add provider").execute(update);
             }
         }
     }
@@ -136,10 +144,19 @@ public class EqTelegramBot extends TelegramLongPollingBot {
             LOGGER.info("create_service");
             UserDto user = userService.getDto(update.getCallbackQuery().getFrom().getId());
             user.setPositionMenu(MENU_CREATE_SERVICE);
-            commandContainer.retrieveCommand("/add").execute(update);
+           commandContainer.retrieveCommand("/check provider").execute(update);
+
+            //commandContainer.retrieveCommand("/add").execute(update);
         }
         if (callbackQuery.getData().equals("search_service")) {
             LOGGER.info("search_service");
+        }
+        if(callbackQuery.getData().equals("add_provider")){
+            LOGGER.info("push button add provider");
+            commandContainer.retrieveCommand("//add provider");
+        }
+        if(callbackQuery.getData().equals("change_provider_details")){
+            LOGGER.info("change provider details");
         }
     }
 

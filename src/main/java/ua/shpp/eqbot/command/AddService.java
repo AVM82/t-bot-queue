@@ -24,7 +24,7 @@ import ua.shpp.eqbot.service.UserService;
 import java.util.ArrayList;
 import java.util.List;
 
-import static ua.shpp.eqbot.model.PositionMenu.MENU_START;
+import static ua.shpp.eqbot.stage.PositionMenu.MENU_START;
 
 @Component
 public class AddService implements Command {
