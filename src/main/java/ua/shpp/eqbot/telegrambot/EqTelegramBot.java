@@ -10,10 +10,7 @@ import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import ua.shpp.eqbot.command.CommandContainer;
-import ua.shpp.eqbot.commandchain.changerole.CommandChain;
-import ua.shpp.eqbot.commandchain.changerole.RegistrationProviderChain;
 import ua.shpp.eqbot.internationalization.BundleLanguage;
-import ua.shpp.eqbot.model.ProviderDto;
 import ua.shpp.eqbot.service.ProviderService;
 import ua.shpp.eqbot.stage.PositionMenu;
 import ua.shpp.eqbot.model.UserDto;
@@ -32,15 +29,16 @@ public class EqTelegramBot extends TelegramLongPollingBot {
     private static final Logger LOGGER = LoggerFactory.getLogger(EqTelegramBot.class);
     private final CommandContainer commandContainer;
     private final UserService userService;
-    private boolean isCommandChain = false;
-    private CommandChain commandChain;
     private final BundleLanguage bundleLanguage;
     ProvideRepository provideRepository;
     private final ProviderService providerService;
 
 
     @Autowired
-    public EqTelegramBot(UserRepository userRepository, ServiceRepository serviceRepository, ProvideRepository provideRepository, @Lazy ImageService imageService, BundleLanguage bundleLanguage, ServiceRepository serviceRepository1, UserService userService, ProviderService providerService) {
+    public EqTelegramBot(UserRepository userRepository, ServiceRepository serviceRepository,
+                         ProvideRepository provideRepository, @Lazy ImageService imageService,
+                         BundleLanguage bundleLanguage, UserService userService,
+                         ProviderService providerService) {
         this.provideRepository = provideRepository;
         this.userService = userService;
         this.bundleLanguage = bundleLanguage;
@@ -68,8 +66,6 @@ public class EqTelegramBot extends TelegramLongPollingBot {
             callbackQueryHandler(update);
         } else if (update.getMessage().hasText() && update.getMessage().isCommand()) {
             commandHandler(update);
-        } else if (isCommandChain) {
-            callNextCommandInChain(update);
         } else if (update.getMessage().hasPhoto()) {
             imageHandler(update);
         } else {
@@ -89,25 +85,26 @@ public class EqTelegramBot extends TelegramLongPollingBot {
 
     private void textHandler(Update update) {
         if (update.hasMessage() && update.getMessage().hasText()) {
-            ProviderDto providerDto = providerService.getProviderDto(update.getMessage().getChatId());
             LOGGER.info("Message from {} {} (id = {}).",
                     update.getMessage().getChat().getFirstName(),
                     update.getMessage().getChat().getLastName(),
                     update.getMessage().getChat().getId());
             UserDto user = userService.getDto(update.getMessage().getChat().getId());
+            //change registration user
             if (!commandContainer.retrieveCommand("/reg").execute(update)) {
                 LOGGER.info("Registration user");
+                //change registration provider
+            } else if (providerService.getProviderDto(update.getMessage().getChatId()) != null) {
+                if (commandContainer.retrieveCommand("/add provider").execute(update))
+                    commandContainer.retrieveCommand("/add").execute(update);
             } else if (update.getMessage().getText().equals("Change role to Provider")) {
                 commandContainer.retrieveCommand(update.getMessage().getText()).execute(update);
-            } else if (update.getMessage().getText().equals("Реєстрація нового провайдера")) {
-                createRegistrationProviderCommandChain(update, bundleLanguage);
-            /*} else if (user.getPositionMenu() == MENU_CREATE_SERVICE) {
-                commandContainer.retrieveCommand("/add").execute(update);*/
+                //change registration service
+            } else if (user.getPositionMenu() == MENU_CREATE_SERVICE) {
+                commandContainer.retrieveCommand("/add").execute(update);
             } else if (user.getPositionMenu() == PositionMenu.MENU_START) {
                 commandContainer.retrieveCommand("mainMenu").execute(update);
                 commandContainer.retrieveCommand("/start").execute(update);
-            }else if(providerDto != null){
-                commandContainer.retrieveCommand("/add provider").execute(update);
             }
         }
     }
@@ -157,21 +154,6 @@ public class EqTelegramBot extends TelegramLongPollingBot {
         }
         if(callbackQuery.getData().equals("change_provider_details")){
             LOGGER.info("change provider details");
-        }
-    }
-
-    public void createRegistrationProviderCommandChain(Update update, BundleLanguage bundleLanguage) {
-        commandChain = new RegistrationProviderChain(new SendBotMessageServiceImpl(this), provideRepository, bundleLanguage);
-        isCommandChain = true;
-        commandChain.nextCommand().execute(update);
-    }
-
-    public void callNextCommandInChain(Update update) {
-        if (commandChain.hasNextCommand()) {
-            commandChain.nextCommand().execute(update);
-            isCommandChain = commandChain.hasNextCommand();
-        } else {
-            isCommandChain = false;
         }
     }
 }

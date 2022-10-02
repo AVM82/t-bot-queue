@@ -18,7 +18,7 @@ import ua.shpp.eqbot.repository.UserRepository;
 public class UserService {
     private static final Logger LOGGER = LoggerFactory.getLogger(UserService.class);
     private final UserRepository userRepository;
-    private final String dtoCacheName = "cacheDto";
+    private final String dtoCacheName = "cacheUserDto";
     private final CacheManager cacheManager;
     private final ModelMapper modelMapper = new ModelMapper();
 
@@ -28,26 +28,26 @@ public class UserService {
     }
 
     public UserEntity getEntity(Long id) {
-        LOGGER.info("get userEntity by id " + id);
+        LOGGER.info("get userEntity by id {}", id);
         UserDto dto = getDto(id);
         return dto != null ? convertToEntity(dto) : userRepository.findFirstByIdTelegram(id);
     }
 
     public UserEntity saveEntity(UserEntity userEntity) {
-        LOGGER.info("save userEntity " + userEntity);
+        LOGGER.info("save userEntity {}", userEntity);
         saveDto(userEntity); // additional
         return userRepository.save(userEntity);
     }
 
     @CachePut(cacheNames = dtoCacheName, key = "#userDto.idTelegram")
     public UserDto saveDto(UserDto userDto) {
-        LOGGER.info("save userDto " + userDto);
+        LOGGER.info("save userDto {}", userDto);
         return userDto;//****
     }
 
     @Cacheable(cacheNames = dtoCacheName, key = "#id")
     public UserDto getDto(Long id) {
-        LOGGER.info("get userDto by id " + id);
+        LOGGER.info("get userDto by id {}", id);
         return null;
     }
 
@@ -60,7 +60,7 @@ public class UserService {
     }
 
     /**
-     * its need modificate
+     * its need modification
      */
     private void saveDto(UserEntity userEntity) {
         Cache cache = cacheManager.getCache(dtoCacheName);

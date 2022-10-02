@@ -11,8 +11,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ua.shpp.eqbot.model.ProviderDto;
 import ua.shpp.eqbot.model.ProviderEntity;
-import ua.shpp.eqbot.model.UserDto;
-import ua.shpp.eqbot.model.UserEntity;
 import ua.shpp.eqbot.repository.ProvideRepository;
 
 import java.util.List;
@@ -62,12 +60,8 @@ public class ProviderService {
         return true;
     }
 
-    public List<ProviderEntity> getEntity(Long idTelegram) {
+    public List<ProviderEntity> getByIdTelegramEntity(Long idTelegram) {
         LOGGER.info("get list entityProvider");
-        return provideRepository.findAllByIdTelegram(idTelegram);
-    }
-
-    public List<ProviderEntity> getByIdTelegram(Long idTelegram) {
         return provideRepository.findAllByIdTelegram(idTelegram);
     }
 

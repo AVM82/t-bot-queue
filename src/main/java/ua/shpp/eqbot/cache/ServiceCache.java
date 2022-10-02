@@ -10,7 +10,6 @@ import java.util.Map;
 
 @Component
 public class ServiceCache {
-    public static boolean justRegistrated = false;
 
     private static final Map<Long, ServiceDTO> services = new HashMap<>();
 

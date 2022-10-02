@@ -12,6 +12,7 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMar
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardRow;
 import ua.shpp.eqbot.cache.ServiceCache;
 import ua.shpp.eqbot.internationalization.BundleLanguage;
+import ua.shpp.eqbot.model.ProviderDto;
 import ua.shpp.eqbot.model.ServiceDTO;
 import ua.shpp.eqbot.model.ServiceEntity;
 import ua.shpp.eqbot.model.UserDto;
@@ -20,6 +21,8 @@ import ua.shpp.eqbot.repository.ServiceRepository;
 import ua.shpp.eqbot.service.ImageService;
 import ua.shpp.eqbot.service.SendBotMessageService;
 import ua.shpp.eqbot.service.UserService;
+import ua.shpp.eqbot.stage.PositionRegistrationProvider;
+import ua.shpp.eqbot.stage.PositionRegistrationService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -50,79 +53,124 @@ public class AddService implements Command {
         this.bundleLanguage = bundleLanguage;
     }
 
-    public void addService(ServiceDTO service) {
-        ServiceEntity serviceEntity = new ServiceEntity();
-        serviceEntity.setIdTelegram(service.getIdTelegram())
-                .setName(service.getName())
-                .setDescription(service.getDescription())
-                .setAvatar(service.getAvatar());
-        serviceRepository.save(serviceEntity);
-    }
-
-
     @Override
     public boolean execute(Update update) {
-        long id;
-        if (update.hasCallbackQuery()) {
+        boolean isRegistration =false;
+        Long id;
+        if (update.hasCallbackQuery())
             id = update.getCallbackQuery().getFrom().getId();
-        } else {
-            /*TODO if message null check it*/
+        else if (update.hasMessage())
             id = update.getMessage().getChatId();
+        else
+            return false;
+        ServiceDTO serviceDTO = ServiceCache.findBy(id);
+        LOGGER.info("i try register new service");
+        if (serviceDTO == null) {
+            ServiceCache.add(generateServiceFromMessage(id));
+            assert id != null;
+            createMessage(id, "new_service");
+            createMessage(id, "input_name_service");
+        } else {
+            switch (serviceDTO.getPositionRegistrationService()) {
+                case INPUT_SERVICE_NAME:
+                    LOGGER.info("new service INPUT_USERNAME with message text {}", update.getMessage().getText());
+                    if (update.getMessage() != null && !update.getMessage().isCommand()) {
+                        ServiceCache.add(serviceDTO.setName(update.getMessage().getText())
+                                .setPositionRegistrationService(PositionRegistrationService.INPUT_PICTURE));
+                        createMessage(id, "add_desc_and_avatar");
+                    }
+                    break;
+                case INPUT_PICTURE:
+                    LOGGER.info("new service INPUT_CITY with message text {}", update.getMessage().getText());
+                    if (update.getMessage() != null && !update.getMessage().isCommand()) {
+                        ServiceCache.add(addingDescriptionAndAvatar(update.getMessage(), serviceDTO)
+                                .setPositionRegistrationService(PositionRegistrationService.START_WORK_IN_MONDAY));
+                        createMessage(id, "beginning_of_work","monday","format");
+                    }
+                    break;
+                case START_WORK_IN_MONDAY:
+                    break;
+                case END_WORK_IN_MONDAY:
+                    break;
+                case START_WORK_IN_TUESDAY:
+                    break;
+                case END_WORK_IN_TUESDAY:
+                    break;
+                case START_WORK_IN_WEDNESDAY:
+                    break;
+                case END_WORK_IN_WEDNESDAY:
+                    break;
+                case START_WORK_IN_THURSDAY:
+                    break;
+                case END_WORK_IN_THURSDAY:
+                    break;
+                case START_WORK_IN_FRIDAY:
+                    break;
+                case END_WORK_IN_FRIDAY:
+                    break;
+                case START_WORK_IN_SATURDAY:
+                    break;
+                case END_WORK_IN_SATURDAY:
+                    break;
+                case START_WORK_IN_SUNDAY:
+                    break;
+                case END_WORK_IN_SUNDAY:
+                    break;
+                case TIME_BETWEEN_CLIENTS:
+                    break;
+                default:
+                    //do nothing
+                    break;
+            }
         }
+        return isRegistration;
 
-        if (provideRepository.findByIdTelegram(id) != null)/*providerRepository.findById(update.getMessage().getChatId())*/ {
-            ServiceDTO newService;
-            if (!update.hasMessage()) {
-                Long idTelegram = update.getCallbackQuery().getFrom().getId();
-                sendBotMessageService.sendMessage(SendMessage.builder().chatId(idTelegram).text(ADD_SERVICE_MESSAGE).build());
-                LOGGER.info("Add new service.");
+
+
+     /*   ServiceDTO newService;
+        if (!update.hasMessage()) {
+            sendBotMessageService.sendMessage(SendMessage.builder().chatId(id).text(ADD_SERVICE_MESSAGE).build());
+            LOGGER.info("Add new service.");
+            return false;
+        }
+        newService = ServiceCache.findBy(update.getMessage().getChatId());
+        UserDto user = userService.getDto(id);
+        if (newService == null) {
+            if (checkIfServiceExists(update.getMessage().getText().trim(), id)) {
+                createService(update);
                 return false;
             }
-            newService = ServiceCache.findBy(update.getMessage().getChatId());
-            Long idTelegram = update.getMessage().getChat().getId();
-            UserDto user = userService.getDto(idTelegram);
-            if (newService == null) {
-                if (checkIfServiceExists(update.getMessage().getText().trim(), idTelegram)) {
-                    createService(update);
-                    return false;
-                }
-                newService = new ServiceDTO();
-                newService.setIdTelegram(user.getIdTelegram()).setName(update.getMessage().getText().trim());
-                LOGGER.info("i want to ask name service");
-                String message = bundleLanguage.getValue(update.getMessage().getChatId(), "add_desc_and_avatar");
-                sendBotMessageService.sendMessage(SendMessage.builder().chatId(idTelegram)
-                        .text(message).build());
-                ServiceCache.add(newService);
-            } else {
-                LOGGER.info("service present");
-                newService = ServiceCache.findBy(update.getMessage().getChatId());
-                addingDescriptionAndAvatar(update.getMessage(), newService);
-                ServiceCache.remove(newService);
-                user.setPositionMenu(MENU_START);
-                String message = bundleLanguage.getValue(update.getMessage().getChatId(), "service_added");
-                sendBotMessageService.sendMessage(SendMessage.builder().chatId(idTelegram)
-                        .text(message).build());
-            }
+            newService = new ServiceDTO();
+            newService.setIdTelegram(user.getIdTelegram()).setName(update.getMessage().getText().trim());
+            LOGGER.info("i want to ask name service");
+            String message = bundleLanguage.getValue(update.getMessage().getChatId(), "add_desc_and_avatar");
+            sendBotMessageService.sendMessage(SendMessage.builder().chatId(id)
+                    .text(message).build());
+            ServiceCache.add(newService);
         } else {
-            LOGGER.info("provider present");
-            var markup = new ReplyKeyboardMarkup();
-            var keyboardRows = new ArrayList<KeyboardRow>();
-            KeyboardRow registrationNewProvider = new KeyboardRow();
-            registrationNewProvider.add("Реєстрація нового провайдера");
-            keyboardRows.add(registrationNewProvider);
-            markup.setKeyboard(keyboardRows);
-            markup.setResizeKeyboard(true);
-            LOGGER.info("Didn't find provider with such id");
-            sendBotMessageService.setReplyMarkup(update.getCallbackQuery().getFrom().getId().toString(), markup);
-            ServiceCache.justRegistrated = true;
+            LOGGER.info("service present");
+            newService = ServiceCache.findBy(update.getMessage().getChatId());
+            addingDescriptionAndAvatar(update.getMessage(), newService);
+            ServiceCache.remove(newService);
+            user.setPositionMenu(MENU_START);
+            String message = bundleLanguage.getValue(update.getMessage().getChatId(), "service_added");
+            sendBotMessageService.sendMessage(SendMessage.builder().chatId(id)
+                    .text(message).build());
         }
-        return false;
+        return false;*/
+    }
+
+    private ServiceDTO generateServiceFromMessage(Long id) {
+        ServiceDTO dto = new ServiceDTO();
+        dto.setIdTelegram(id)
+                .setPositionRegistrationService(PositionRegistrationService.INPUT_SERVICE_NAME);
+        return dto;
     }
 
     private void createService(Update update) {
         hasSuchName = false;
         Long idTelegram;
-        if (update.getMessage() != null) {
+        if (update.hasMessage()) {
             idTelegram = update.getMessage().getChatId();
         } else {
             idTelegram = update.getCallbackQuery().getFrom().getId();
@@ -143,7 +191,16 @@ public class AddService implements Command {
         return result;
     }
 
-    private void addingDescriptionAndAvatar(Message message, ServiceDTO serviceDTO) {
+    public void addService(ServiceDTO service) {
+        ServiceEntity serviceEntity = new ServiceEntity();
+        serviceEntity.setIdTelegram(service.getIdTelegram())
+                .setName(service.getName())
+                .setDescription(service.getDescription())
+                .setAvatar(service.getAvatar());
+        serviceRepository.save(serviceEntity);
+    }
+
+    private ServiceDTO addingDescriptionAndAvatar(Message message, ServiceDTO serviceDTO) {
         LOGGER.info("i want to addingDescriptionAndAvatar ");
         if (message.hasPhoto()) {
             List<PhotoSize> photos = message.getPhoto();
@@ -158,7 +215,40 @@ public class AddService implements Command {
             serviceDTO.setDescription(message.getText());
             LOGGER.info("Adding description");
         }
-        addService(serviceDTO);
+        //addService(serviceDTO);
+        return serviceDTO;
     }
 
+    private boolean changeFormatTime(String time, Long id){
+        if (!(time.matches("\\d{1,2}[:]{1}\\d{1,2}")))
+            return true;
+        else {
+            createMessage(id,"");
+            return false;
+        }
+    }
+
+    private void createMessage(Long id, String text) {
+        sendBotMessageService.sendMessage(SendMessage.builder()
+                .text(bundleLanguage.getValue(id, text))
+                .chatId(id)
+                .build());
+    }
+
+    private void createMessage(Long id, String text1, String text2) {
+        sendBotMessageService.sendMessage(SendMessage.builder()
+                .text(bundleLanguage.getValue(id, text1)+ " "+
+                        bundleLanguage.getValue(id, text2))
+                .chatId(id)
+                .build());
+    }
+
+    private void createMessage(Long id, String text1, String text2, String text3) {
+        sendBotMessageService.sendMessage(SendMessage.builder()
+                .text(bundleLanguage.getValue(id, text1)+ " "+
+                        bundleLanguage.getValue(id, text2)+ " "+
+                        bundleLanguage.getValue(id, text3))
+                .chatId(id)
+                .build());
+    }
 }
