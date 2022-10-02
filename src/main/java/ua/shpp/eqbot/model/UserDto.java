@@ -1,8 +1,13 @@
 package ua.shpp.eqbot.model;
 
 
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+
 public class UserDto {
+
     private Long idTelegram;
+
     private String name;
     private String city;
     private String phone;
