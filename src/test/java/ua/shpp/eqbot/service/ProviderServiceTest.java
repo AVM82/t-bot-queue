@@ -1,5 +1,6 @@
 package ua.shpp.eqbot.service;
 
+import org.flywaydb.core.Flyway;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -35,6 +36,8 @@ class ProviderServiceTest {
     SendBotMessageServiceImpl sendBotMessageService;
     @MockBean
     EqTelegramBot eqTelegramBot;
+    @MockBean
+    Flyway flyway;
 
     @Autowired
     private ProvideRepository provideRepository;
