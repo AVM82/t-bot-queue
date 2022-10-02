@@ -1,5 +1,6 @@
 package ua.shpp.eqbot.service;
 
+import org.flywaydb.core.Flyway;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -41,6 +42,8 @@ class UserServiceTest {
     ProviderService providerService;
     @MockBean
     ProvideRepository provideRepository;
+    @MockBean
+    Flyway flyway;
 
     @Autowired
     private CacheManager cacheManager;
@@ -56,8 +59,7 @@ class UserServiceTest {
     }
 
     private UserEntity convertToEntity(UserDto userDto) {
-        UserEntity userEntity = modelMapper.map(userDto, UserEntity.class);
-        return userEntity;
+        return modelMapper.map(userDto, UserEntity.class);
     }
 
     @Test
