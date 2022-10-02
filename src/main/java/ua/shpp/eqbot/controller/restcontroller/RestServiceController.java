@@ -73,11 +73,4 @@ public class RestServiceController {
         service.deleteService(id);
     }
 
-    @DeleteMapping("/by_telegram_id/{idTelegram}")
-    @Operation(summary = "${operation.summary.service.delete_service_by_telegram}",
-            description = "${operation.desc.service.delete_service_by_telegram}")
-    public void deleteServicesByIdTelegram(@PathVariable Long idTelegram){
-        log.info("Deleting all services with idTelegram {}", idTelegram);
-        service.deleteAllServiceByIdTelegram(idTelegram);
-    }
 }

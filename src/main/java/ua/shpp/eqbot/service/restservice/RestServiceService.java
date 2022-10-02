@@ -27,9 +27,6 @@ public class RestServiceService {
         return repository.findAllByIdTelegram(idTelegram);
     }
 
-    public void deleteAllServiceByIdTelegram(Long idTelegram){
-        repository.deleteByIdTelegram(idTelegram);
-    }
 
     public void postService (ServiceRestDTO serviceDTO){
         ServiceEntity serviceEntity = new ServiceEntity();
