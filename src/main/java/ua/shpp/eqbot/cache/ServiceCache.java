@@ -30,7 +30,7 @@ public class ServiceCache {
         return services.get(id);
     }
 
-    public static List<ServiceDTO> getAll() {
-        return new ArrayList<>(services.values());
+    public static Map<Long, ServiceDTO> getAll() {
+        return services;
     }
 }

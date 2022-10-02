@@ -1,6 +1,9 @@
 package ua.shpp.eqbot.model;
 
 
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+
 import ua.shpp.eqbot.stage.PositionMenu;
 import ua.shpp.eqbot.stage.PositionRegistration;
 
