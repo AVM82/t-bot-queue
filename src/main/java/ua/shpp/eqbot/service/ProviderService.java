@@ -70,6 +70,11 @@ public class ProviderService {
         return provideRepository.findByIdTelegram(idTelegram);
     }
 
+    public void removeInDataBase(ProviderEntity entity){
+        LOGGER.info("remove entityProvider in database");
+        provideRepository.delete(entity);
+    }
+
     public Optional<ProviderEntity> getByNameAndIdTelegram(Long id_provider, String city_provider) {
         return provideRepository.findProviderEntitiesByIdTelegramAndName(id_provider, city_provider);
     }

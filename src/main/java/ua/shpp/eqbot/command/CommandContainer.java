@@ -37,7 +37,7 @@ public class CommandContainer {
                 .put(CommandName.ADD_SERVICE.getNameCommand(),
                         new AddService(sendBotMessageService, serviceRepository, imageService, bundleLanguage))
                 .put(CommandName.DELETE_USER.getNameCommand(), new DeleteUserCommand(sendBotMessageService,
-                        userRepository, userService, bundleLanguage, provideRepository, serviceRepository))
+                        userService, bundleLanguage, providerService, serviceRepository))
                 .put(CommandName.MAIN_MENU.getNameCommand(), new MainMenu(sendBotMessageService))
                 .put(CommandName.CHECK_PROVIDER.getNameCommand(),
                         new CheckProviderRegistrationCommand(sendBotMessageService, providerService, bundleLanguage))
