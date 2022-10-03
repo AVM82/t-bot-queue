@@ -5,6 +5,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import ua.shpp.eqbot.model.ProviderEntity;
 
+import javax.ws.rs.DELETE;
 import java.util.List;
 import java.util.Optional;
 

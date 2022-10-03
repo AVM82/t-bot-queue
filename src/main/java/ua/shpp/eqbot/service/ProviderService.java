@@ -13,6 +13,7 @@ import ua.shpp.eqbot.model.ProviderDto;
 import ua.shpp.eqbot.model.ProviderEntity;
 import ua.shpp.eqbot.repository.ProvideRepository;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -61,7 +62,7 @@ public class ProviderService {
     @CacheEvict(cacheNames = dtoCacheName, key = "#id")
     public boolean remove(Long id) {
         LOGGER.info("delete provider dto and All entity");
-        provideRepository.findAllByIdTelegram(id);
+        provideRepository.delete(getByIdTelegramEntity(id));
         return true;
     }
 
@@ -77,6 +78,10 @@ public class ProviderService {
 
     public Optional<ProviderEntity> getByNameAndIdTelegram(Long id_provider, String city_provider) {
         return provideRepository.findProviderEntitiesByIdTelegramAndName(id_provider, city_provider);
+    }
+
+    public List<ProviderEntity> getAllProvidersBtIdTelegram(Long idTelegram) {
+        return provideRepository.findAllByIdTelegram(idTelegram);
     }
 
     private ProviderEntity convertToEntity(ProviderDto dto) {
