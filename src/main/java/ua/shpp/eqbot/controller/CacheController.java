@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import ua.shpp.eqbot.cache.ServiceCache;
-import ua.shpp.eqbot.model.ServiceDTO;
+import ua.shpp.eqbot.dto.ServiceDTO;
 
 import java.util.Collection;
 import java.util.Map;

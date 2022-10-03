@@ -7,17 +7,19 @@ import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ua.shpp.eqbot.model.ProviderDto;
 import ua.shpp.eqbot.model.ProviderEntity;
-import ua.shpp.eqbot.repository.ProvideRepository;
+import ua.shpp.eqbot.repository.ProviderRepository;
 
 import java.util.List;
 import java.util.Optional;
 
 @Service
 public class ProviderService {
+    private final ProviderRepository providerRepository;
     private static final Logger LOGGER = LoggerFactory.getLogger(ProviderService.class);
     private final ProvideRepository provideRepository;
     private final String providerDtoCacheName = "cacheProviderDto";
@@ -78,8 +80,9 @@ public class ProviderService {
         provideRepository.delete(entity);
     }
 
-    public Optional<ProviderEntity> getByNameAndIdTelegram(Long id_provider, String city_provider) {
-        return provideRepository.findProviderEntitiesByIdTelegramAndName(id_provider, city_provider);
+    public void remove(Long telegramId) {
+        Optional<ProviderEntity> providerEntity = get(telegramId);
+        providerEntity.ifPresent(providerRepository::delete);
     }
 
     public List<ProviderEntity> getAllProvidersBtIdTelegram(Long idTelegram) {

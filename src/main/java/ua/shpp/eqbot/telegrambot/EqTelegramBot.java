@@ -7,14 +7,15 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
+import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
 import org.telegram.telegrambots.meta.api.objects.Update;
+import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import ua.shpp.eqbot.command.CommandContainer;
 import ua.shpp.eqbot.internationalization.BundleLanguage;
-import ua.shpp.eqbot.service.ProviderService;
-import ua.shpp.eqbot.stage.PositionMenu;
-import ua.shpp.eqbot.model.UserDto;
-import ua.shpp.eqbot.repository.ProvideRepository;
+import ua.shpp.eqbot.model.PositionMenu;
+import ua.shpp.eqbot.dto.UserDto;
+import ua.shpp.eqbot.repository.ProviderRepository;
 import ua.shpp.eqbot.repository.ServiceRepository;
 import ua.shpp.eqbot.repository.UserRepository;
 import ua.shpp.eqbot.service.ImageService;
@@ -47,7 +48,7 @@ public class EqTelegramBot extends TelegramLongPollingBot {
                 new SendBotMessageServiceImpl(this),
                 userRepository,
                 serviceRepository,
-                provideRepository,
+                providerRepository,
                 imageService,
                 bundleLanguage,
                 userService,

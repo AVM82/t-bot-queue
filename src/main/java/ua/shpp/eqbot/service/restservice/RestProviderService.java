@@ -2,9 +2,9 @@ package ua.shpp.eqbot.service.restservice;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ua.shpp.eqbot.model.ProviderDto;
+import ua.shpp.eqbot.dto.ProviderDto;
 import ua.shpp.eqbot.model.ProviderEntity;
-import ua.shpp.eqbot.repository.ProvideRepository;
+import ua.shpp.eqbot.repository.ProviderRepository;
 
 import java.util.List;
 
@@ -12,29 +12,29 @@ import java.util.List;
 public class RestProviderService {
 
     @Autowired
-    ProvideRepository repository;
+    ProviderRepository repository;
 
     public List<ProviderEntity> getAllProviders(){
         return repository.findAll();
     }
 
-    public List<ProviderEntity> getProviders(Long idTelegram){
-        return repository.findAllByIdTelegram(idTelegram);
+    public List<ProviderEntity> getProviders(Long telegramId){
+        return repository.findAllByTelegramId(telegramId);
     }
 
-    public ProviderEntity getProvider(Long idTelegram){
-        return repository.findByIdTelegram(idTelegram);
+    public ProviderEntity getProvider(Long telegramId){
+        return repository.findByTelegramId(telegramId);
     }
 
     public void postProvider(ProviderDto providerDto){
         ProviderEntity providerEntity = new ProviderEntity();
-        providerEntity.setIdTelegram(providerDto.getIdTelegram());
-        providerEntity.setCity(providerDto.getCity());
+        providerEntity.setTelegramId(providerDto.getTelegramId());
+        providerEntity.setProviderCity(providerDto.getCity());
         providerEntity.setName(providerDto.getName());
         repository.save(providerEntity);
     }
 
-    public void deleteProvider(Long idTelegram){
-        repository.deleteById(idTelegram);
+    public void deleteProvider(Long telegramId){
+        repository.deleteById(telegramId);
     }
 }

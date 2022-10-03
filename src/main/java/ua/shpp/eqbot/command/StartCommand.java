@@ -42,7 +42,7 @@ public class StartCommand implements Command {
                 .build());
         List<InlineKeyboardButton> buttonSearch = new ArrayList<>();
         buttonCreate.add(InlineKeyboardButton.builder()
-                .text(bundleLanguage.getValue(chatId, "choose_service"))
+                .text(bundleLanguage.getValue(chatId, "search_service"))
                 .callbackData("search_service")
                 .build());
         keyboard.add(buttonCreate);

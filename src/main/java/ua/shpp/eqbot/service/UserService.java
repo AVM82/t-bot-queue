@@ -10,7 +10,7 @@ import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ua.shpp.eqbot.model.UserDto;
+import ua.shpp.eqbot.dto.UserDto;
 import ua.shpp.eqbot.model.UserEntity;
 import ua.shpp.eqbot.repository.UserRepository;
 
@@ -27,10 +27,10 @@ public class UserService {
         this.cacheManager = cacheManager;
     }
 
-    public UserEntity getEntity(Long id) {
-        LOGGER.info("get userEntity by id {}", id);
-        UserDto dto = getDto(id);
-        return dto != null ? convertToEntity(dto) : userRepository.findFirstByIdTelegram(id);
+    public UserEntity getEntity(Long telergamId) {
+        LOGGER.info("get userEntity by telergamId {}", telergamId);
+        UserDto dto = getDto(telergamId);
+        return dto != null ? convertToEntity(dto) : userRepository.findByTelegramId(telergamId);
     }
 
     public UserEntity saveEntity(UserEntity userEntity) {
@@ -39,7 +39,7 @@ public class UserService {
         return userRepository.save(userEntity);
     }
 
-    @CachePut(cacheNames = dtoCacheName, key = "#userDto.idTelegram")
+    @CachePut(cacheNames = dtoCacheName, key = "#userDto.telegramId")
     public UserDto saveDto(UserDto userDto) {
         LOGGER.info("save userDto {}", userDto);
         return userDto;//****
@@ -67,7 +67,7 @@ public class UserService {
     private void saveDto(UserEntity userEntity) {
         Cache cache = cacheManager.getCache(dtoCacheName);
         if (cache != null) { // first attempt ?
-            Cache.ValueWrapper valueWrapper = cache.get(userEntity.getIdTelegram());
+            Cache.ValueWrapper valueWrapper = cache.get(userEntity.getTelegramId());
             UserDto userDto;
             if (valueWrapper == null) {
                 userDto = convertToDto(userEntity);
@@ -78,7 +78,7 @@ public class UserService {
                         .setCity(userEntity.getCity())
                         .setPhone(userEntity.getPhone());
             }
-            cache.put(userEntity.getIdTelegram(), userDto);
+            cache.put(userEntity.getTelegramId(), userDto);
         }
     }
 

@@ -1,12 +1,9 @@
 package ua.shpp.eqbot.service;
 
+//import org.flywaydb.core.Flyway;
 import org.flywaydb.core.Flyway;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -15,9 +12,9 @@ import org.springframework.cache.CacheManager;
 import org.telegram.telegrambots.starter.TelegramBotInitializer;
 import ua.shpp.eqbot.command.AddService;
 import ua.shpp.eqbot.command.CommandContainer;
-import ua.shpp.eqbot.model.UserDto;
+import ua.shpp.eqbot.dto.UserDto;
 import ua.shpp.eqbot.model.UserEntity;
-import ua.shpp.eqbot.repository.ProvideRepository;
+import ua.shpp.eqbot.repository.ProviderRepository;
 import ua.shpp.eqbot.repository.UserRepository;
 import ua.shpp.eqbot.telegrambot.EqTelegramBot;
 
@@ -41,7 +38,7 @@ class UserServiceTest {
     @MockBean
     ProviderService providerService;
     @MockBean
-    ProvideRepository provideRepository;
+    ProviderRepository providerRepository;
     @MockBean
     Flyway flyway;
 
@@ -66,7 +63,7 @@ class UserServiceTest {
     void getEntity() {
         UserDto userDto = new UserDto();
         userDto.setName("kolobok");
-        userDto.setIdTelegram(1L);
+        userDto.setTelegramId(1L);
         UserEntity userEntity = convertToEntity(userDto);
         userService.saveEntity(userEntity);
         UserEntity dto = userService.getEntity(1L);
@@ -78,7 +75,7 @@ class UserServiceTest {
     void whenRemoveThanEmptyResult() {
         UserEntity entity = new UserEntity();
         entity.setName("Did Moroz");
-        entity.setIdTelegram(1L);
+        entity.setTelegramId(1L);
 
         userService.saveEntity(entity);
 

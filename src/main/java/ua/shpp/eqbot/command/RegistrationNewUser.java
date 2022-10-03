@@ -12,6 +12,9 @@ import ua.shpp.eqbot.internationalization.BundleLanguage;
 import ua.shpp.eqbot.stage.PositionMenu;
 import ua.shpp.eqbot.stage.PositionRegistration;
 import ua.shpp.eqbot.model.UserDto;
+import ua.shpp.eqbot.model.PositionMenu;
+import ua.shpp.eqbot.model.PositionRegistration;
+import ua.shpp.eqbot.dto.UserDto;
 import ua.shpp.eqbot.model.UserEntity;
 import ua.shpp.eqbot.service.SendBotMessageService;
 import ua.shpp.eqbot.service.UserService;
@@ -66,7 +69,7 @@ public class RegistrationNewUser implements Command {
     private UserDto generateUserFromMessage(Message message) {
         UserDto user = new UserDto();
         user.setName(message.getFrom().getUserName())
-                .setIdTelegram(message.getChatId())
+                .setTelegramId(message.getChatId())
                 .setPositionRegistration(PositionRegistration.INPUT_USERNAME)
                 .setLanguage(message.getFrom().getLanguageCode())
                 .setPositionMenu(PositionMenu.MENU_START);
@@ -126,7 +129,7 @@ public class RegistrationNewUser implements Command {
                     sendBotMessageService.sendMessage(createQuery(message.getChatId(),
                             String.format(bundleLanguage.getValue(
                                             message.getChatId(), "registered"),
-                                    userDto.getIdTelegram(), userDto.getName(), userDto.getCity(), userDto.getPhone())));
+                                    userDto.getTelegramId(), userDto.getName(), userDto.getCity(), userDto.getPhone())));
                     break;
                 default:
                     //do nothing

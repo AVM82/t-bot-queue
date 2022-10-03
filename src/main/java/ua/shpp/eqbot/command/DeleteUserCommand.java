@@ -9,6 +9,7 @@ import ua.shpp.eqbot.internationalization.BundleLanguage;
 import ua.shpp.eqbot.model.ProviderDto;
 import ua.shpp.eqbot.model.ProviderEntity;
 import ua.shpp.eqbot.model.ServiceEntity;
+import ua.shpp.eqbot.repository.ProviderRepository;
 import ua.shpp.eqbot.repository.ServiceRepository;
 import ua.shpp.eqbot.service.ProviderService;
 import ua.shpp.eqbot.service.SendBotMessageService;
@@ -36,7 +37,7 @@ public class DeleteUserCommand implements Command {
 
     @Override
     public boolean execute(Update update) {
-        List<ServiceEntity> serviceEntityList = serviceRepository.findAllByIdTelegram(update.getMessage().getChatId());
+        List<ServiceEntity> serviceEntityList = serviceRepository.findAllByTelegramId(update.getMessage().getChatId());
         if (!serviceEntityList.isEmpty()) {
             LOGGER.info("deleted service in database");
             serviceRepository.deleteAllInBatch(serviceEntityList);

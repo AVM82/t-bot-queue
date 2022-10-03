@@ -1,4 +1,4 @@
-package ua.shpp.eqbot.model;
+package ua.shpp.eqbot.dto;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
@@ -8,7 +8,7 @@ import java.util.Objects;
 
 public class UserRestDto implements Serializable {
     @NotNull(message = "{valid.user.id.notnull.message}")
-    private final Long idTelegram;
+    private final Long telegramId;
     @Size(min = 3, max = 30, message = "{valid.name.id.size.message}")
     private final String name;
     @Size(min = 3, max = 30, message = "{valid.user.city.size.message}")
@@ -18,16 +18,16 @@ public class UserRestDto implements Serializable {
     private final String phone;
     private final String language;
 
-    public UserRestDto(Long idTelegram, String name, String city, String phone, String language) {
-        this.idTelegram = idTelegram;
+    public UserRestDto(Long telegramId, String name, String city, String phone, String language) {
+        this.telegramId = telegramId;
         this.name = name;
         this.city = city;
         this.phone = phone;
         this.language = language;
     }
 
-    public Long getIdTelegram() {
-        return idTelegram;
+    public Long getTelegramId() {
+        return telegramId;
     }
 
     public String getName() {
@@ -51,7 +51,7 @@ public class UserRestDto implements Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         UserRestDto entity = (UserRestDto) o;
-        return Objects.equals(this.idTelegram, entity.idTelegram) &&
+        return Objects.equals(this.telegramId, entity.telegramId) &&
                 Objects.equals(this.name, entity.name) &&
                 Objects.equals(this.city, entity.city) &&
                 Objects.equals(this.phone, entity.phone) &&
@@ -60,13 +60,13 @@ public class UserRestDto implements Serializable {
 
     @Override
     public int hashCode() {
-        return Objects.hash(idTelegram, name, city, phone, language);
+        return Objects.hash(telegramId, name, city, phone, language);
     }
 
     @Override
     public String toString() {
         return getClass().getSimpleName() + "(" +
-                "idTelegram = " + idTelegram + ", " +
+                "telegramId = " + telegramId + ", " +
                 "name = " + name + ", " +
                 "city = " + city + ", " +
                 "phone = " + phone + ", " +

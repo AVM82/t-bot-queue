@@ -9,9 +9,8 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
-import ua.shpp.eqbot.model.ServiceDTO;
 import ua.shpp.eqbot.model.ServiceEntity;
-import ua.shpp.eqbot.model.ServiceRestDTO;
+import ua.shpp.eqbot.dto.ServiceRestDTO;
 import ua.shpp.eqbot.service.restservice.RestServiceService;
 
 import javax.validation.Valid;
@@ -41,12 +40,12 @@ public class RestServiceController {
         return service.getService(id);
     }
 
-    @GetMapping("/by_telegram_id/{idTelegram}")
+    @GetMapping("/by_telegram_id/{telegramId}")
     @Operation(summary = "${operation.summary.service.get_service_by_telegram}",
             description = "${operation.desc.service.get_service_by_telegram}")
-    public List<ServiceEntity> getServicesByIdTelegram(@PathVariable Long idTelegram){
-        log.info("Getting all services with idTelegram {}", idTelegram);
-        return service.getAllServiceByIdTelegram(idTelegram);
+    public List<ServiceEntity> getServicesByTelegramId(@PathVariable Long telegramId){
+        log.info("Getting all services with telegramId {}", telegramId);
+        return service.getAllServiceByTelegramId(telegramId);
     }
 
     @PostMapping
