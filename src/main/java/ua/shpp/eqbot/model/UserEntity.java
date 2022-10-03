@@ -10,22 +10,20 @@ public class UserEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(name = "id_telegram")
 
     private Long telegramId;
     private String name;
     private String city;
     private String phone;
     private String language;
-    @Column(name = "time_created")
-    private LocalDateTime timeCreated;
+    private LocalDateTime createdTime;
 
     public UserEntity() {
     }
 
     @PrePersist
     private void setTime() {
-        timeCreated = LocalDateTime.now();
+        createdTime = LocalDateTime.now();
     }
 
     public Long getTelegramId() {
@@ -73,12 +71,12 @@ public class UserEntity {
         return this;
     }
 
-    public LocalDateTime getTimeCreated() {
-        return timeCreated;
+    public LocalDateTime getCreatedTime() {
+        return createdTime;
     }
 
-    public void setTimeCreated(LocalDateTime timeCreated) {
-        this.timeCreated = timeCreated;
+    public void setCreatedTime(LocalDateTime timeCreated) {
+        this.createdTime = timeCreated;
     }
 
     @Override
@@ -86,12 +84,12 @@ public class UserEntity {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         UserEntity that = (UserEntity) o;
-        return Objects.equals(telegramId, that.telegramId) && Objects.equals(name, that.name) && Objects.equals(city, that.city) && Objects.equals(phone, that.phone) && Objects.equals(language, that.language) && Objects.equals(timeCreated, that.timeCreated);
+        return Objects.equals(telegramId, that.telegramId) && Objects.equals(name, that.name) && Objects.equals(city, that.city) && Objects.equals(phone, that.phone) && Objects.equals(language, that.language) && Objects.equals(createdTime, that.createdTime);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(telegramId, name, city, phone, language, timeCreated);
+        return Objects.hash(telegramId, name, city, phone, language, createdTime);
     }
 
     @Override
@@ -102,7 +100,7 @@ public class UserEntity {
         sb.append(", city='").append(city).append('\'');
         sb.append(", phone='").append(phone).append('\'');
         sb.append(", language='").append(language).append('\'');
-        sb.append(", timeCreated=").append(timeCreated);
+        sb.append(", timeCreated=").append(createdTime);
         sb.append('}');
         return sb.toString();
     }

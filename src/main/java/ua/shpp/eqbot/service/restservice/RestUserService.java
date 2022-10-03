@@ -31,7 +31,7 @@ public class RestUserService {
         userEntity.setLanguage(userDto.getLanguage());
         userEntity.setName(userDto.getName());
         userEntity.setPhone(userDto.getPhone());
-        userEntity.setTimeCreated(LocalDateTime.now());
+        userEntity.setCreatedTime(LocalDateTime.now());
         repository.save(userEntity);
     }
 
