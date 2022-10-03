@@ -1,4 +1,3 @@
-/*
 package ua.shpp.eqbot.service;
 
 import org.flywaydb.core.Flyway;
@@ -6,6 +5,7 @@ import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.cache.CacheManager;
 import org.telegram.telegrambots.starter.TelegramBotInitializer;
 import ua.shpp.eqbot.command.AddService;
 import ua.shpp.eqbot.command.CommandContainer;
@@ -19,6 +19,8 @@ import java.util.Optional;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @TestMethodOrder(MethodOrderer.DisplayName.class)
 @SpringBootTest(properties = {"application.properties"})
@@ -42,13 +44,15 @@ class ProviderServiceTest {
 
     @Autowired
     private ProvideRepository provideRepository;
+    @Autowired
+    private CacheManager cacheManager;
 
     private ProviderService providerService;
 
 
     @BeforeEach
     void setUp() {
-        providerService = new ProviderService(provideRepository);
+        providerService = new ProviderService(provideRepository, cacheManager);
     }
 
     @DisplayName("2")
@@ -58,43 +62,34 @@ class ProviderServiceTest {
         providerEntity.setCity("Dnipro");
         providerEntity.setIdTelegram(1L);
         providerEntity.setName("provider");
-        providerService.save(providerEntity);
-        Optional<ProviderEntity> providerEntity1 = providerService.get(1L);
-        ProviderEntity result = new ProviderEntity();
-        if (providerEntity1.isPresent()) {
-            result = providerEntity1.get();
+        providerService.saveEntity(providerEntity);
+        ProviderEntity result = providerService.getByIdTelegramEntity(1L);
+        if (result != null) {
+            assertThat(result.getName(), is("provider"));
         }
-        assertThat(result.getName(), is("provider"));
     }
 
     @DisplayName("3")
     @Test
-    void whenPutThreeProvidersThenGetProvidersUseIdTelegramExpectedAllList() {
+    void whenPutThreeProvidersThenGetLastAddProviders() {
         ProviderEntity providerEntity = new ProviderEntity()
                 .setCity("Dnipro");
         ProviderEntity providerEntity1 = new ProviderEntity()
                 .setCity("Kiev");
-        ProviderEntity providerEntity2 = new ProviderEntity()
-                .setCity("Starcon");
-        providerEntity.setIdTelegram(1L);
+
+        providerEntity.setIdTelegram(7L);
         providerEntity.setName("providerOne");
 
-        providerEntity1.setIdTelegram(1L);
+        providerEntity1.setIdTelegram(7L);
         providerEntity1.setName("providerTwo");
 
-        providerEntity2.setIdTelegram(1L);
-        providerEntity2.setName("providerThree");
+        providerService.saveEntity(providerEntity);
+        providerService.saveEntity(providerEntity1);
 
-        providerService.save(providerEntity);
-        providerService.save(providerEntity1);
-        providerService.save(providerEntity2);
+        List<ProviderEntity> byIdTelegram = providerService.getAllProvidersBtIdTelegram(1L);
 
-        List<ProviderEntity> byIdTelegram = providerService.getByIdTelegram(1L);
-
-        assertThat(byIdTelegram.size(), is(5));
-        assertThat(byIdTelegram.get(2).getCity(), is("Dnipro"));
-        assertThat(byIdTelegram.get(3).getCity(), is("Kiev"));
-        assertThat(byIdTelegram.get(4).getCity(), is("Starcon"));
+        assertThat(byIdTelegram.size(), is(1));
+        assertThat(byIdTelegram.get(0).getCity(), is("Dnipro"));
     }
 
     @DisplayName("1")
@@ -108,7 +103,7 @@ class ProviderServiceTest {
                 .setCity(CITY_PROVIDER)
                 .setName("provider");
 
-        providerService.save(providerEntity);
+        providerService.saveEntity(providerEntity);
 
         Optional<ProviderEntity> providerEntity1 = providerService
                 .getByNameAndIdTelegram(ID_PROVIDER, "provider");
@@ -121,5 +116,19 @@ class ProviderServiceTest {
         assertThat(result.getIdTelegram(), is(ID_PROVIDER));
         assertThat(result.getCity(), is(CITY_PROVIDER));
     }
+
+    @Test
+    void whenAddAndRemoveThanReturnNull() {
+        ProviderEntity providerEntity = new ProviderEntity();
+        providerEntity.setCity("Kolomuya");
+        providerEntity.setIdTelegram(4L);
+        providerEntity.setName("FOP");
+        providerService.saveEntity(providerEntity);
+        ProviderEntity result = providerService.getByIdTelegramEntity(4L);
+        if (result != null) {
+            assertThat(result.getName(), is("FOP"));
+        }
+        assertTrue(providerService.remove(4L));
+        assertNull(providerService.getByIdTelegramEntity(4L));
+    }
 }
-*/
