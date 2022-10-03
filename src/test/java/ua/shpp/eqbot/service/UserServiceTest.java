@@ -3,10 +3,6 @@ package ua.shpp.eqbot.service;
 import org.flywaydb.core.Flyway;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -17,7 +13,7 @@ import ua.shpp.eqbot.command.AddService;
 import ua.shpp.eqbot.command.CommandContainer;
 import ua.shpp.eqbot.model.UserDto;
 import ua.shpp.eqbot.model.UserEntity;
-import ua.shpp.eqbot.repository.ProvideRepository;
+import ua.shpp.eqbot.repository.ProviderRepository;
 import ua.shpp.eqbot.repository.UserRepository;
 import ua.shpp.eqbot.telegrambot.EqTelegramBot;
 
@@ -41,7 +37,7 @@ class UserServiceTest {
     @MockBean
     ProviderService providerService;
     @MockBean
-    ProvideRepository provideRepository;
+    ProviderRepository providerRepository;
     @MockBean
     Flyway flyway;
 

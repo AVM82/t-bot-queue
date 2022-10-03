@@ -5,7 +5,7 @@ import org.slf4j.LoggerFactory;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardRow;
-import ua.shpp.eqbot.repository.ProvideRepository;
+import ua.shpp.eqbot.repository.ProviderRepository;
 import ua.shpp.eqbot.service.SendBotMessageService;
 
 import java.util.ArrayList;
@@ -17,17 +17,17 @@ public class ChangeRoleToProviderCommand implements Command {
 
     private final SendBotMessageService sendBotMessageService;
 
-    ProvideRepository provideRepository;
+    ProviderRepository providerRepository;
 
-    public ChangeRoleToProviderCommand(SendBotMessageService sendBotMessageService, ProvideRepository provideRepository) {
+    public ChangeRoleToProviderCommand(SendBotMessageService sendBotMessageService, ProviderRepository providerRepository) {
         this.sendBotMessageService = sendBotMessageService;
 
-        this.provideRepository = provideRepository;
+        this.providerRepository = providerRepository;
     }
 
     @Override
     public boolean execute(Update update) {
-        if (provideRepository.findByIdTelegram(update.getMessage().getChatId()) != null)/*providerRepository.findById(update.getMessage().getChatId())*/ {
+        if (providerRepository.findByIdTelegram(update.getMessage().getChatId()) != null)/*providerRepository.findById(update.getMessage().getChatId())*/ {
             LOGGER.info("Find provider with such id and enroll as a provider");
             sendBotMessageService.sendMessage(update.getMessage().getChatId().toString(), "U switched to provider");
         } else {

@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ua.shpp.eqbot.model.ProviderDto;
 import ua.shpp.eqbot.model.ProviderEntity;
-import ua.shpp.eqbot.repository.ProvideRepository;
+import ua.shpp.eqbot.repository.ProviderRepository;
 
 import java.util.List;
 
@@ -12,7 +12,7 @@ import java.util.List;
 public class RestProviderService {
 
     @Autowired
-    ProvideRepository repository;
+    ProviderRepository repository;
 
     public List<ProviderEntity> getAllProviders(){
         return repository.findAll();

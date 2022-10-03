@@ -16,8 +16,8 @@ public interface ServiceRepository extends JpaRepository<ServiceEntity, Long> {
 
     ServiceEntity findFirstById (Long id);
 
-
     @Query("select t from ServiceEntity t where t. idTelegram = ?1")
     List<ServiceEntity> findAllByIdTelegram(Long id);
 
+    List<ServiceEntity> findAllByIdTelegramIn(List<Long> idTelegramList);
 }

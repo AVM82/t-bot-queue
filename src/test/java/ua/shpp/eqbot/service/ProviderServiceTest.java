@@ -10,7 +10,7 @@ import ua.shpp.eqbot.command.AddService;
 import ua.shpp.eqbot.command.CommandContainer;
 import ua.shpp.eqbot.command.RegistrationNewUser;
 import ua.shpp.eqbot.model.ProviderEntity;
-import ua.shpp.eqbot.repository.ProvideRepository;
+import ua.shpp.eqbot.repository.ProviderRepository;
 import ua.shpp.eqbot.telegrambot.EqTelegramBot;
 
 import java.util.List;
@@ -40,14 +40,14 @@ class ProviderServiceTest {
     Flyway flyway;
 
     @Autowired
-    private ProvideRepository provideRepository;
+    private ProviderRepository providerRepository;
 
     private ProviderService providerService;
 
 
     @BeforeEach
     void setUp() {
-        providerService = new ProviderService(provideRepository);
+        providerService = new ProviderService(providerRepository);
     }
 
     @DisplayName("2")

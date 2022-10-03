@@ -15,7 +15,7 @@ import ua.shpp.eqbot.internationalization.BundleLanguage;
 import ua.shpp.eqbot.model.ServiceDTO;
 import ua.shpp.eqbot.model.ServiceEntity;
 import ua.shpp.eqbot.model.UserDto;
-import ua.shpp.eqbot.repository.ProvideRepository;
+import ua.shpp.eqbot.repository.ProviderRepository;
 import ua.shpp.eqbot.repository.ServiceRepository;
 import ua.shpp.eqbot.service.ImageService;
 import ua.shpp.eqbot.service.SendBotMessageService;
@@ -37,15 +37,15 @@ public class AddService implements Command {
     private final ImageService imageService;
     private final BundleLanguage bundleLanguage;
 
-    private final ProvideRepository provideRepository;
+    private final ProviderRepository providerRepository;
     private boolean hasSuchName = false;
 
     @Autowired
-    public AddService(SendBotMessageService sendBotMessageService, ServiceRepository serviceRepository, ImageService imageService, ProvideRepository provideRepository, UserService userService, BundleLanguage bundleLanguage) {
+    public AddService(SendBotMessageService sendBotMessageService, ServiceRepository serviceRepository, ImageService imageService, ProviderRepository providerRepository, UserService userService, BundleLanguage bundleLanguage) {
         this.sendBotMessageService = sendBotMessageService;
         this.serviceRepository = serviceRepository;
         this.imageService = imageService;
-        this.provideRepository = provideRepository;
+        this.providerRepository = providerRepository;
         this.userService = userService;
         this.bundleLanguage = bundleLanguage;
     }
@@ -70,7 +70,7 @@ public class AddService implements Command {
             id = update.getMessage().getChatId();
         }
 
-        if (provideRepository.findByIdTelegram(id) != null)/*providerRepository.findById(update.getMessage().getChatId())*/ {
+        if (providerRepository.findByIdTelegram(id) != null)/*providerRepository.findById(update.getMessage().getChatId())*/ {
             ServiceDTO newService;
             if (!update.hasMessage()) {
                 Long idTelegram = update.getCallbackQuery().getFrom().getId();

@@ -10,7 +10,7 @@ import java.util.Optional;
 
 
 @Repository
-public interface ProvideRepository extends JpaRepository<ProviderEntity, Long> {
+public interface ProviderRepository extends JpaRepository<ProviderEntity, Long> {
     @Query("select t from ProviderEntity t where t. idTelegram = ?1")
     ProviderEntity findFirstByIdTelegram(Long id);
 
@@ -21,6 +21,8 @@ public interface ProvideRepository extends JpaRepository<ProviderEntity, Long> {
     List<ProviderEntity> findAllByIdTelegram(Long id);
 
     Optional<ProviderEntity> findProviderEntitiesByIdTelegramAndName(Long idTelegram, String name);
+
+    List<ProviderEntity> findAllByCity(String city);
 
 //    ProviderEntity findPleaseProviderEntitiesByIdTelegramAAndCity(Long idTelegram, String name);
 }
