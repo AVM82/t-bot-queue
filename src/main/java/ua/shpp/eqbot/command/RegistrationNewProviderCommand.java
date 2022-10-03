@@ -61,7 +61,6 @@ public class RegistrationNewProviderCommand implements Command {
                     providerDto.setCity(update.getMessage().getText())
                             .setPositionRegistrationProvider(PositionRegistrationProvider.DONE);
                     providerService.saveDtoInDataBase(providerDto);
-                    providerService.remove(id);
                     sendBotMessageService.sendMessage(SendMessage.builder()
                             .chatId(id)
                             .text(bundleLanguage.getValue(id, "provider_registered"))

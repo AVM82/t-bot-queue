@@ -8,17 +8,13 @@ import ua.shpp.eqbot.cache.ServiceCache;
 import ua.shpp.eqbot.internationalization.BundleLanguage;
 import ua.shpp.eqbot.model.ProviderDto;
 import ua.shpp.eqbot.model.ProviderEntity;
-import ua.shpp.eqbot.model.ServiceDTO;
 import ua.shpp.eqbot.model.ServiceEntity;
-import ua.shpp.eqbot.repository.ProvideRepository;
 import ua.shpp.eqbot.repository.ServiceRepository;
-import ua.shpp.eqbot.repository.UserRepository;
 import ua.shpp.eqbot.service.ProviderService;
 import ua.shpp.eqbot.service.SendBotMessageService;
 import ua.shpp.eqbot.service.UserService;
 
 import java.util.List;
-
 
 public class DeleteUserCommand implements Command {
     private static final Logger LOGGER = LoggerFactory.getLogger(DeleteUserCommand.class);

@@ -150,9 +150,14 @@ public class EqTelegramBot extends TelegramLongPollingBot {
         } else if (callbackQuery.getData().equals("search_service")) {
             LOGGER.info("search_service");
         } else if (callbackQuery.getData().equals("return_in_menu")) {
-            commandContainer.retrieveCommand("/start");
+            commandContainer.retrieveCommand("/start").execute(update);
         } else if (callbackQuery.getData().equals("change_provider_details")) {
             LOGGER.info("change provider details");
+        }else if (callbackQuery.getData().equals("newServiceFromAnExistingProvider")) {
+            LOGGER.info("add new service");
+            userService.getDto(update.getCallbackQuery().getFrom().getId())
+                    .setPositionMenu(PositionMenu.REGISTRATION_SERVICE);
+            commandContainer.retrieveCommand("/add").execute(update);
         }
     }
 }

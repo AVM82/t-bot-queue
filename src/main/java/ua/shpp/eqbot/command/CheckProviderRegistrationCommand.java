@@ -56,19 +56,21 @@ public class CheckProviderRegistrationCommand implements Command {
                     .build());
             return new RegistrationNewProviderCommand(sendBotMessageService, providerService, bundleLanguage).execute(update);
         }
-        if (providerDto.getPositionRegistrationProvider() == PositionRegistrationProvider.DONE)
+        if (providerDto.getPositionRegistrationProvider() == PositionRegistrationProvider.DONE) {
+            printListProvider(id);
+            addRequest(id);
             return true;
-        else
+        } else
             return new RegistrationNewProviderCommand(sendBotMessageService, providerService, bundleLanguage).execute(update);
     }
 
     private void printListProvider(Long id) {
-        ProviderEntity providerEntity = providerService.getByIdTelegramEntity(id);
+        ProviderDto dto = providerService.getProviderDto(id);
         sendBotMessageService.sendMessage(SendMessage.builder()
                 .chatId(id)
                 .text(bundleLanguage.getValue(id, "registered_to_you") +
-                        "\n" + bundleLanguage.getValue(id, "company_name") + ": " + providerEntity.getName() +
-                        "\n" + bundleLanguage.getValue(id, "city") + ": " + providerEntity.getCity())
+                        "\n" + bundleLanguage.getValue(id, "company_name") + ": " + dto.getName() +
+                        "\n" + bundleLanguage.getValue(id, "city") + ": " + dto.getCity())
                 .build());
     }
 

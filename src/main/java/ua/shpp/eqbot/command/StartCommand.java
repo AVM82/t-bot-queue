@@ -25,7 +25,10 @@ public class StartCommand implements Command {
 
     @Override
     public boolean execute(Update update) {
-        createStartMenu(update.getMessage().getChatId());
+        if (update.hasCallbackQuery())
+            createStartMenu(update.getCallbackQuery().getFrom().getId());
+        else
+            createStartMenu(update.getMessage().getChatId());
         return true;
     }
 

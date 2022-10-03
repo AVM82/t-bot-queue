@@ -55,7 +55,9 @@ public class UserService {
     @CacheEvict(cacheNames = dtoCacheName, key = "#id")
     public boolean remove(Long id) {
         LOGGER.info("delete userDto and All entity");
-        userRepository.delete(getEntity(id));
+        UserEntity entity = getEntity(id);
+        if (entity != null)
+            userRepository.delete(getEntity(id));
         return true;
     }
 

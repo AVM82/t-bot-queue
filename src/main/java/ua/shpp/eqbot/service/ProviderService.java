@@ -20,7 +20,7 @@ import java.util.Optional;
 public class ProviderService {
     private static final Logger LOGGER = LoggerFactory.getLogger(ProviderService.class);
     private final ProvideRepository provideRepository;
-    private final String dtoCacheName = "cacheProviderDto";
+    private final String providerDtoCacheName = "cacheProviderDto";
     private final CacheManager cacheManager;
     private final ModelMapper modelMapper = new ModelMapper();
 
@@ -42,27 +42,29 @@ public class ProviderService {
 
     public void saveDtoInDataBase(ProviderDto providerDto) {
         LOGGER.info("save provider dto in database {}", providerDto);
-        ProviderEntity entity= convertToEntity(providerDto);
+        ProviderEntity entity = convertToEntity(providerDto);
         saveEntity(entity);
     }
 
-    @CachePut(cacheNames = dtoCacheName, key = "#providerDto.idTelegram")
+    @CachePut(cacheNames = providerDtoCacheName, key = "#providerDto.idTelegram")
     public ProviderDto saveProviderDto(ProviderDto providerDto) {
         LOGGER.info("save provider dto {}", providerDto);
         return providerDto;
     }
 
-    @Cacheable(cacheNames = dtoCacheName, key = "#id")
+    @Cacheable(cacheNames = providerDtoCacheName, key = "#id")
     public ProviderDto getProviderDto(Long id) {
         LOGGER.info("get provider dto by id {}", id);
         return null;
     }
 
     @Transactional
-    @CacheEvict(cacheNames = dtoCacheName, key = "#id")
+    @CacheEvict(cacheNames = providerDtoCacheName, key = "#id")
     public boolean remove(Long id) {
         LOGGER.info("delete provider dto and All entity");
-        provideRepository.delete(getByIdTelegramEntity(id));
+        ProviderEntity entity = provideRepository.findByIdTelegram(id);
+        if (entity != null)
+            provideRepository.delete(entity);
         return true;
     }
 
@@ -71,7 +73,7 @@ public class ProviderService {
         return provideRepository.findByIdTelegram(idTelegram);
     }
 
-    public void removeInDataBase(ProviderEntity entity){
+    public void removeInDataBase(ProviderEntity entity) {
         LOGGER.info("remove entityProvider in database");
         provideRepository.delete(entity);
     }
