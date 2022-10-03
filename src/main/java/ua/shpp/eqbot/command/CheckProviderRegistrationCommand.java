@@ -46,10 +46,6 @@ public class CheckProviderRegistrationCommand implements Command {
             if (providerEntity != null) {
                 LOGGER.info("there is provider in the database");
                 providerService.saveEntityInCache(providerEntity);
-                sendBotMessageService.sendMessage(SendMessage.builder()
-                        .chatId(id)
-                        .text(bundleLanguage.getValue(id, "registered_to_you"))
-                        .build());
                 printListProvider(id);
                 addRequest(id);
                 return true;
@@ -70,7 +66,8 @@ public class CheckProviderRegistrationCommand implements Command {
         ProviderEntity providerEntity = providerService.getByIdTelegramEntity(id);
         sendBotMessageService.sendMessage(SendMessage.builder()
                 .chatId(id)
-                .text(bundleLanguage.getValue(id, "company_name") + ": " + providerEntity.getName() +
+                .text(bundleLanguage.getValue(id, "registered_to_you") +
+                        "\n" + bundleLanguage.getValue(id, "company_name") + ": " + providerEntity.getName() +
                         "\n" + bundleLanguage.getValue(id, "city") + ": " + providerEntity.getCity())
                 .build());
     }
@@ -81,6 +78,7 @@ public class CheckProviderRegistrationCommand implements Command {
         keyboard.add(createButton(id, "change_provider_details", "change_provider_details"));
         keyboard.add(createButton(id, "newServiceFromAnExistingProvider",
                 "newServiceFromAnExistingProvider"));
+        keyboard.add(createButton(id, "return_in_menu", "return_in_menu"));
         inlineKeyboardMarkup.setKeyboard(keyboard);
         SendMessage sendMessage = new SendMessage();
         sendMessage.setText(bundleLanguage.getValue(id, "choose_menu_option"));

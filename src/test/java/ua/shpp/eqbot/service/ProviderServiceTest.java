@@ -6,6 +6,8 @@ import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.cache.Cache;
+import org.springframework.cache.CacheManager;
 import org.telegram.telegrambots.starter.TelegramBotInitializer;
 import ua.shpp.eqbot.command.AddService;
 import ua.shpp.eqbot.command.CommandContainer;
@@ -14,6 +16,7 @@ import ua.shpp.eqbot.model.ProviderEntity;
 import ua.shpp.eqbot.repository.ProvideRepository;
 import ua.shpp.eqbot.telegrambot.EqTelegramBot;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
