@@ -28,10 +28,8 @@ public class MainMenu implements Command {
 //        Long id = update.getMessage().getChatId();
         listOfCommand.add(new BotCommand("/start", "Старт")); //bundleLanguage.getValue(id, "menu_start")
         listOfCommand.add(new BotCommand("/help", "Допомога"));
-        listOfCommand.add(new BotCommand("/reg", "Реєстрація"));
         listOfCommand.add(new BotCommand("/stop", "Стоп"));
         listOfCommand.add(new BotCommand("/settings", "Налаштування"));
-        listOfCommand.add(new BotCommand("/add", "Додати"));
         listOfCommand.add(new BotCommand("/delete", "Видалити"));
         sendBotMessageService.sendMenu(new SetMyCommands(listOfCommand, new BotCommandScopeDefault(), null));
         LOGGER.info("Created main menu successful.");

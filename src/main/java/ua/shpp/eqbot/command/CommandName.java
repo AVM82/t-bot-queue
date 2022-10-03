@@ -12,6 +12,7 @@ public enum CommandName {
     MAIN_MENU("mainMenu"),
     ADD_PROVIDER("/add provider"),
     CHECK_PROVIDER("/check provider"),
+    CHECK_SERVICE("/check service"),
     NO("nocommand");
 
 

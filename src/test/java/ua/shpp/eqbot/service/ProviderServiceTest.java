@@ -1,3 +1,4 @@
+/*
 package ua.shpp.eqbot.service;
 
 import org.flywaydb.core.Flyway;
@@ -121,3 +122,4 @@ class ProviderServiceTest {
         assertThat(result.getCity(), is(CITY_PROVIDER));
     }
 }
+*/

@@ -35,16 +35,17 @@ public class CommandContainer {
                 .put(CommandName.CHANGE_ROLE_TO_PROVIDER.getNameCommand(),
                         new ChangeRoleToProviderCommand(sendBotMessageService, provideRepository))
                 .put(CommandName.ADD_SERVICE.getNameCommand(),
-                        new AddService(sendBotMessageService, serviceRepository, imageService, provideRepository, userService, bundleLanguage))
+                        new AddService(sendBotMessageService, serviceRepository, imageService, bundleLanguage))
                 .put(CommandName.DELETE_USER.getNameCommand(), new DeleteUserCommand(sendBotMessageService,
                         userRepository, userService, bundleLanguage, provideRepository, serviceRepository))
                 .put(CommandName.MAIN_MENU.getNameCommand(), new MainMenu(sendBotMessageService))
                 .put(CommandName.CHECK_PROVIDER.getNameCommand(),
                         new CheckProviderRegistrationCommand(sendBotMessageService, providerService, bundleLanguage))
                 .put(CommandName.ADD_PROVIDER.getNameCommand(),
-                        new AddNewProviderCommand(sendBotMessageService, providerService, bundleLanguage))
+                        new RegistrationNewProviderCommand(sendBotMessageService, providerService, bundleLanguage))
+                .put(CommandName.CHECK_SERVICE.getNameCommand(),
+                        new CheckServiceRegistrationCommand(sendBotMessageService, bundleLanguage, serviceRepository, imageService))
                 .build();
-
         unknownCommand = new UnknownCommand(sendBotMessageService, bundleLanguage);
     }
 

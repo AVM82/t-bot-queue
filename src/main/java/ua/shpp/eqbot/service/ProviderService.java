@@ -13,7 +13,6 @@ import ua.shpp.eqbot.model.ProviderDto;
 import ua.shpp.eqbot.model.ProviderEntity;
 import ua.shpp.eqbot.repository.ProvideRepository;
 
-import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -34,7 +33,13 @@ public class ProviderService {
         return provideRepository.save(providerEntity);
     }
 
-    public void saveDtoIndatabase(ProviderDto providerDto) {
+    public void saveEntityInCache(ProviderEntity entity) {
+        LOGGER.info("save provider entity in cache {}", entity);
+        ProviderDto dto = convertToDto(entity);
+        saveProviderDto(dto);
+    }
+
+    public void saveDtoInDataBase(ProviderDto providerDto) {
         LOGGER.info("save provider dto in database {}", providerDto);
         ProviderEntity entity= convertToEntity(providerDto);
         saveEntity(entity);
@@ -60,9 +65,9 @@ public class ProviderService {
         return true;
     }
 
-    public List<ProviderEntity> getByIdTelegramEntity(Long idTelegram) {
-        LOGGER.info("get list entityProvider");
-        return provideRepository.findAllByIdTelegram(idTelegram);
+    public ProviderEntity getByIdTelegramEntity(Long idTelegram) {
+        LOGGER.info("get entityProvider in database");
+        return provideRepository.findByIdTelegram(idTelegram);
     }
 
     public Optional<ProviderEntity> getByNameAndIdTelegram(Long id_provider, String city_provider) {
@@ -74,5 +79,12 @@ public class ProviderService {
         ProviderEntity entity = modelMapper.map(dto, ProviderEntity.class);
         LOGGER.info("convert dto to entity");
         return entity;
+    }
+
+    private ProviderDto convertToDto(ProviderEntity entity) {
+        if (entity == null) return null;
+        ProviderDto dto = modelMapper.map(entity, ProviderDto.class);
+        LOGGER.info("convert entity to dto");
+        return dto;
     }
 }

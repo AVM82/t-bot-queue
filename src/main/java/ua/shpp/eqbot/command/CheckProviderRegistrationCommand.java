@@ -11,6 +11,7 @@ import ua.shpp.eqbot.model.ProviderDto;
 import ua.shpp.eqbot.model.ProviderEntity;
 import ua.shpp.eqbot.service.ProviderService;
 import ua.shpp.eqbot.service.SendBotMessageService;
+import ua.shpp.eqbot.stage.PositionRegistrationProvider;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,7 +29,6 @@ public class CheckProviderRegistrationCommand implements Command {
         this.bundleLanguage = bundleLanguage;
     }
 
-
     @Override
     public boolean execute(Update update) {
         Long id;
@@ -41,12 +41,13 @@ public class CheckProviderRegistrationCommand implements Command {
         ProviderDto providerDto = providerService.getProviderDto(id);
         if (providerDto == null) {
             LOGGER.info("the provider is not in the cache");
-            List<ProviderEntity> providerEntityList = providerService.getByIdTelegramEntity(id);
-            if (!providerEntityList.isEmpty()) {
+            ProviderEntity providerEntity = providerService.getByIdTelegramEntity(id);
+            if (providerEntity != null) {
                 LOGGER.info("there is provider in the database");
+                providerService.saveEntityInCache(providerEntity);
                 sendBotMessageService.sendMessage(SendMessage.builder()
                         .chatId(id)
-                        .text(bundleLanguage.getValue(id, "registered_with_a_provider"))
+                        .text(bundleLanguage.getValue(id, "registered_to_you"))
                         .build());
                 printListProvider(id);
                 addRequest(id);
@@ -56,28 +57,28 @@ public class CheckProviderRegistrationCommand implements Command {
                     .chatId(id)
                     .text(bundleLanguage.getValue(id, "no_registration_provider"))
                     .build());
-            return new AddNewProviderCommand(sendBotMessageService, providerService, bundleLanguage).execute(update);
+            return new RegistrationNewProviderCommand(sendBotMessageService, providerService, bundleLanguage).execute(update);
         }
-        return new AddNewProviderCommand(sendBotMessageService, providerService, bundleLanguage).execute(update);
+        if (providerDto.getPositionRegistrationProvider() == PositionRegistrationProvider.DONE)
+            return true;
+        else
+            return new RegistrationNewProviderCommand(sendBotMessageService, providerService, bundleLanguage).execute(update);
     }
 
     private void printListProvider(Long id) {
-        List<ProviderEntity> providerEntityList = providerService.getByIdTelegramEntity(id);
-        for (ProviderEntity entity : providerEntityList) {
-            sendBotMessageService.sendMessage(SendMessage.builder()
-                    .chatId(id)
-                    .text(bundleLanguage.getValue(id, "company_name") + ": " + entity.getName() +
-                            "\n" + bundleLanguage.getValue(id, "city") + ": " + entity.getCity())
-                    .build());
-        }
+        ProviderEntity providerEntity = providerService.getByIdTelegramEntity(id);
+        sendBotMessageService.sendMessage(SendMessage.builder()
+                .chatId(id)
+                .text(bundleLanguage.getValue(id, "company_name") + ": " + providerEntity.getName() +
+                        "\n" + bundleLanguage.getValue(id, "city") + ": " + providerEntity.getCity())
+                .build());
     }
 
     private void addRequest(Long id) {
         InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
         List<List<InlineKeyboardButton>> keyboard = new ArrayList<>();
-        keyboard.add(createButton(id, "add_provider", "add_provider"));
         keyboard.add(createButton(id, "change_provider_details", "change_provider_details"));
-        keyboard.add(createButton(id,"newServiceFromAnExistingProvider",
+        keyboard.add(createButton(id, "newServiceFromAnExistingProvider",
                 "newServiceFromAnExistingProvider"));
         inlineKeyboardMarkup.setKeyboard(keyboard);
         SendMessage sendMessage = new SendMessage();
@@ -87,7 +88,7 @@ public class CheckProviderRegistrationCommand implements Command {
         sendBotMessageService.sendMessage(sendMessage);
     }
 
-    private List<InlineKeyboardButton> createButton(Long id, String nameButton, String dataButton){
+    private List<InlineKeyboardButton> createButton(Long id, String nameButton, String dataButton) {
         List<InlineKeyboardButton> button = new ArrayList<>();
         button.add(InlineKeyboardButton.builder()
                 .text(bundleLanguage.getValue(id, nameButton))

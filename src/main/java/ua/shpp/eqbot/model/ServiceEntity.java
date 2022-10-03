@@ -3,6 +3,7 @@ package ua.shpp.eqbot.model;
 import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
+import java.util.Arrays;
 
 @Entity
 @Table(name = "services")
@@ -175,15 +176,6 @@ public class ServiceEntity {
     }
 
     private String timeBetweenClients;
-
-    public Long getId() {
-        return id;
-    }
-
-    public ServiceEntity setId(Long id) {
-        this.id = id;
-        return this;
-    }
 
     public Long getIdTelegram() {
         return idTelegram;

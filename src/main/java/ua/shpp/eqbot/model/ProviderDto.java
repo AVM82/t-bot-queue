@@ -8,17 +8,20 @@ import java.util.Objects;
 
 public class ProviderDto implements Serializable {
     @NotNull(message = "{valid.provider.id.notnull.message}")
-    private final Long idTelegram;
+    private Long idTelegram;
     @Size(min = 3, max = 30, message = "{valid.provider.name.size.message}")
-    private final String name;
+    private String name;
     @Size(min = 3, max = 20, message = "{valid.provider.city.size.message}")
-    private final String city;
+    private String city;
     private PositionRegistrationProvider positionRegistrationProvider;
 
     public ProviderDto(Long idTelegram, String name, String city) {
         this.idTelegram = idTelegram;
         this.name = name;
         this.city = city;
+    }
+
+    public ProviderDto(){
     }
 
     public Long getIdTelegram() {
@@ -55,6 +58,8 @@ public class ProviderDto implements Serializable {
     public ProviderDto setPositionRegistrationProvider(PositionRegistrationProvider positionRegistrationProvider) {
         this.positionRegistrationProvider = positionRegistrationProvider;
         return this;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

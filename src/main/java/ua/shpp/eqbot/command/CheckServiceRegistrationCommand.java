@@ -6,11 +6,10 @@ import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import ua.shpp.eqbot.cache.ServiceCache;
 import ua.shpp.eqbot.internationalization.BundleLanguage;
-import ua.shpp.eqbot.model.ProviderDto;
-import ua.shpp.eqbot.model.ProviderEntity;
 import ua.shpp.eqbot.model.ServiceDTO;
 import ua.shpp.eqbot.model.ServiceEntity;
 import ua.shpp.eqbot.repository.ServiceRepository;
+import ua.shpp.eqbot.service.ImageService;
 import ua.shpp.eqbot.service.SendBotMessageService;
 
 import java.util.List;
@@ -20,11 +19,13 @@ public class CheckServiceRegistrationCommand implements Command{
     private final SendBotMessageService sendBotMessageService;
     private final BundleLanguage bundleLanguage;
     private final ServiceRepository serviceRepository;
+    private final ImageService imageService;
 
-    public CheckServiceRegistrationCommand(SendBotMessageService sendBotMessageService, BundleLanguage bundleLanguage, ServiceRepository serviceRepository) {
+    public CheckServiceRegistrationCommand(SendBotMessageService sendBotMessageService, BundleLanguage bundleLanguage, ServiceRepository serviceRepository, ImageService imageService) {
         this.sendBotMessageService = sendBotMessageService;
         this.bundleLanguage = bundleLanguage;
         this.serviceRepository = serviceRepository;
+        this.imageService = imageService;
     }
 
     @Override
@@ -44,18 +45,14 @@ public class CheckServiceRegistrationCommand implements Command{
                 LOGGER.info("there is provider in the database");
                 sendBotMessageService.sendMessage(SendMessage.builder()
                         .chatId(id)
-                        .text(bundleLanguage.getValue(id, "registered_with_a_provider"))
+                        .text(bundleLanguage.getValue(id, "registered_to_you"))
                         .build());
                 printListService(id);
                 return true;
             }
-            sendBotMessageService.sendMessage(SendMessage.builder()
-                    .chatId(id)
-                    .text(bundleLanguage.getValue(id, "no_registration_provider"))
-                    .build());
-            //return new AddService(sendBotMessageService, providerService, bundleLanguage).execute(update);
+            return new AddService(sendBotMessageService, serviceRepository, imageService, bundleLanguage).execute(update);
         }
-        //return new AddNewProviderCommand(sendBotMessageService, providerService, bundleLanguage).execute(update);
+
         return false;
     }
 
