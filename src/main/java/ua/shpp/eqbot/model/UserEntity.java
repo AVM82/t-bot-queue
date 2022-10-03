@@ -8,12 +8,15 @@ import java.util.Objects;
 @Table(name = "appuser")
 public class UserEntity {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    @Column(name = "id_telegram")
     private Long idTelegram;
-
     private String name;
     private String city;
     private String phone;
     private String language;
+    @Column(name = "time_created")
     private LocalDateTime timeCreated;
 
     public UserEntity() {

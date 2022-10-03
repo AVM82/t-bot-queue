@@ -9,16 +9,15 @@ import java.util.Objects;
 @Entity
 @Table(name = "services")
 public class ServiceEntity {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
+    @Column(name = "id_telegram")
     private Long idTelegram;
     private String name;
     private String description;
 
-    @Type(type="org.hibernate.type.BinaryType")
+    @Type(type = "org.hibernate.type.BinaryType")
     @Column(columnDefinition = "bytea")
     private byte[] avatar;
 

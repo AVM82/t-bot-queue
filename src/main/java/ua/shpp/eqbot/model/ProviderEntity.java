@@ -1,13 +1,14 @@
 package ua.shpp.eqbot.model;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Entity
+@Table(name = "provider_entity")
 public class ProviderEntity {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    @Column(name = "id_telegram")
     private Long idTelegram;
     private String name;
     private String city;
