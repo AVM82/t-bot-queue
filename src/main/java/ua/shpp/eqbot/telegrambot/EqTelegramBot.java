@@ -9,7 +9,6 @@ import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
 import org.telegram.telegrambots.meta.api.objects.Update;
-import ua.shpp.eqbot.cache.ServiceCache;
 import ua.shpp.eqbot.command.CommandContainer;
 import ua.shpp.eqbot.internationalization.BundleLanguage;
 import ua.shpp.eqbot.service.ProviderService;
@@ -96,11 +95,9 @@ public class EqTelegramBot extends TelegramLongPollingBot {
                 LOGGER.info("Registration user");
                 //change registration provider
             } else if (user.getPositionMenu() == REGISTRATION_PROVIDER) {
-                if (commandContainer.retrieveCommand("/add provider").execute(update)) {
-                    if (!commandContainer.retrieveCommand("/check service").execute(update)) {
-                        user.setPositionMenu(PositionMenu.REGISTRATION_SERVICE);
-                    }
-                }
+                if (commandContainer.retrieveCommand("/add provider").execute(update) &&
+                        !commandContainer.retrieveCommand("/check service").execute(update))
+                    user.setPositionMenu(PositionMenu.REGISTRATION_SERVICE);
                 //change registration service
             } else if (user.getPositionMenu() == REGISTRATION_SERVICE) {
                 if (commandContainer.retrieveCommand("/add").execute(update)) {
@@ -150,8 +147,6 @@ public class EqTelegramBot extends TelegramLongPollingBot {
             user.setPositionMenu(MENU_CREATE_SERVICE);
             if (!commandContainer.retrieveCommand("/check provider").execute(update))
                 user.setPositionMenu(REGISTRATION_PROVIDER);
-
-            //commandContainer.retrieveCommand("/add").execute(update);
         } else if (callbackQuery.getData().equals("search_service")) {
             LOGGER.info("search_service");
         } else if (callbackQuery.getData().equals("add_provider")) {
