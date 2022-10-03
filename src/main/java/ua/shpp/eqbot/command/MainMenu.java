@@ -29,7 +29,6 @@ public class MainMenu implements Command {
         Long id = update.getMessage().getChatId();
         listOfCommand.add(new BotCommand("/start", bundleLanguage.getValue(id, "start")));
         listOfCommand.add(new BotCommand("/help", bundleLanguage.getValue(id, "help")));
-        //listOfCommand.add(new BotCommand("/stop", bundleLanguage.getValue(id, "stop")));
         listOfCommand.add(new BotCommand("/settings", bundleLanguage.getValue(id, "settings")));
         listOfCommand.add(new BotCommand("/delete", bundleLanguage.getValue(id, "delete")));
         sendBotMessageService.sendMenu(new SetMyCommands(listOfCommand, new BotCommandScopeDefault(), null));
