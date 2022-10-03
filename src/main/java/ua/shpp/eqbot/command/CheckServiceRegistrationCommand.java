@@ -2,7 +2,6 @@ package ua.shpp.eqbot.command;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import ua.shpp.eqbot.cache.ServiceCache;
 import ua.shpp.eqbot.internationalization.BundleLanguage;
@@ -43,26 +42,11 @@ public class CheckServiceRegistrationCommand implements Command{
             List<ServiceEntity> serviceEntityList = serviceRepository.findAllByIdTelegram(id);
             if (!serviceEntityList.isEmpty()) {
                 LOGGER.info("there is provider in the database");
-                sendBotMessageService.sendMessage(SendMessage.builder()
-                        .chatId(id)
-                        .text(bundleLanguage.getValue(id, "registered_to_you"))
-                        .build());
-                printListService(id);
                 return true;
             }
             return new AddService(sendBotMessageService, serviceRepository, imageService, bundleLanguage).execute(update);
         }
 
         return false;
-    }
-
-    private void printListService(Long id) {
-        List<ServiceEntity> serviceEntityList = serviceRepository.findAllByIdTelegram(id);
-        for (ServiceEntity entity : serviceEntityList) {
-            sendBotMessageService.sendMessage(SendMessage.builder()
-                    .chatId(id)
-                    .text(bundleLanguage.getValue(id, "name_service") + ": " + entity.getName())
-                    .build());
-        }
     }
 }

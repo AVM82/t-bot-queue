@@ -11,17 +11,11 @@ import org.telegram.telegrambots.meta.api.objects.PhotoSize;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import ua.shpp.eqbot.cache.ServiceCache;
 import ua.shpp.eqbot.internationalization.BundleLanguage;
-import ua.shpp.eqbot.model.ProviderDto;
-import ua.shpp.eqbot.model.ProviderEntity;
 import ua.shpp.eqbot.model.ServiceDTO;
 import ua.shpp.eqbot.model.ServiceEntity;
-import ua.shpp.eqbot.repository.ProvideRepository;
 import ua.shpp.eqbot.repository.ServiceRepository;
 import ua.shpp.eqbot.service.ImageService;
 import ua.shpp.eqbot.service.SendBotMessageService;
-import ua.shpp.eqbot.service.UserService;
-import ua.shpp.eqbot.service.restservice.RestProviderService;
-import ua.shpp.eqbot.service.restservice.RestServiceService;
 import ua.shpp.eqbot.stage.PositionRegistrationService;
 import java.util.List;
 

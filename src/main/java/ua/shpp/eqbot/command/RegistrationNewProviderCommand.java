@@ -10,8 +10,7 @@ import ua.shpp.eqbot.service.ProviderService;
 import ua.shpp.eqbot.service.SendBotMessageService;
 import ua.shpp.eqbot.stage.PositionRegistrationProvider;
 
-
-public class RegistrationNewProviderCommand implements Command { //RegistrationNewProviderCommand
+public class RegistrationNewProviderCommand implements Command {
     private static final Logger LOGGER = LoggerFactory.getLogger(RegistrationNewProviderCommand.class);
     private final SendBotMessageService sendBotMessageService;
     private final ProviderService providerService;

@@ -12,7 +12,6 @@ import ua.shpp.eqbot.model.ProviderEntity;
 import ua.shpp.eqbot.service.ProviderService;
 import ua.shpp.eqbot.service.SendBotMessageService;
 import ua.shpp.eqbot.stage.PositionRegistrationProvider;
-
 import java.util.ArrayList;
 import java.util.List;
 
