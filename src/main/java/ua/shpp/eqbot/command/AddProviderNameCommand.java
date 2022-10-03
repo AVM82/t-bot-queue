@@ -24,7 +24,7 @@ public class AddProviderNameCommand implements Command {
         LOGGER.info("Call addNameProvider");
         ProviderEntity providerEntity = new ProviderEntity();
         providerEntity.setName(update.getMessage().getText());
-        providerEntity.setIdTelegram(update.getMessage().getChatId());
+        providerEntity.setTelegramId(update.getMessage().getChatId());
         providerRepository.save(providerEntity);
         sendBotMessageService.sendMessage(update.getMessage().getChatId().toString(), "Type city");
         return true;

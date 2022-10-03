@@ -11,18 +11,18 @@ import java.util.Optional;
 
 @Repository
 public interface ProviderRepository extends JpaRepository<ProviderEntity, Long> {
-    @Query("select t from ProviderEntity t where t. idTelegram = ?1")
-    ProviderEntity findFirstByIdTelegram(Long id);
+    @Query("select t from ProviderEntity t where t. telegramId = ?1")
+    ProviderEntity findFirstByTelegramId(Long id);
 
-    @Query("select t from ProviderEntity t where t. idTelegram = ?1")
-    ProviderEntity findByIdTelegram(Long id);
+    @Query("select t from ProviderEntity t where t. telegramId = ?1")
+    ProviderEntity findByTelegramId(Long id);
 
-    @Query("select t from ProviderEntity t where t. idTelegram = ?1")
-    List<ProviderEntity> findAllByIdTelegram(Long id);
+    @Query("select t from ProviderEntity t where t. telegramId = ?1")
+    List<ProviderEntity> findAllByTelegramId(Long id);
 
-    Optional<ProviderEntity> findProviderEntitiesByIdTelegramAndName(Long idTelegram, String name);
+    Optional<ProviderEntity> findProviderEntitiesByTelegramIdAndProviderCity(Long telegramId, String name);
 
-    List<ProviderEntity> findAllByCity(String city);
+    List<ProviderEntity> findAllByProviderCity(String city);
 
-//    ProviderEntity findPleaseProviderEntitiesByIdTelegramAAndCity(Long idTelegram, String name);
+//    ProviderEntity findPleaseProviderEntitiesByTelegramIdAAndCity(Long telegramId, String name);
 }

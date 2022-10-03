@@ -12,9 +12,9 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMar
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardRow;
 import ua.shpp.eqbot.cache.ServiceCache;
 import ua.shpp.eqbot.internationalization.BundleLanguage;
-import ua.shpp.eqbot.model.ServiceDTO;
+import ua.shpp.eqbot.dto.ServiceDTO;
 import ua.shpp.eqbot.model.ServiceEntity;
-import ua.shpp.eqbot.model.UserDto;
+import ua.shpp.eqbot.dto.UserDto;
 import ua.shpp.eqbot.repository.ProviderRepository;
 import ua.shpp.eqbot.repository.ServiceRepository;
 import ua.shpp.eqbot.service.ImageService;
@@ -52,7 +52,7 @@ public class AddService implements Command {
 
     public void addService(ServiceDTO service) {
         ServiceEntity serviceEntity = new ServiceEntity();
-        serviceEntity.setIdTelegram(service.getIdTelegram())
+        serviceEntity.setTelegramId(service.getTelegramId())
                 .setName(service.getName())
                 .setDescription(service.getDescription())
                 .setAvatar(service.getAvatar());
@@ -70,27 +70,27 @@ public class AddService implements Command {
             id = update.getMessage().getChatId();
         }
 
-        if (providerRepository.findByIdTelegram(id) != null)/*providerRepository.findById(update.getMessage().getChatId())*/ {
+        if (providerRepository.findByTelegramId(id) != null)/*providerRepository.findById(update.getMessage().getChatId())*/ {
             ServiceDTO newService;
             if (!update.hasMessage()) {
-                Long idTelegram = update.getCallbackQuery().getFrom().getId();
-                sendBotMessageService.sendMessage(SendMessage.builder().chatId(idTelegram).text(ADD_SERVICE_MESSAGE).build());
+                Long telegramId = update.getCallbackQuery().getFrom().getId();
+                sendBotMessageService.sendMessage(SendMessage.builder().chatId(telegramId).text(ADD_SERVICE_MESSAGE).build());
                 LOGGER.info("Add new service.");
                 return false;
             }
             newService = ServiceCache.findBy(update.getMessage().getChatId());
-            Long idTelegram = update.getMessage().getChat().getId();
-            UserDto user = userService.getDto(idTelegram);
+            Long telegramId = update.getMessage().getChat().getId();
+            UserDto user = userService.getDto(telegramId);
             if (newService == null) {
-                if (checkIfServiceExists(update.getMessage().getText().trim(), idTelegram)) {
+                if (checkIfServiceExists(update.getMessage().getText().trim(), telegramId)) {
                     createService(update);
                     return false;
                 }
                 newService = new ServiceDTO();
-                newService.setIdTelegram(user.getIdTelegram()).setName(update.getMessage().getText().trim());
+                newService.setTelegramId(user.getTelegramId()).setName(update.getMessage().getText().trim());
                 LOGGER.info("i want to ask name service");
                 String message = bundleLanguage.getValue(update.getMessage().getChatId(), "add_desc_and_avatar");
-                sendBotMessageService.sendMessage(SendMessage.builder().chatId(idTelegram)
+                sendBotMessageService.sendMessage(SendMessage.builder().chatId(telegramId)
                         .text(message).build());
                 ServiceCache.add(newService);
             } else {
@@ -100,7 +100,7 @@ public class AddService implements Command {
                 ServiceCache.remove(newService);
                 user.setPositionMenu(MENU_START);
                 String message = bundleLanguage.getValue(update.getMessage().getChatId(), "service_added");
-                sendBotMessageService.sendMessage(SendMessage.builder().chatId(idTelegram)
+                sendBotMessageService.sendMessage(SendMessage.builder().chatId(telegramId)
                         .text(message).build());
             }
         } else {
@@ -121,22 +121,22 @@ public class AddService implements Command {
 
     private void createService(Update update) {
         hasSuchName = false;
-        Long idTelegram;
+        Long telegramId;
         if (update.getMessage() != null) {
-            idTelegram = update.getMessage().getChatId();
+            telegramId = update.getMessage().getChatId();
         } else {
-            idTelegram = update.getCallbackQuery().getFrom().getId();
+            telegramId = update.getCallbackQuery().getFrom().getId();
         }
-        String message = bundleLanguage.getValue(idTelegram, "input_name_service");
-        sendBotMessageService.sendMessage(SendMessage.builder().chatId(idTelegram).text(message).build());
+        String message = bundleLanguage.getValue(telegramId, "input_name_service");
+        sendBotMessageService.sendMessage(SendMessage.builder().chatId(telegramId).text(message).build());
         LOGGER.info("Add new service.");
     }
 
-    private boolean checkIfServiceExists(String name, Long idTelegram) {
-        boolean result = serviceRepository.getFirstByNameAndAndIdTelegram(name, idTelegram) != null;
+    private boolean checkIfServiceExists(String name, Long telegramId) {
+        boolean result = serviceRepository.getFirstByNameAndAndTelegramId(name, telegramId) != null;
         if (result) {
-            String message = bundleLanguage.getValue(idTelegram, "service_exist");
-            sendBotMessageService.sendMessage(SendMessage.builder().chatId(idTelegram)
+            String message = bundleLanguage.getValue(telegramId, "service_exist");
+            sendBotMessageService.sendMessage(SendMessage.builder().chatId(telegramId)
                     .text(message).build());
             hasSuchName = true;
         }

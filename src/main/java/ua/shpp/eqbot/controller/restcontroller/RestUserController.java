@@ -1,20 +1,16 @@
 package ua.shpp.eqbot.controller.restcontroller;
 
 import io.swagger.v3.oas.annotations.Operation;
-import org.apache.catalina.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.PropertySource;
-import org.springframework.data.repository.query.Param;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
-import ua.shpp.eqbot.model.UserDto;
 import ua.shpp.eqbot.model.UserEntity;
-import ua.shpp.eqbot.model.UserRestDto;
+import ua.shpp.eqbot.dto.UserRestDto;
 import ua.shpp.eqbot.service.restservice.RestUserService;
 
 import javax.validation.Valid;
@@ -36,12 +32,12 @@ public class RestUserController {
         return service.getAllUsers();
     }
 
-    @GetMapping("/{idTelegram}")
+    @GetMapping("/{telegramId}")
     @Operation(summary = "${operation.summary.user.get_user}",
             description = "${operation.desc.user.get_user}")
-    public UserEntity getUser(@PathVariable Long idTelegram){
-        log.info("Getting user with Telegram {}", idTelegram);
-        return service.getUser(idTelegram);
+    public UserEntity getUser(@PathVariable Long telegramId){
+        log.info("Getting user with Telegram {}", telegramId);
+        return service.getUser(telegramId);
     }
 
     @PostMapping
@@ -61,12 +57,12 @@ public class RestUserController {
 
     }
 
-    @DeleteMapping("/{idTelegram}")
+    @DeleteMapping("/{telegramId}")
     @Operation(summary = "${operation.summary.user.delete_user}",
             description = "${operation.desc.user.delete_user}")
-    public void deleteUser(@PathVariable Long idTelegram){
-        log.info("Deleting user with Telegram id {}", idTelegram);
-        service.deleteUser(idTelegram);
+    public void deleteUser(@PathVariable Long telegramId){
+        log.info("Deleting user with Telegram id {}", telegramId);
+        service.deleteUser(telegramId);
     }
 
 

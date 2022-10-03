@@ -16,7 +16,7 @@ import ua.shpp.eqbot.commandchain.changerole.CommandChain;
 import ua.shpp.eqbot.commandchain.changerole.RegistrationProviderChain;
 import ua.shpp.eqbot.internationalization.BundleLanguage;
 import ua.shpp.eqbot.model.PositionMenu;
-import ua.shpp.eqbot.model.UserDto;
+import ua.shpp.eqbot.dto.UserDto;
 import ua.shpp.eqbot.repository.ProviderRepository;
 import ua.shpp.eqbot.repository.ServiceRepository;
 import ua.shpp.eqbot.repository.UserRepository;

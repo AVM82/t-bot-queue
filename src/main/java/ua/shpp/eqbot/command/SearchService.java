@@ -11,7 +11,7 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKe
 import ua.shpp.eqbot.internationalization.BundleLanguage;
 import ua.shpp.eqbot.model.ProviderEntity;
 import ua.shpp.eqbot.model.ServiceEntity;
-import ua.shpp.eqbot.model.UserDto;
+import ua.shpp.eqbot.dto.UserDto;
 import ua.shpp.eqbot.repository.ProviderRepository;
 import ua.shpp.eqbot.repository.ServiceRepository;
 import ua.shpp.eqbot.service.SendBotMessageService;
@@ -54,7 +54,7 @@ public class SearchService implements Command {
 
         UserDto user = userService.getDto(id);
         String city = user.getCity();
-        List<ProviderEntity> providerEntityByCityList = providerRepository.findAllByCity(city);
+        List<ProviderEntity> providerEntityByCityList = providerRepository.findAllByProviderCity(city);
         if (providerEntityByCityList.isEmpty()) {
             LOGGER.info("No service providers were found for the user's city of registration");
             sendBotMessageService.sendMessage(String.valueOf(id),
@@ -62,11 +62,11 @@ public class SearchService implements Command {
             return false;
         }
 
-        List<Long> idTelegramProviderByCityList = providerEntityByCityList.stream()
-                .map(ProviderEntity::getIdTelegram)
+        List<Long> telegramIdProviderByCityList = providerEntityByCityList.stream()
+                .map(ProviderEntity::getTelegramId)
                 .collect(Collectors.toList());
 
-        List<ServiceEntity> serviceEntityByCityList = serviceRepository.findAllByIdTelegramIn(idTelegramProviderByCityList);
+        List<ServiceEntity> serviceEntityByCityList = serviceRepository.findAllByTelegramIdIn(telegramIdProviderByCityList);
         if (serviceEntityByCityList.isEmpty()) {
             LOGGER.info("No services were found for the user's city of registration");
             sendBotMessageService.sendMessage(String.valueOf(id),

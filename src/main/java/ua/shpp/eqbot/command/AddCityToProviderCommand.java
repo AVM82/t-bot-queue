@@ -26,15 +26,15 @@ public class AddCityToProviderCommand implements Command {
     @Override
     public boolean execute(Update update) {
         LOGGER.info("Added city to provider");
-        ProviderEntity providerEntity = providerRepository.findFirstByIdTelegram(update.getMessage().getChatId());
-        providerEntity.setCity(update.getMessage().getText());
+        ProviderEntity providerEntity = providerRepository.findFirstByTelegramId(update.getMessage().getChatId());
+        providerEntity.setProviderCity(update.getMessage().getText());
         providerRepository.save(providerEntity);
         sendBotMessageService.sendMessage(update.getMessage().getChatId().toString(), "Provider registered");
 
         if (ServiceCache.justRegistrated) {
-            Long idTelegram = update.getMessage().getChatId();
-            String message = bundleLanguage.getValue(idTelegram, "input_name_service");
-            sendBotMessageService.sendMessage(SendMessage.builder().chatId(idTelegram).text(message).build());
+            Long telegramId = update.getMessage().getChatId();
+            String message = bundleLanguage.getValue(telegramId, "input_name_service");
+            sendBotMessageService.sendMessage(SendMessage.builder().chatId(telegramId).text(message).build());
             LOGGER.info("Add new service.");
             ServiceCache.justRegistrated = false;
         }

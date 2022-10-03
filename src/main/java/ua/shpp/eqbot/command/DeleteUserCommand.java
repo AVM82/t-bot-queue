@@ -35,13 +35,13 @@ public class DeleteUserCommand implements Command {
 
     @Override
     public boolean execute(Update update) {
-        List<ServiceEntity> serviceEntityList = serviceRepository.findAllByIdTelegram(update.getMessage().getChatId());
+        List<ServiceEntity> serviceEntityList = serviceRepository.findAllByTelegramId(update.getMessage().getChatId());
         if (!serviceEntityList.isEmpty()) {
             LOGGER.info("deleted service");
             serviceRepository.deleteAllInBatch(serviceEntityList);
         }
 
-        List<ProviderEntity> providerEntityList = providerRepository.findAllByIdTelegram(update.getMessage().getChatId());
+        List<ProviderEntity> providerEntityList = providerRepository.findAllByTelegramId(update.getMessage().getChatId());
         if (!providerEntityList.isEmpty()) {
             LOGGER.info("deleted provider");
             providerRepository.deleteAllInBatch(providerEntityList);

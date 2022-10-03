@@ -1,5 +1,6 @@
 package ua.shpp.eqbot.service;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ua.shpp.eqbot.model.ProviderEntity;
 import ua.shpp.eqbot.repository.ProviderRepository;
@@ -11,6 +12,7 @@ import java.util.Optional;
 public class ProviderService {
     private final ProviderRepository providerRepository;
 
+    @Autowired
     public ProviderService(ProviderRepository providerRepository) {
         this.providerRepository = providerRepository;
     }
@@ -23,11 +25,16 @@ public class ProviderService {
         return providerRepository.findById(id);
     }
 
-    public List<ProviderEntity> getByIdTelegram(Long idTelegram) {
-        return providerRepository.findAllByIdTelegram(idTelegram);
+    public List<ProviderEntity> getByTelegramId(Long telegramId) {
+        return providerRepository.findAllByTelegramId(telegramId);
     }
 
-    public Optional<ProviderEntity> getByNameAndIdTelegram(Long id_provider, String city_provider) {
-        return providerRepository.findProviderEntitiesByIdTelegramAndName(id_provider, city_provider);
+    public Optional<ProviderEntity> getByNameAndTelegramId(Long providerId, String providerCity) {
+        return providerRepository.findProviderEntitiesByTelegramIdAndProviderCity(providerId, providerCity);
+    }
+
+    public void remove(Long telegramId) {
+        Optional<ProviderEntity> providerEntity = get(telegramId);
+        providerEntity.ifPresent(providerRepository::delete);
     }
 }

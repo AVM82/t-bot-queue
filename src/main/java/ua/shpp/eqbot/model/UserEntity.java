@@ -11,7 +11,8 @@ public class UserEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Column(name = "id_telegram")
-    private Long idTelegram;
+
+    private Long telegramId;
     private String name;
     private String city;
     private String phone;
@@ -27,12 +28,12 @@ public class UserEntity {
         timeCreated = LocalDateTime.now();
     }
 
-    public Long getIdTelegram() {
-        return idTelegram;
+    public Long getTelegramId() {
+        return telegramId;
     }
 
-    public UserEntity setIdTelegram(Long idTelegram) {
-        this.idTelegram = idTelegram;
+    public UserEntity setTelegramId(Long telegramId) {
+        this.telegramId = telegramId;
         return this;
     }
 
@@ -85,18 +86,18 @@ public class UserEntity {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         UserEntity that = (UserEntity) o;
-        return Objects.equals(idTelegram, that.idTelegram) && Objects.equals(name, that.name) && Objects.equals(city, that.city) && Objects.equals(phone, that.phone) && Objects.equals(language, that.language) && Objects.equals(timeCreated, that.timeCreated);
+        return Objects.equals(telegramId, that.telegramId) && Objects.equals(name, that.name) && Objects.equals(city, that.city) && Objects.equals(phone, that.phone) && Objects.equals(language, that.language) && Objects.equals(timeCreated, that.timeCreated);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(idTelegram, name, city, phone, language, timeCreated);
+        return Objects.hash(telegramId, name, city, phone, language, timeCreated);
     }
 
     @Override
     public String toString() {
         final StringBuilder sb = new StringBuilder("UserEntity{");
-        sb.append("idTelegram=").append(idTelegram);
+        sb.append("telegramId=").append(telegramId);
         sb.append(", name='").append(name).append('\'');
         sb.append(", city='").append(city).append('\'');
         sb.append(", phone='").append(phone).append('\'');
