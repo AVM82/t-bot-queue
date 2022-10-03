@@ -1,24 +1,33 @@
 package ua.shpp.eqbot.model;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Entity
+@Table(name = "provider_entity")
 public class ProviderEntity {
     @Id
-    private Long idTelegram;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    private Long telegramId;
     private String name;
-    private String city;
+    private String providerCity;
 
 
-    public Long getIdTelegram() {
-        return idTelegram;
+    public Long getId() {
+        return id;
     }
 
-    public ProviderEntity setIdTelegram(Long idTelegram) {
-        this.idTelegram = idTelegram;
+    public ProviderEntity setId(Long id) {
+        this.id = id;
+        return this;
+    }
+
+    public Long getTelegramId() {
+        return telegramId;
+    }
+
+    public ProviderEntity setTelegramId(Long telegramId) {
+        this.telegramId = telegramId;
         return this;
     }
 
@@ -31,12 +40,12 @@ public class ProviderEntity {
         return this;
     }
 
-    public String getCity() {
-        return city;
+    public String getProviderCity() {
+        return providerCity;
     }
 
-    public ProviderEntity setCity(String city) {
-        this.city = city;
+    public ProviderEntity setProviderCity(String providerCity) {
+        this.providerCity = providerCity;
         return this;
     }
 
@@ -47,27 +56,21 @@ public class ProviderEntity {
 
         ProviderEntity that = (ProviderEntity) o;
 
-        if (idTelegram != null ? !idTelegram.equals(that.idTelegram) : that.idTelegram != null) return false;
-        if (name != null ? !name.equals(that.name) : that.name != null) return false;
-        return city != null ? city.equals(that.city) : that.city == null;
+        return id != null ? id.equals(that.id) : that.id == null;
     }
 
     @Override
     public int hashCode() {
-        int result =  (idTelegram != null ? idTelegram.hashCode() : 0);
-        result = 31 * result + (name != null ? name.hashCode() : 0);
-        result = 31 * result + (city != null ? city.hashCode() : 0);
-        return result;
+        return id != null ? id.hashCode() : 0;
     }
 
     @Override
     public String toString() {
         return "ProviderEntity{" +
-                ", idTelegram=" + idTelegram +
+                "id=" + id +
+                ", telegramId=" + telegramId +
                 ", name='" + name + '\'' +
-                ", city='" + city + '\'' +
+                ", providerCity='" + providerCity + '\'' +
                 '}';
     }
-
-
 }

@@ -10,7 +10,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
-import ua.shpp.eqbot.model.ProviderDto;
+import ua.shpp.eqbot.dto.ProviderDto;
 import ua.shpp.eqbot.model.ProviderEntity;
 import ua.shpp.eqbot.service.restservice.RestProviderService;
 
@@ -37,12 +37,12 @@ public class RestProviderController {
     }
 
 
-    @GetMapping("/{idTelegram}")
+    @GetMapping("/{telegramId}")
     @Operation(summary = "${operation.summary.provider.get_provider}",
             description = "${operation.desc.provider.get_provider}")
-    public ProviderEntity getProvider(@PathVariable Long idTelegram){
-        log.info("Geting provider with Telegram id {}", idTelegram);
-        return service.getProvider(idTelegram);
+    public ProviderEntity getProvider(@PathVariable Long telegramId){
+        log.info("Geting provider with Telegram id {}", telegramId);
+        return service.getProvider(telegramId);
 
     }
 
@@ -63,11 +63,11 @@ public class RestProviderController {
 
     }
 
-    @DeleteMapping("/{idTelegram}")
+    @DeleteMapping("/{telegramId}")
     @Operation(summary = "${operation.summary.provider.delete_provider}",
             description = "${operation.desc.provider.delete_provider}")
-    public void deleteProvider(@PathVariable Long idTelegram){
-        service.deleteProvider(idTelegram);
-        log.info("Deleting provider with Telegram id [" +idTelegram +"]");
+    public void deleteProvider(@PathVariable Long telegramId){
+        service.deleteProvider(telegramId);
+        log.info("Deleting provider with Telegram id [" +telegramId +"]");
     }
 }

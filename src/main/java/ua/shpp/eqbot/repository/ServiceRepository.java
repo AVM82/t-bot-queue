@@ -11,13 +11,13 @@ public interface ServiceRepository extends JpaRepository<ServiceEntity, Long> {
 
     ServiceEntity getFirstByName(String name);
 
-    @Query("select t from ServiceEntity t where t.name = ?1 and t.idTelegram=?2")
-    ServiceEntity getFirstByNameAndAndIdTelegram(String name, Long idTelegram);
+    @Query("select t from ServiceEntity t where t.name = ?1 and t.telegramId=?2")
+    ServiceEntity getFirstByNameAndAndTelegramId(String name, Long telegramId);
 
     ServiceEntity findFirstById (Long id);
 
+    @Query("select t from ServiceEntity t where t. telegramId = ?1")
+    List<ServiceEntity> findAllByTelegramId(Long id);
 
-    @Query("select t from ServiceEntity t where t. idTelegram = ?1")
-    List<ServiceEntity> findAllByIdTelegram(Long id);
-
+    List<ServiceEntity> findAllByTelegramIdIn(List<Long> telegramIdList);
 }

@@ -4,7 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import ua.shpp.eqbot.model.ProviderEntity;
-import ua.shpp.eqbot.repository.ProvideRepository;
+import ua.shpp.eqbot.repository.ProviderRepository;
 import ua.shpp.eqbot.service.SendBotMessageService;
 
 public class AddProviderNameCommand implements Command {
@@ -12,11 +12,11 @@ public class AddProviderNameCommand implements Command {
     private static final Logger LOGGER = LoggerFactory.getLogger(AddProviderNameCommand.class);
     private final SendBotMessageService sendBotMessageService;
 
-    private final ProvideRepository provideRepository;
+    private final ProviderRepository providerRepository;
 
-    public AddProviderNameCommand(SendBotMessageService sendBotMessageService, ProvideRepository provideRepository) {
+    public AddProviderNameCommand(SendBotMessageService sendBotMessageService, ProviderRepository providerRepository) {
         this.sendBotMessageService = sendBotMessageService;
-        this.provideRepository = provideRepository;
+        this.providerRepository = providerRepository;
     }
 
     @Override
@@ -24,8 +24,8 @@ public class AddProviderNameCommand implements Command {
         LOGGER.info("Call addNameProvider");
         ProviderEntity providerEntity = new ProviderEntity();
         providerEntity.setName(update.getMessage().getText());
-        providerEntity.setIdTelegram(update.getMessage().getChatId());
-        provideRepository.save(providerEntity);
+        providerEntity.setTelegramId(update.getMessage().getChatId());
+        providerRepository.save(providerEntity);
         sendBotMessageService.sendMessage(update.getMessage().getChatId().toString(), "Type city");
         return true;
     }

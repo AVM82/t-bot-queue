@@ -1,12 +1,12 @@
-package ua.shpp.eqbot.model;
+package ua.shpp.eqbot.dto;
 
 
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
+import ua.shpp.eqbot.model.PositionMenu;
+import ua.shpp.eqbot.model.PositionRegistration;
 
 public class UserDto {
 
-    private Long idTelegram;
+    private Long telegramId;
 
     private String name;
     private String city;
@@ -24,12 +24,12 @@ public class UserDto {
         return this;
     }
 
-    public Long getIdTelegram() {
-        return idTelegram;
+    public Long getTelegramId() {
+        return telegramId;
     }
 
-    public UserDto setIdTelegram(Long idTelegram) {
-        this.idTelegram = idTelegram;
+    public UserDto setTelegramId(Long telegramId) {
+        this.telegramId = telegramId;
         return this;
     }
 

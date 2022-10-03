@@ -1,12 +1,11 @@
-package ua.shpp.eqbot.model;
+package ua.shpp.eqbot.dto;
 
-import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 public class ServiceDTO {
-    @NotNull(message = "{valid.service.idTelegram.notnull.message}")
-    private Long idTelegram;
+    @NotNull(message = "{valid.service.telegramId.notnull.message}")
+    private Long telegramId;
     @Size(min = 3, max = 50, message = "{valid.service.name.size.message}")
     private String name;
 
@@ -22,12 +21,12 @@ public class ServiceDTO {
         this.avatar = avatar;
     }
 
-    public Long getIdTelegram() {
-        return idTelegram;
+    public Long getTelegramId() {
+        return telegramId;
     }
 
-    public ServiceDTO setIdTelegram(Long idTelegram) {
-        this.idTelegram = idTelegram;
+    public ServiceDTO setTelegramId(Long telegramId) {
+        this.telegramId = telegramId;
         return this;
     }
 

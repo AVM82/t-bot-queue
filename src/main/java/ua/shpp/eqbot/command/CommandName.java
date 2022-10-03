@@ -7,6 +7,7 @@ public enum CommandName {
     HELP("/help"),
     SETTINGS("/settings"),
     ADD_SERVICE("/add"),
+    SEARCH_SERVICE("/search"),
     CHANGE_ROLE_TO_PROVIDER("Change role to Provider"),
     DELETE_USER("/delete"),
     MAIN_MENU("mainMenu"),

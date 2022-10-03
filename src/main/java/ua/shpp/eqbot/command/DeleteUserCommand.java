@@ -7,9 +7,7 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 import ua.shpp.eqbot.internationalization.BundleLanguage;
 import ua.shpp.eqbot.model.ProviderEntity;
 import ua.shpp.eqbot.model.ServiceEntity;
-import ua.shpp.eqbot.model.UserDto;
-import ua.shpp.eqbot.model.UserEntity;
-import ua.shpp.eqbot.repository.ProvideRepository;
+import ua.shpp.eqbot.repository.ProviderRepository;
 import ua.shpp.eqbot.repository.ServiceRepository;
 import ua.shpp.eqbot.repository.UserRepository;
 import ua.shpp.eqbot.service.SendBotMessageService;
@@ -23,30 +21,30 @@ public class DeleteUserCommand implements Command {
     private final SendBotMessageService sendBotMessageService;
     private final UserService userService;
     private final BundleLanguage bundleLanguage;
-    private final ProvideRepository provideRepository;
+    private final ProviderRepository providerRepository;
     private final ServiceRepository serviceRepository;
 
     public DeleteUserCommand(SendBotMessageService sendBotMessageService, UserRepository userRepository,
-                             UserService userService, BundleLanguage bundleLanguage, ProvideRepository provideRepository, ServiceRepository serviceRepository) {
+                             UserService userService, BundleLanguage bundleLanguage, ProviderRepository providerRepository, ServiceRepository serviceRepository) {
         this.sendBotMessageService = sendBotMessageService;
         this.userService = userService;
         this.bundleLanguage = bundleLanguage;
-        this.provideRepository = provideRepository;
+        this.providerRepository = providerRepository;
         this.serviceRepository = serviceRepository;
     }
 
     @Override
     public boolean execute(Update update) {
-        List<ServiceEntity> serviceEntityList = serviceRepository.findAllByIdTelegram(update.getMessage().getChatId());
+        List<ServiceEntity> serviceEntityList = serviceRepository.findAllByTelegramId(update.getMessage().getChatId());
         if (!serviceEntityList.isEmpty()) {
             LOGGER.info("deleted service");
             serviceRepository.deleteAllInBatch(serviceEntityList);
         }
 
-        List<ProviderEntity> providerEntityList = provideRepository.findAllByIdTelegram(update.getMessage().getChatId());
+        List<ProviderEntity> providerEntityList = providerRepository.findAllByTelegramId(update.getMessage().getChatId());
         if (!providerEntityList.isEmpty()) {
             LOGGER.info("deleted provider");
-            provideRepository.deleteAllInBatch(providerEntityList);
+            providerRepository.deleteAllInBatch(providerEntityList);
         }
 
         userService.remove(update.getMessage().getChatId());
