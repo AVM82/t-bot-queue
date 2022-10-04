@@ -4,7 +4,6 @@ import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
@@ -16,7 +15,7 @@ import ua.shpp.eqbot.model.UserEntity;
 import ua.shpp.eqbot.service.SendBotMessageService;
 import ua.shpp.eqbot.service.UserService;
 
-@Component
+//@Component
 public class RegistrationNewUser implements Command {
     private static final Logger LOGGER = LoggerFactory.getLogger(RegistrationNewUser.class);
     private final SendBotMessageService sendBotMessageService;

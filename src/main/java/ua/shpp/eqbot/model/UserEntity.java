@@ -7,9 +7,10 @@ import java.util.Objects;
 @Entity
 @Table(name = "appuser")
 public class UserEntity {
-    @Id
+   /* @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long id;*/
+   @Id
     private Long telegramId;
     private String name;
     private String city;

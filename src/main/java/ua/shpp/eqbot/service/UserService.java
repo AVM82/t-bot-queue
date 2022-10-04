@@ -14,6 +14,8 @@ import ua.shpp.eqbot.dto.UserDto;
 import ua.shpp.eqbot.model.UserEntity;
 import ua.shpp.eqbot.repository.UserRepository;
 
+import java.util.Optional;
+
 @Service
 public class UserService {
     private static final Logger LOGGER = LoggerFactory.getLogger(UserService.class);
@@ -30,7 +32,15 @@ public class UserService {
     public UserEntity getEntity(Long telergamId) {
         LOGGER.info("get userEntity by telergamId {}", telergamId);
         UserDto dto = getDto(telergamId);
-        return dto != null ? convertToEntity(dto) : userRepository.findByTelegramId(telergamId);
+        //return dto != null ? convertToEntity(dto) : userRepository.findByTelegramId(telergamId);
+        if(dto != null){
+            return convertToEntity(dto);
+        }else{
+            Optional<UserEntity> optionalUser = userRepository.findById(telergamId);
+            if(optionalUser.isPresent())
+                return optionalUser.get();
+            else return null;
+        }
     }
 
     public UserEntity saveEntity(UserEntity userEntity) {
