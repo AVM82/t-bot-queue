@@ -122,12 +122,12 @@ public class AddService implements Command {
                         if (changeFormatTime(update.getMessage().getText(), id)) {
                             ServiceCache.add(serviceDTO.setSundayWorkingHours(update.getMessage().getText())
                                     .setPositionRegistrationService(PositionRegistrationService.TIME_BETWEEN_CLIENTS));
-                            createMessage(id, "time_between_clients", "format");
+                            createMessage(id, "time_between_clients", "format_between");
                         }
                         break;
                     case TIME_BETWEEN_CLIENTS:
                         LOGGER.info("new service TIME_BETWEEN_CLIENTS with message text {}", update.getMessage().getText());
-                        if (changeFormatTime(update.getMessage().getText(), id)) {
+                        if (changeFormatTimeBetweenClients(update.getMessage().getText(), id)) {
                             ServiceCache.add(serviceDTO.setTimeBetweenClients(update.getMessage().getText()));
                             createMessage(id, "service_added");
                             serviceRepository.save(convertToEntity(serviceDTO));
@@ -171,6 +171,14 @@ public class AddService implements Command {
 
     private boolean changeFormatTime(String time, Long id){
         if (time.matches("([0-9]|0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]-([0-9]|0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]"))
+            return true;
+        else {
+            createMessage(id,"unformatted");
+            return false;
+        }
+    }
+    private boolean changeFormatTimeBetweenClients(String time, Long id){
+        if (time.matches("([0-9]|0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]"))
             return true;
         else {
             createMessage(id,"unformatted");
