@@ -103,6 +103,15 @@ public class ServiceDTO {
 
     private byte[] avatar;
 
+    public ServiceDTO() {
+    }
+
+    public ServiceDTO(Long telegramId, String name, String description) {
+        this.telegramId = telegramId;
+        this.name = name;
+        this.description = description;
+    }
+
     public byte[] getAvatar() {
         return avatar;
     }

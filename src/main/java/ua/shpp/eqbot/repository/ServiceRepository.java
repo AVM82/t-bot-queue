@@ -5,6 +5,7 @@ import org.springframework.data.jpa.repository.Query;
 import ua.shpp.eqbot.model.ServiceEntity;
 
 import java.util.List;
+import java.util.Set;
 
 public interface ServiceRepository extends JpaRepository<ServiceEntity, Long> {
 
@@ -13,10 +14,13 @@ public interface ServiceRepository extends JpaRepository<ServiceEntity, Long> {
     @Query("select t from ServiceEntity t where t.name = ?1 and t.telegramId=?2")
     ServiceEntity getFirstByNameAndAndTelegramId(String name, Long telegramId);
 
-    ServiceEntity findFirstById (Long id);
+    ServiceEntity findFirstById(Long id);
 
     @Query("select t from ServiceEntity t where t. telegramId = ?1")
     List<ServiceEntity> findAllByTelegramId(Long id);
 
     List<ServiceEntity> findAllByTelegramIdIn(List<Long> telegramIdList);
+
+    @Query("select distinct t.name from ServiceEntity t ")
+    Set<String> findAllByName();
 }

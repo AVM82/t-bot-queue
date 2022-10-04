@@ -13,6 +13,8 @@ import org.springframework.transaction.annotation.Transactional;
 import ua.shpp.eqbot.dto.UserDto;
 import ua.shpp.eqbot.model.UserEntity;
 import ua.shpp.eqbot.repository.UserRepository;
+import ua.shpp.eqbot.mapper.UserMapper;
+import ua.shpp.eqbot.validation.UserValidateService;
 
 import java.util.Optional;
 
@@ -22,10 +24,10 @@ public class UserService {
     private final UserRepository userRepository;
     private final String dtoCacheName = "cacheUserDto";
     private final CacheManager cacheManager;
-    private final ModelMapper modelMapper = new ModelMapper();
 
-    public UserService(UserRepository userRepository, CacheManager cacheManager) {
+    public UserService(UserRepository userRepository, UserValidateService userValidateService, CacheManager cacheManager) {
         this.userRepository = userRepository;
+        this.userValidateService = userValidateService;
         this.cacheManager = cacheManager;
     }
 
@@ -72,7 +74,7 @@ public class UserService {
             Cache.ValueWrapper valueWrapper = cache.get(userEntity.getTelegramId());
             UserDto userDto;
             if (valueWrapper == null) {
-                userDto = convertToDto(userEntity);
+                userDto = UserMapper.INSTANCE.userEntityToUserDTO(userEntity);
             } else {
                 userDto = ((UserDto) valueWrapper.get())
                         .setName(userEntity.getName())

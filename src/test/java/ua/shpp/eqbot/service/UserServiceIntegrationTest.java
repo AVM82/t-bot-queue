@@ -1,10 +1,7 @@
 package ua.shpp.eqbot.service;
 
-//import org.flywaydb.core.Flyway;
-import org.flywaydb.core.Flyway;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -17,13 +14,17 @@ import ua.shpp.eqbot.model.UserEntity;
 import ua.shpp.eqbot.repository.ProviderRepository;
 import ua.shpp.eqbot.repository.UserRepository;
 import ua.shpp.eqbot.telegrambot.EqTelegramBot;
+import ua.shpp.eqbot.mapper.UserMapper;
+import ua.shpp.eqbot.validation.UserValidateService;
+
+import java.time.LocalDateTime;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
-import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
-class UserServiceTest {
+class UserServiceIntegrationTest {
     @MockBean
     AddService addService;
     @MockBean
@@ -32,16 +33,14 @@ class UserServiceTest {
     ImageService imageService;
     @MockBean
     TelegramBotInitializer telegramBotInitializer;
-    private final ModelMapper modelMapper = new ModelMapper();
     @MockBean
     EqTelegramBot eqTelegramBot;
     @MockBean
     ProviderService providerService;
     @MockBean
     ProviderRepository providerRepository;
-    @MockBean
-    Flyway flyway;
-
+    @Autowired
+    private UserValidateService userValidateService;
     @Autowired
     private CacheManager cacheManager;
 
@@ -52,11 +51,7 @@ class UserServiceTest {
 
     @BeforeEach
     void setUp() {
-        userService = new UserService(userRepository, cacheManager);
-    }
-
-    private UserEntity convertToEntity(UserDto userDto) {
-        return modelMapper.map(userDto, UserEntity.class);
+        userService = new UserService(userRepository, userValidateService, cacheManager);
     }
 
     @Test
@@ -64,7 +59,7 @@ class UserServiceTest {
         UserDto userDto = new UserDto();
         userDto.setName("kolobok");
         userDto.setTelegramId(1L);
-        UserEntity userEntity = convertToEntity(userDto);
+        UserEntity userEntity = UserMapper.INSTANCE.userDTOToUserEntity(userDto);
         userService.saveEntity(userEntity);
         UserEntity dto = userService.getEntity(1L);
 
@@ -85,6 +80,21 @@ class UserServiceTest {
         userService.remove(1L);
 
         assertNull(userService.getEntity(1L));
+    }
+
+    @Test
+    void shouldCreateOneUser() {
+        final var name = "Oleksandr";
+        final var phone = "777";
+        UserEntity userEntity = new UserEntity();
+        userEntity.setTelegramId(7L).setName(name).setPhone(phone);
+
+        final var user = userRepository.save(userEntity);
+
+        assertEquals(7L, user.getTelegramId());
+        assertEquals(name, user.getName());
+        assertEquals(phone, user.getPhone());
+        assertTrue(user.getCreatedTime().isBefore(LocalDateTime.now()));
     }
 
     @Test

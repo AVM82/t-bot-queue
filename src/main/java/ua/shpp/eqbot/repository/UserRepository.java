@@ -11,4 +11,6 @@ public interface UserRepository extends JpaRepository<UserEntity, Long> {
     UserEntity findByTelegramId(Long telegramId);
 
     void deleteAllByTelegramId(Long telegramId);
+
+    boolean existsByNameAndPhone(String name, String phone);
 }

@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
+import ua.shpp.eqbot.dto.UserDto;
 import ua.shpp.eqbot.internationalization.BundleLanguage;
 import ua.shpp.eqbot.stage.PositionMenu;
 import ua.shpp.eqbot.stage.PositionRegistration;
@@ -14,14 +15,14 @@ import ua.shpp.eqbot.dto.UserDto;
 import ua.shpp.eqbot.model.UserEntity;
 import ua.shpp.eqbot.service.SendBotMessageService;
 import ua.shpp.eqbot.service.UserService;
+import ua.shpp.eqbot.mapper.UserMapper;
 
-//@Component
+@Component
 public class RegistrationNewUser implements Command {
     private static final Logger LOGGER = LoggerFactory.getLogger(RegistrationNewUser.class);
     private final SendBotMessageService sendBotMessageService;
     private final UserService userService;
     private final BundleLanguage bundleLanguage;
-    private final ModelMapper modelMapper = new ModelMapper();
 
     @Autowired
     public RegistrationNewUser(SendBotMessageService sendBotMessageService, UserService userService, BundleLanguage bundleLanguage) {
@@ -118,7 +119,7 @@ public class RegistrationNewUser implements Command {
                     if(message.isCommand()) break;
                     userDto.setPhone(message.getText());
                     userDto.setPositionRegistration(PositionRegistration.DONE);
-                    UserEntity userEntity = convertToEntity(userDto);
+                    UserEntity userEntity = UserMapper.INSTANCE.userDTOToUserEntity(userDto);
                     userService.saveEntity(userEntity);
                     LOGGER.info("save entity to database {}", userEntity);
                     isRegistration = true;
