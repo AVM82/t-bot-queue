@@ -1,10 +1,8 @@
 package ua.shpp.eqbot.service;
 
-//import org.flywaydb.core.Flyway;
 import org.flywaydb.core.Flyway;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -17,6 +15,7 @@ import ua.shpp.eqbot.model.UserEntity;
 import ua.shpp.eqbot.repository.ProviderRepository;
 import ua.shpp.eqbot.repository.UserRepository;
 import ua.shpp.eqbot.telegrambot.EqTelegramBot;
+import ua.shpp.eqbot.utility.ConverterDTO;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
@@ -32,16 +31,12 @@ class UserServiceTest {
     ImageService imageService;
     @MockBean
     TelegramBotInitializer telegramBotInitializer;
-    private final ModelMapper modelMapper = new ModelMapper();
     @MockBean
     EqTelegramBot eqTelegramBot;
     @MockBean
     ProviderService providerService;
     @MockBean
     ProviderRepository providerRepository;
-    @MockBean
-    Flyway flyway;
-
     @Autowired
     private CacheManager cacheManager;
 
@@ -55,16 +50,12 @@ class UserServiceTest {
         userService = new UserService(userRepository, cacheManager);
     }
 
-    private UserEntity convertToEntity(UserDto userDto) {
-        return modelMapper.map(userDto, UserEntity.class);
-    }
-
     @Test
     void getEntity() {
         UserDto userDto = new UserDto();
         userDto.setName("kolobok");
         userDto.setTelegramId(1L);
-        UserEntity userEntity = convertToEntity(userDto);
+        UserEntity userEntity = ConverterDTO.convertToEntity(userDto);
         userService.saveEntity(userEntity);
         UserEntity dto = userService.getEntity(1L);
 

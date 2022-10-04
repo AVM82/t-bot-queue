@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 import ua.shpp.eqbot.dto.UserDto;
 import ua.shpp.eqbot.model.UserEntity;
 import ua.shpp.eqbot.repository.UserRepository;
+import ua.shpp.eqbot.utility.ConverterDTO;
 
 @Service
 public class UserService {
@@ -31,7 +32,7 @@ public class UserService {
     public UserEntity getEntity(Long telergamId) {
         LOGGER.info("get userEntity by telergamId " + telergamId);
         UserDto dto = getDto(telergamId);
-        return dto != null ? convertToEntity(dto) : userRepository.findByTelegramId(telergamId);
+        return dto != null ? ConverterDTO.convertToEntity(dto) : userRepository.findByTelegramId(telergamId);
     }
 
     public UserEntity saveEntity(UserEntity userEntity) {
@@ -69,7 +70,7 @@ public class UserService {
             Cache.ValueWrapper valueWrapper = cache.get(userEntity.getTelegramId());
             UserDto userDto;
             if (valueWrapper == null) {
-                userDto = convertToDto(userEntity);
+                userDto = ConverterDTO.convertToDto(userEntity);
             } else {
                 userDto = ((UserDto) valueWrapper.get())
                         .setName(userEntity.getName())
@@ -79,19 +80,5 @@ public class UserService {
             }
             cache.put(userEntity.getTelegramId(), userDto);
         }
-    }
-
-    private UserEntity convertToEntity(UserDto userDto) {
-        if (userDto == null) return null;
-        UserEntity userEntity = modelMapper.map(userDto, UserEntity.class);
-        LOGGER.info("convert dto to entity");
-        return userEntity;
-    }
-
-    private UserDto convertToDto(UserEntity userEntity) {
-        if (userEntity == null) return null;
-        UserDto postDto = modelMapper.map(userEntity, UserDto.class);
-        LOGGER.info("convert entity to dto");
-        return postDto;
     }
 }

@@ -1,6 +1,5 @@
 package ua.shpp.eqbot.command;
 
-import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,13 +7,14 @@ import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
+import ua.shpp.eqbot.dto.UserDto;
 import ua.shpp.eqbot.internationalization.BundleLanguage;
 import ua.shpp.eqbot.model.PositionMenu;
 import ua.shpp.eqbot.model.PositionRegistration;
-import ua.shpp.eqbot.dto.UserDto;
 import ua.shpp.eqbot.model.UserEntity;
 import ua.shpp.eqbot.service.SendBotMessageService;
 import ua.shpp.eqbot.service.UserService;
+import ua.shpp.eqbot.utility.ConverterDTO;
 
 @Component
 public class RegistrationNewUser implements Command {
@@ -22,7 +22,6 @@ public class RegistrationNewUser implements Command {
     private final SendBotMessageService sendBotMessageService;
     private final UserService userService;
     private final BundleLanguage bundleLanguage;
-    private final ModelMapper modelMapper = new ModelMapper();
 
     @Autowired
     public RegistrationNewUser(SendBotMessageService sendBotMessageService, UserService userService, BundleLanguage bundleLanguage) {
@@ -45,7 +44,7 @@ public class RegistrationNewUser implements Command {
             UserEntity userEntity = userService.getEntity(update.getMessage().getChatId());
             if (userEntity != null) {
                 LOGGER.info("user present into repo");
-                userService.saveDto(convertToDto(userEntity).setPositionRegistration(PositionRegistration.DONE));
+                userService.saveDto(ConverterDTO.convertToDto(userEntity).setPositionRegistration(PositionRegistration.DONE));
                 return true;
             }
             return registration(update.getMessage(), null);
@@ -116,7 +115,7 @@ public class RegistrationNewUser implements Command {
                     LOGGER.info("new user phase INPUT_PHONE with message text {}", message.getText());
                     userDto.setPhone(message.getText());
                     userDto.setPositionRegistration(PositionRegistration.DONE);
-                    UserEntity userEntity = convertToEntity(userDto);
+                    UserEntity userEntity = ConverterDTO.convertToEntity(userDto);
                     userService.saveEntity(userEntity);
                     LOGGER.info("save entity to database {}", userEntity);
                     isRegistration = true;
@@ -131,17 +130,5 @@ public class RegistrationNewUser implements Command {
             }
         }
         return isRegistration;
-    }
-
-    private UserEntity convertToEntity(UserDto userDto) {
-        UserEntity userEntity = modelMapper.map(userDto, UserEntity.class);
-        LOGGER.info("convert dto to entity");
-        return userEntity;
-    }
-
-    private UserDto convertToDto(UserEntity userEntity) {
-        UserDto postDto = modelMapper.map(userEntity, UserDto.class);
-        LOGGER.info("convert entity to dto");
-        return postDto;
     }
 }
