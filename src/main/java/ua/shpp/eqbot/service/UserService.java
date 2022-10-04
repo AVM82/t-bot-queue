@@ -14,18 +14,19 @@ import ua.shpp.eqbot.dto.UserDto;
 import ua.shpp.eqbot.model.UserEntity;
 import ua.shpp.eqbot.repository.UserRepository;
 import ua.shpp.eqbot.utility.ConverterDTO;
+import ua.shpp.eqbot.validation.UserValidateService;
 
 @Service
 public class UserService {
     private static final Logger LOGGER = LoggerFactory.getLogger(UserService.class);
     private final UserRepository userRepository;
-
+    private final UserValidateService userValidateService;
     private final String dtoCacheName = "cacheDto";
     private final CacheManager cacheManager;
-    private final ModelMapper modelMapper = new ModelMapper();
 
-    public UserService(UserRepository userRepository, CacheManager cacheManager) {
+    public UserService(UserRepository userRepository, UserValidateService userValidateService, CacheManager cacheManager) {
         this.userRepository = userRepository;
+        this.userValidateService = userValidateService;
         this.cacheManager = cacheManager;
     }
 
@@ -37,6 +38,7 @@ public class UserService {
 
     public UserEntity saveEntity(UserEntity userEntity) {
         LOGGER.info("save userEntity " + userEntity);
+        userValidateService.checkUserCreation(userEntity.getName(), userEntity.getPhone());
         saveDto(userEntity); // additional
         return userRepository.save(userEntity);
     }

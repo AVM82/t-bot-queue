@@ -28,6 +28,7 @@ public class ProviderServiceIntegrationTest {
 
     @Autowired
     ProviderRepository providerRepository;
+
     ProviderService providerService;
 
 

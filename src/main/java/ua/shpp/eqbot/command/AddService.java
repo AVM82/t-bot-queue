@@ -38,7 +38,6 @@ public class AddService implements Command {
     private final BundleLanguage bundleLanguage;
 
     private final ProviderRepository providerRepository;
-    private boolean hasSuchName = false;
 
     @Autowired
     public AddService(SendBotMessageService sendBotMessageService, ServiceRepository serviceRepository, ImageService imageService, ProviderRepository providerRepository, UserService userService, BundleLanguage bundleLanguage) {
@@ -50,13 +49,13 @@ public class AddService implements Command {
         this.bundleLanguage = bundleLanguage;
     }
 
-    public void addService(ServiceDTO service) {
+    public ServiceEntity addService(ServiceDTO service) {
         ServiceEntity serviceEntity = new ServiceEntity();
         serviceEntity.setTelegramId(service.getTelegramId())
                 .setName(service.getName())
                 .setDescription(service.getDescription())
                 .setAvatar(service.getAvatar());
-        serviceRepository.save(serviceEntity);
+       return serviceRepository.save(serviceEntity);
     }
 
 
@@ -120,7 +119,6 @@ public class AddService implements Command {
     }
 
     private void createService(Update update) {
-        hasSuchName = false;
         Long telegramId;
         if (update.getMessage() != null) {
             telegramId = update.getMessage().getChatId();
@@ -138,7 +136,6 @@ public class AddService implements Command {
             String message = bundleLanguage.getValue(telegramId, "service_exist");
             sendBotMessageService.sendMessage(SendMessage.builder().chatId(telegramId)
                     .text(message).build());
-            hasSuchName = true;
         }
         return result;
     }
@@ -160,5 +157,4 @@ public class AddService implements Command {
         }
         addService(serviceDTO);
     }
-
 }

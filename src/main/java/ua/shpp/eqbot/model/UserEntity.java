@@ -21,6 +21,11 @@ public class UserEntity {
     public UserEntity() {
     }
 
+    public UserEntity(String name, String phone) {
+        this.name = name;
+        this.phone = phone;
+    }
+
     @PrePersist
     private void setTime() {
         createdTime = LocalDateTime.now();
