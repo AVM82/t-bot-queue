@@ -1,6 +1,5 @@
 package ua.shpp.eqbot.service;
 
-import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.cache.Cache;
@@ -13,7 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import ua.shpp.eqbot.dto.UserDto;
 import ua.shpp.eqbot.model.UserEntity;
 import ua.shpp.eqbot.repository.UserRepository;
-import ua.shpp.eqbot.utility.ConverterDTO;
+import ua.shpp.eqbot.utility.UserMapper;
 import ua.shpp.eqbot.validation.UserValidateService;
 
 @Service
@@ -33,7 +32,7 @@ public class UserService {
     public UserEntity getEntity(Long telergamId) {
         LOGGER.info("get userEntity by telergamId " + telergamId);
         UserDto dto = getDto(telergamId);
-        return dto != null ? ConverterDTO.convertToEntity(dto) : userRepository.findByTelegramId(telergamId);
+        return dto != null ? UserMapper.INSTANCE.userDTOToUserEntity(dto) : userRepository.findByTelegramId(telergamId);
     }
 
     public UserEntity saveEntity(UserEntity userEntity) {
@@ -72,7 +71,7 @@ public class UserService {
             Cache.ValueWrapper valueWrapper = cache.get(userEntity.getTelegramId());
             UserDto userDto;
             if (valueWrapper == null) {
-                userDto = ConverterDTO.convertToDto(userEntity);
+                userDto = UserMapper.INSTANCE.userEntityToUserDTO(userEntity);
             } else {
                 userDto = ((UserDto) valueWrapper.get())
                         .setName(userEntity.getName())

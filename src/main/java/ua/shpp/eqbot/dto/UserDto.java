@@ -15,6 +15,14 @@ public class UserDto {
     private PositionRegistration positionRegistration;
     private PositionMenu positionMenu;
 
+    public UserDto() {
+    }
+
+    public UserDto(String name, String city) {
+        this.name = name;
+        this.city = city;
+    }
+
     public PositionRegistration getPositionRegistration() {
         return positionRegistration;
     }
@@ -78,6 +86,4 @@ public class UserDto {
         return this;
     }
 
-    public UserDto() {
-    }
 }

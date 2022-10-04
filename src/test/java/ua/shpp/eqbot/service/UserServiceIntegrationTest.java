@@ -14,7 +14,7 @@ import ua.shpp.eqbot.model.UserEntity;
 import ua.shpp.eqbot.repository.ProviderRepository;
 import ua.shpp.eqbot.repository.UserRepository;
 import ua.shpp.eqbot.telegrambot.EqTelegramBot;
-import ua.shpp.eqbot.utility.ConverterDTO;
+import ua.shpp.eqbot.utility.UserMapper;
 import ua.shpp.eqbot.validation.UserValidateService;
 
 import java.time.LocalDateTime;
@@ -59,7 +59,7 @@ class UserServiceIntegrationTest {
         UserDto userDto = new UserDto();
         userDto.setName("kolobok");
         userDto.setTelegramId(1L);
-        UserEntity userEntity = ConverterDTO.convertToEntity(userDto);
+        UserEntity userEntity = UserMapper.INSTANCE.userDTOToUserEntity(userDto);
         userService.saveEntity(userEntity);
         UserEntity dto = userService.getEntity(1L);
 

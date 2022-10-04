@@ -14,7 +14,7 @@ import ua.shpp.eqbot.model.PositionRegistration;
 import ua.shpp.eqbot.model.UserEntity;
 import ua.shpp.eqbot.service.SendBotMessageService;
 import ua.shpp.eqbot.service.UserService;
-import ua.shpp.eqbot.utility.ConverterDTO;
+import ua.shpp.eqbot.utility.UserMapper;
 
 @Component
 public class RegistrationNewUser implements Command {
@@ -44,7 +44,7 @@ public class RegistrationNewUser implements Command {
             UserEntity userEntity = userService.getEntity(update.getMessage().getChatId());
             if (userEntity != null) {
                 LOGGER.info("user present into repo");
-                userService.saveDto(ConverterDTO.convertToDto(userEntity).setPositionRegistration(PositionRegistration.DONE));
+                userService.saveDto(UserMapper.INSTANCE.userEntityToUserDTO(userEntity).setPositionRegistration(PositionRegistration.DONE));
                 return true;
             }
             return registration(update.getMessage(), null);
@@ -115,7 +115,7 @@ public class RegistrationNewUser implements Command {
                     LOGGER.info("new user phase INPUT_PHONE with message text {}", message.getText());
                     userDto.setPhone(message.getText());
                     userDto.setPositionRegistration(PositionRegistration.DONE);
-                    UserEntity userEntity = ConverterDTO.convertToEntity(userDto);
+                    UserEntity userEntity = UserMapper.INSTANCE.userDTOToUserEntity(userDto);
                     userService.saveEntity(userEntity);
                     LOGGER.info("save entity to database {}", userEntity);
                     isRegistration = true;

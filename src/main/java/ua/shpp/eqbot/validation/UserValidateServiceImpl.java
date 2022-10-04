@@ -1,16 +1,18 @@
 package ua.shpp.eqbot.validation;
 
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ua.shpp.eqbot.ecxeption.ValidationFailedException;
 import ua.shpp.eqbot.repository.UserRepository;
 
 @Service
-@RequiredArgsConstructor
-class UserValidateServiceImpl implements UserValidateService {
+public class UserValidateServiceImpl implements UserValidateService {
 
     private final UserRepository userRepository;
+
+    public UserValidateServiceImpl(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
 
     @Override
     @Transactional(readOnly = true)
