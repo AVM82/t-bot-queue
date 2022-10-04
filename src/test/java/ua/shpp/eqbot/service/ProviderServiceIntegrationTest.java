@@ -1,12 +1,17 @@
 package ua.shpp.eqbot.service;
 
-import org.junit.jupiter.api.*;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.ArgumentCaptor;
-import org.mockito.Captor;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
+import org.hamcrest.core.Is;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.MethodOrderer;
+import org.junit.jupiter.api.TestMethodOrder;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.test.context.junit4.SpringRunner;
 import ua.shpp.eqbot.model.ProviderEntity;
 import ua.shpp.eqbot.repository.ProviderRepository;
 
@@ -15,42 +20,43 @@ import java.util.Optional;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 @TestMethodOrder(MethodOrderer.DisplayName.class)
-@ExtendWith(MockitoExtension.class)
-class ProviderServiceTest {
+@RunWith(SpringRunner.class)
+@DataJpaTest
+public class ProviderServiceIntegrationTest {
 
-    @Mock
-    private ProviderRepository providerRepository;
-    @Captor
-    private ArgumentCaptor<ProviderEntity> argumentCaptor;
-    @InjectMocks
-    private ProviderService providerService;
+    @Autowired
+    ProviderRepository providerRepository;
+    ProviderService providerService;
 
 
-    @DisplayName("2")
-    @Test
-    void whenPutProviderThanGetProviderUseId() {
-        ProviderEntity providerEntity = new ProviderEntity();
-        providerEntity.setProviderCity("Dnipro");
-        providerEntity.setTelegramId(1L);
-        providerEntity.setName("provider");
+    @Before
+    public void setUp() {
+        providerService = new ProviderService(providerRepository);
 
-        when(providerRepository.save(any())).thenReturn(providerEntity);
+        ProviderEntity entity = new ProviderEntity();
+        entity.setProviderCity("Dnipro");
+        entity.setTelegramId(12L);
 
-        providerService.save(providerEntity);
-        verify(providerRepository).save(argumentCaptor.capture());
-
-        assertThat(argumentCaptor.getValue(), is(providerEntity));
+        providerService.save(entity);
     }
 
-    @DisplayName("3")
+    @After
+    public void tearDown() {
+        providerService.remove(12L);
+    }
+
     @Test
-    @Disabled
-    void whenPutThreeProvidersThenGetProvidersUseTelegramIdExpectedAllList() {
+    public void contextLoads() {
+
+        Optional<ProviderEntity> dnipro = providerService.getByNameAndTelegramId(12L, "Dnipro");
+        assertThat(dnipro.isPresent(), Is.is(true));
+    }
+
+
+    @Test
+    public void whenPutThreeProvidersThenGetProvidersUseTelegramIdExpectedAllList() {
         ProviderEntity providerEntity = new ProviderEntity()
                 .setProviderCity("Dnipro");
         ProviderEntity providerEntity1 = new ProviderEntity()
@@ -72,16 +78,14 @@ class ProviderServiceTest {
 
         List<ProviderEntity> byTelegramId = providerService.getByTelegramId(1L);
 
-        assertThat(byTelegramId.size(), is(5));
-        assertThat(byTelegramId.get(2).getProviderCity(), is("Dnipro"));
-        assertThat(byTelegramId.get(3).getProviderCity(), is("Kiev"));
-        assertThat(byTelegramId.get(4).getProviderCity(), is("Starcon"));
+        assertThat(byTelegramId.size(), is(3));
+        assertThat(byTelegramId.get(0).getProviderCity(), is("Dnipro"));
+        assertThat(byTelegramId.get(1).getProviderCity(), is("Kiev"));
+        assertThat(byTelegramId.get(2).getProviderCity(), is("Starcon"));
     }
 
-    @DisplayName("1")
     @Test
-    @Disabled
-    void whenPutProviderThanGetProviderUseIdAndName() {
+    public void whenPutProviderThanGetProviderUseIdAndName() {
         final String cityProvider = "kiev";
         final Long providerId = 1L;
 
@@ -103,4 +107,5 @@ class ProviderServiceTest {
 
         assertThat(result.getProviderCity(), is(cityProvider));
     }
+
 }
