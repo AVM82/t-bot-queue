@@ -15,7 +15,6 @@ public class UserEntity {
     private String city;
     private String phone;
     private String language;
-    @Column (name = "created_time")
     private LocalDateTime createdTime;
 
     public UserEntity() {
