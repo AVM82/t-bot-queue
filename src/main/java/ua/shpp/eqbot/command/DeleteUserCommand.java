@@ -5,11 +5,10 @@ import org.slf4j.LoggerFactory;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import ua.shpp.eqbot.cache.ServiceCache;
+import ua.shpp.eqbot.dto.ProviderDto;
 import ua.shpp.eqbot.internationalization.BundleLanguage;
-import ua.shpp.eqbot.model.ProviderDto;
 import ua.shpp.eqbot.model.ProviderEntity;
 import ua.shpp.eqbot.model.ServiceEntity;
-import ua.shpp.eqbot.repository.ProviderRepository;
 import ua.shpp.eqbot.repository.ServiceRepository;
 import ua.shpp.eqbot.service.ProviderService;
 import ua.shpp.eqbot.service.SendBotMessageService;
@@ -45,7 +44,7 @@ public class DeleteUserCommand implements Command {
         //delete service in cache
         ServiceCache.remove(update.getMessage().getChatId());
 
-        ProviderEntity providerEntity = providerService.getByIdTelegramEntity(update.getMessage().getChatId());
+        ProviderEntity providerEntity = providerService.getByTelegramIdEntity(update.getMessage().getChatId());
         if (providerEntity != null) {
             LOGGER.info("deleted provider in database");
             providerService.removeInDataBase(providerEntity);

@@ -7,33 +7,31 @@ import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ua.shpp.eqbot.model.ProviderDto;
+import ua.shpp.eqbot.dto.ProviderDto;
 import ua.shpp.eqbot.model.ProviderEntity;
 import ua.shpp.eqbot.repository.ProviderRepository;
 
-import java.util.List;
 import java.util.Optional;
 
 @Service
 public class ProviderService {
-    private final ProviderRepository providerRepository;
+
     private static final Logger LOGGER = LoggerFactory.getLogger(ProviderService.class);
-    private final ProvideRepository provideRepository;
+    private final ProviderRepository providerRepository;
     private final String providerDtoCacheName = "cacheProviderDto";
     private final CacheManager cacheManager;
     private final ModelMapper modelMapper = new ModelMapper();
 
-    public ProviderService(ProvideRepository provideRepository, CacheManager cacheManager) {
-        this.provideRepository = provideRepository;
+    public ProviderService(ProviderRepository providerRepository, CacheManager cacheManager) {
+        this.providerRepository = providerRepository;
         this.cacheManager = cacheManager;
     }
 
     public ProviderEntity saveEntity(ProviderEntity providerEntity) {
         LOGGER.info("save provider entity {}", providerEntity);
-        return provideRepository.save(providerEntity);
+        return providerRepository.save(providerEntity);
     }
 
     public void saveEntityInCache(ProviderEntity entity) {
@@ -48,7 +46,7 @@ public class ProviderService {
         saveEntity(entity);
     }
 
-    @CachePut(cacheNames = providerDtoCacheName, key = "#providerDto.idTelegram")
+    @CachePut(cacheNames = providerDtoCacheName, key = "#providerDto.telegramId")
     public ProviderDto saveProviderDto(ProviderDto providerDto) {
         LOGGER.info("save provider dto {}", providerDto);
         return providerDto;
@@ -64,30 +62,26 @@ public class ProviderService {
     @CacheEvict(cacheNames = providerDtoCacheName, key = "#id")
     public boolean remove(Long id) {
         LOGGER.info("delete provider dto and All entity");
-        ProviderEntity entity = provideRepository.findByIdTelegram(id);
+        ProviderEntity entity = providerRepository.findByTelegramId(id);
         if (entity != null)
-            provideRepository.delete(entity);
+            providerRepository.delete(entity);
         return true;
     }
 
-    public ProviderEntity getByIdTelegramEntity(Long idTelegram) {
+    public ProviderEntity getByTelegramIdEntity(Long telegramId) {
         LOGGER.info("get entityProvider in database");
-        return provideRepository.findByIdTelegram(idTelegram);
+        return providerRepository.findByTelegramId(telegramId);
     }
 
     public void removeInDataBase(ProviderEntity entity) {
         LOGGER.info("remove entityProvider in database");
-        provideRepository.delete(entity);
+        providerRepository.delete(entity);
     }
 
-    public void remove(Long telegramId) {
+/*    public void remove(Long telegramId) {
         Optional<ProviderEntity> providerEntity = get(telegramId);
         providerEntity.ifPresent(providerRepository::delete);
-    }
-
-    public List<ProviderEntity> getAllProvidersBtIdTelegram(Long idTelegram) {
-        return provideRepository.findAllByIdTelegram(idTelegram);
-    }
+    }*/
 
     private ProviderEntity convertToEntity(ProviderDto dto) {
         if (dto == null) return null;

@@ -5,7 +5,6 @@ import org.slf4j.LoggerFactory;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import ua.shpp.eqbot.cache.ServiceCache;
 import ua.shpp.eqbot.internationalization.BundleLanguage;
-import ua.shpp.eqbot.model.ServiceDTO;
 import ua.shpp.eqbot.model.ServiceEntity;
 import ua.shpp.eqbot.repository.ServiceRepository;
 import ua.shpp.eqbot.service.ImageService;
@@ -36,10 +35,10 @@ public class CheckServiceRegistrationCommand implements Command{
             id = update.getMessage().getChatId();
         else
             return false;
-        ServiceDTO serviceDTO = ServiceCache.findBy(id);
+        ua.shpp.eqbot.dto.ServiceDTO serviceDTO = ServiceCache.findBy(id);
         if (serviceDTO == null) {
             LOGGER.info("the provider is not in the cache");
-            List<ServiceEntity> serviceEntityList = serviceRepository.findAllByIdTelegram(id);
+            List<ServiceEntity> serviceEntityList = serviceRepository.findAllByTelegramId(id);
             if (!serviceEntityList.isEmpty()) {
                 LOGGER.info("there is provider in the database");
                 return true;

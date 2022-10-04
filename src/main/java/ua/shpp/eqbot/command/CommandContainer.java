@@ -23,7 +23,7 @@ public class CommandContainer {
 
     @Autowired
     public CommandContainer(SendBotMessageService sendBotMessageService, UserRepository userRepository,
-                            ServiceRepository serviceRepository, ProvideRepository provideRepository,
+                            ServiceRepository serviceRepository, ProviderRepository providerRepository,
                             ImageService imageService, BundleLanguage bundleLanguage, UserService userService,
                             ProviderService providerService) {
         commandMap = ImmutableMap.<String, Command>builder()
@@ -33,7 +33,7 @@ public class CommandContainer {
                 .put(CommandName.NO.getNameCommand(), new NoCommand(sendBotMessageService))
                 .put(CommandName.SETTINGS.getNameCommand(), new SettingsCommand(sendBotMessageService))
                 .put(CommandName.CHANGE_ROLE_TO_PROVIDER.getNameCommand(),
-                        new ChangeRoleToProviderCommand(sendBotMessageService, provideRepository))
+                        new ChangeRoleToProviderCommand(sendBotMessageService, providerRepository))
                 .put(CommandName.ADD_SERVICE.getNameCommand(),
                         new AddService(sendBotMessageService, serviceRepository, imageService, bundleLanguage))
                 .put(CommandName.DELETE_USER.getNameCommand(), new DeleteUserCommand(sendBotMessageService,

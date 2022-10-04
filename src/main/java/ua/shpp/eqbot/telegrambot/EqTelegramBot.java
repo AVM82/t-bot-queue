@@ -7,20 +7,19 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
-import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
 import org.telegram.telegrambots.meta.api.objects.Update;
-import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import ua.shpp.eqbot.command.CommandContainer;
 import ua.shpp.eqbot.internationalization.BundleLanguage;
-import ua.shpp.eqbot.model.PositionMenu;
 import ua.shpp.eqbot.dto.UserDto;
 import ua.shpp.eqbot.repository.ProviderRepository;
 import ua.shpp.eqbot.repository.ServiceRepository;
 import ua.shpp.eqbot.repository.UserRepository;
 import ua.shpp.eqbot.service.ImageService;
+import ua.shpp.eqbot.service.ProviderService;
 import ua.shpp.eqbot.service.SendBotMessageServiceImpl;
 import ua.shpp.eqbot.service.UserService;
+import ua.shpp.eqbot.stage.PositionMenu;
 
 import static ua.shpp.eqbot.command.CommandName.NO;
 import static ua.shpp.eqbot.stage.PositionMenu.*;
@@ -31,16 +30,16 @@ public class EqTelegramBot extends TelegramLongPollingBot {
     private final CommandContainer commandContainer;
     private final UserService userService;
     private final BundleLanguage bundleLanguage;
-    ProvideRepository provideRepository;
+    ProviderRepository providerRepository;
     private final ProviderService providerService;
 
 
     @Autowired
     public EqTelegramBot(UserRepository userRepository, ServiceRepository serviceRepository,
-                         ProvideRepository provideRepository, @Lazy ImageService imageService,
+                         ProviderRepository providerRepository, @Lazy ImageService imageService,
                          BundleLanguage bundleLanguage, UserService userService,
                          ProviderService providerService) {
-        this.provideRepository = provideRepository;
+        this.providerRepository = providerRepository;
         this.userService = userService;
         this.bundleLanguage = bundleLanguage;
         this.providerService = providerService;

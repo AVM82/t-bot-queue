@@ -4,8 +4,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
+import ua.shpp.eqbot.dto.ProviderDto;
 import ua.shpp.eqbot.internationalization.BundleLanguage;
-import ua.shpp.eqbot.model.ProviderDto;
 import ua.shpp.eqbot.service.ProviderService;
 import ua.shpp.eqbot.service.SendBotMessageService;
 import ua.shpp.eqbot.stage.PositionRegistrationProvider;
@@ -78,7 +78,7 @@ public class RegistrationNewProviderCommand implements Command {
 
     private ProviderDto generateProviderFromMessage(Long id) {
         ProviderDto providerDto = new ProviderDto();
-        providerDto.setIdTelegram(id)
+        providerDto.setTelegramId(id)
                 .setPositionRegistrationProvider(PositionRegistrationProvider.INPUT_COMPANY_NAME);
         return providerDto;
     }

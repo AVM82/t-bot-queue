@@ -21,12 +21,16 @@ public class ProviderDto implements Serializable {
         this.city = city;
     }
 
+    public ProviderDto(){
+
+    }
+
     public Long getTelegramId() {
         return telegramId;
     }
 
-    public ProviderDto setIdTelegram(Long idTelegram) {
-        this.idTelegram = idTelegram;
+    public ProviderDto setTelegramId(Long telegramId) {
+        this.telegramId = telegramId;
         return this;
     }
 

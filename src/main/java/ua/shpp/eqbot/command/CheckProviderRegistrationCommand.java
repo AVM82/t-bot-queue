@@ -6,8 +6,8 @@ import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
+import ua.shpp.eqbot.dto.ProviderDto;
 import ua.shpp.eqbot.internationalization.BundleLanguage;
-import ua.shpp.eqbot.model.ProviderDto;
 import ua.shpp.eqbot.model.ProviderEntity;
 import ua.shpp.eqbot.service.ProviderService;
 import ua.shpp.eqbot.service.SendBotMessageService;
@@ -42,7 +42,7 @@ public class CheckProviderRegistrationCommand implements Command {
         ProviderDto providerDto = providerService.getProviderDto(id);
         if (providerDto == null) {
             LOGGER.info("the provider is not in the cache");
-            ProviderEntity providerEntity = providerService.getByIdTelegramEntity(id);
+            ProviderEntity providerEntity = providerService.getByTelegramIdEntity(id);
             if (providerEntity != null) {
                 LOGGER.info("there is provider in the database");
                 providerService.saveEntityInCache(providerEntity);

@@ -11,10 +11,7 @@ import org.telegram.telegrambots.meta.api.objects.PhotoSize;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import ua.shpp.eqbot.cache.ServiceCache;
 import ua.shpp.eqbot.internationalization.BundleLanguage;
-import ua.shpp.eqbot.dto.ServiceDTO;
 import ua.shpp.eqbot.model.ServiceEntity;
-import ua.shpp.eqbot.dto.UserDto;
-import ua.shpp.eqbot.repository.ProviderRepository;
 import ua.shpp.eqbot.repository.ServiceRepository;
 import ua.shpp.eqbot.service.ImageService;
 import ua.shpp.eqbot.service.SendBotMessageService;
@@ -50,7 +47,7 @@ public class AddService implements Command {
             id = update.getMessage().getChatId();
         else
             return false;
-        ServiceDTO serviceDTO = ServiceCache.findBy(id);
+        ua.shpp.eqbot.dto.ServiceDTO serviceDTO = ServiceCache.findBy(id);
         LOGGER.info("i try register new service");
         if (serviceDTO == null) {
             ServiceCache.add(generateServiceFromMessage(id));
@@ -69,117 +66,61 @@ public class AddService implements Command {
                     case INPUT_PICTURE:
                         LOGGER.info("new service INPUT_CITY with message text {}", update.getMessage().getText());
                             ServiceCache.add(addingDescriptionAndAvatar(update.getMessage(), serviceDTO)
-                                    .setPositionRegistrationService(PositionRegistrationService.START_WORK_IN_MONDAY));
+                                    .setPositionRegistrationService(PositionRegistrationService.MONDAY_WORKING_HOURS));
                             createMessage(id, "beginning_of_work", "monday", "format");
                         break;
-                    case START_WORK_IN_MONDAY:
-                        LOGGER.info("new service START_WORK_IN_MONDAY with message text {}", update.getMessage().getText());
+                    case MONDAY_WORKING_HOURS:
+                        LOGGER.info("new service MONDAY_WORKING_HOURS with message text {}", update.getMessage().getText());
                         if (changeFormatTime(update.getMessage().getText(), id)) {
-                            ServiceCache.add(serviceDTO.setStartWorkInMonday(update.getMessage().getText())
-                                    .setPositionRegistrationService(PositionRegistrationService.END_WORK_IN_MONDAY));
-                            createMessage(id, "end_of_work_on", "monday", "format");
-                        }
-                        break;
-                    case END_WORK_IN_MONDAY:
-                        LOGGER.info("new service END_WORK_IN_MONDAY with message text {}", update.getMessage().getText());
-                        if (changeFormatTime(update.getMessage().getText(), id)) {
-                            ServiceCache.add(serviceDTO.setEndWorkInMonday(update.getMessage().getText())
-                                    .setPositionRegistrationService(PositionRegistrationService.START_WORK_IN_TUESDAY));
-                            createMessage(id, "beginning_of_work", "tuesday", "format");
-                        }
-                        break;
-                    case START_WORK_IN_TUESDAY:
-                        LOGGER.info("new service START_WORK_IN_TUESDAY with message text {}", update.getMessage().getText());
-                        if (changeFormatTime(update.getMessage().getText(), id)) {
-                            ServiceCache.add(serviceDTO.setStartWorkInTuesday(update.getMessage().getText())
-                                    .setPositionRegistrationService(PositionRegistrationService.END_WORK_IN_TUESDAY));
+                            ServiceCache.add(serviceDTO.setMondayWorkingHours(update.getMessage().getText())
+                                    .setPositionRegistrationService(PositionRegistrationService.TUESDAY_WORKING_HOURS));
                             createMessage(id, "end_of_work_on", "tuesday", "format");
                         }
                         break;
-                    case END_WORK_IN_TUESDAY:
-                        LOGGER.info("new service END_WORK_IN_TUESDAY with message text {}", update.getMessage().getText());
+                    case TUESDAY_WORKING_HOURS:
+                        LOGGER.info("new service TUESDAY_WORKING_HOURS with message text {}", update.getMessage().getText());
                         if (changeFormatTime(update.getMessage().getText(), id)) {
-                            ServiceCache.add(serviceDTO.setEndWorkInTuesday(update.getMessage().getText())
-                                    .setPositionRegistrationService(PositionRegistrationService.START_WORK_IN_WEDNESDAY));
-                            createMessage(id, "beginning_of_work", "wednesday", "format");
-                        }
-                        break;
-                    case START_WORK_IN_WEDNESDAY:
-                        LOGGER.info("new service START_WORK_IN_WEDNESDAY with message text {}", update.getMessage().getText());
-                        if (changeFormatTime(update.getMessage().getText(), id)) {
-                            ServiceCache.add(serviceDTO.setStartWorkInWednesday(update.getMessage().getText())
-                                    .setPositionRegistrationService(PositionRegistrationService.END_WORK_IN_WEDNESDAY));
+                            ServiceCache.add(serviceDTO.setThursdayWorkingHours(update.getMessage().getText())
+                                    .setPositionRegistrationService(PositionRegistrationService.WEDNESDAY_WORKING_HOURS));
                             createMessage(id, "end_of_work_on", "wednesday", "format");
                         }
                         break;
-                    case END_WORK_IN_WEDNESDAY:
-                        LOGGER.info("new service END_WORK_IN_WEDNESDAY with message text {}", update.getMessage().getText());
+                    case WEDNESDAY_WORKING_HOURS:
+                        LOGGER.info("new service WEDNESDAY_WORKING_HOURS with message text {}", update.getMessage().getText());
                         if (changeFormatTime(update.getMessage().getText(), id)) {
-                            ServiceCache.add(serviceDTO.setEndWorkInwWednesday(update.getMessage().getText())
-                                    .setPositionRegistrationService(PositionRegistrationService.START_WORK_IN_THURSDAY));
-                            createMessage(id, "beginning_of_work", "thursday", "format");
-                        }
-                        break;
-                    case START_WORK_IN_THURSDAY:
-                        LOGGER.info("new service START_WORK_IN_THURSDAY with message text {}", update.getMessage().getText());
-                        if (changeFormatTime(update.getMessage().getText(), id)) {
-                            ServiceCache.add(serviceDTO.setStartWorkInThursday(update.getMessage().getText())
-                                    .setPositionRegistrationService(PositionRegistrationService.END_WORK_IN_THURSDAY));
+                            ServiceCache.add(serviceDTO.setWednesdayWorkingHours(update.getMessage().getText())
+                                    .setPositionRegistrationService(PositionRegistrationService.THURSDAY_WORKING_HOURS));
                             createMessage(id, "end_of_work_on", "thursday", "format");
                         }
                         break;
-                    case END_WORK_IN_THURSDAY:
-                        LOGGER.info("new service END_WORK_IN_THURSDAY with message text {}", update.getMessage().getText());
+                    case THURSDAY_WORKING_HOURS:
+                        LOGGER.info("new service THURSDAY_WORKING_HOURS with message text {}", update.getMessage().getText());
                         if (changeFormatTime(update.getMessage().getText(), id)) {
-                            ServiceCache.add(serviceDTO.setEndWorkInThursday(update.getMessage().getText())
-                                    .setPositionRegistrationService(PositionRegistrationService.START_WORK_IN_FRIDAY));
-                            createMessage(id, "beginning_of_work", "friday", "format");
-                        }
-                        break;
-                    case START_WORK_IN_FRIDAY:
-                        LOGGER.info("new service START_WORK_IN_FRIDAY with message text {}", update.getMessage().getText());
-                        if (changeFormatTime(update.getMessage().getText(), id)) {
-                            ServiceCache.add(serviceDTO.setStartWorkInFriday(update.getMessage().getText())
-                                    .setPositionRegistrationService(PositionRegistrationService.END_WORK_IN_FRIDAY));
+                            ServiceCache.add(serviceDTO.setThursdayWorkingHours(update.getMessage().getText())
+                                    .setPositionRegistrationService(PositionRegistrationService.FRIDAY_WORKING_HOURS));
                             createMessage(id, "end_of_work_on", "friday", "format");
                         }
                         break;
-                    case END_WORK_IN_FRIDAY:
-                        LOGGER.info("new service END_WORK_IN_FRIDAY with message text {}", update.getMessage().getText());
+                    case FRIDAY_WORKING_HOURS:
+                        LOGGER.info("new service FRIDAY_WORKING_HOURS with message text {}", update.getMessage().getText());
                         if (changeFormatTime(update.getMessage().getText(), id)) {
-                            ServiceCache.add(serviceDTO.setEndWorkInFriday(update.getMessage().getText())
-                                    .setPositionRegistrationService(PositionRegistrationService.START_WORK_IN_SATURDAY));
-                            createMessage(id, "beginning_of_work", "saturday", "format");
-                        }
-                        break;
-                    case START_WORK_IN_SATURDAY:
-                        LOGGER.info("new service START_WORK_IN_SATURDAY with message text {}", update.getMessage().getText());
-                        if (changeFormatTime(update.getMessage().getText(), id)) {
-                            ServiceCache.add(serviceDTO.setStartWorkInSaturday(update.getMessage().getText())
-                                    .setPositionRegistrationService(PositionRegistrationService.END_WORK_IN_SATURDAY));
+                            ServiceCache.add(serviceDTO.setFridayWorkingHours(update.getMessage().getText())
+                                    .setPositionRegistrationService(PositionRegistrationService.SATURDAY_WORKING_HOURS));
                             createMessage(id, "end_of_work_on", "saturday", "format");
                         }
                         break;
-                    case END_WORK_IN_SATURDAY:
-                        LOGGER.info("new service END_WORK_IN_SATURDAY with message text {}", update.getMessage().getText());
+                    case SATURDAY_WORKING_HOURS:
+                        LOGGER.info("new service SATURDAY_WORKING_HOURS with message text {}", update.getMessage().getText());
                         if (changeFormatTime(update.getMessage().getText(), id)) {
-                            ServiceCache.add(serviceDTO.setEndWorkInSaturday(update.getMessage().getText())
-                                    .setPositionRegistrationService(PositionRegistrationService.START_WORK_IN_SUNDAY));
-                            createMessage(id, "beginning_of_work", "sunday", "format");
-                        }
-                        break;
-                    case START_WORK_IN_SUNDAY:
-                        LOGGER.info("new service START_WORK_IN_SUNDAY with message text {}", update.getMessage().getText());
-                        if (changeFormatTime(update.getMessage().getText(), id)) {
-                            ServiceCache.add(serviceDTO.setStartWorkInSunday(update.getMessage().getText())
-                                    .setPositionRegistrationService(PositionRegistrationService.END_WORK_IN_SUNDAY));
+                            ServiceCache.add(serviceDTO.setSaturdayWorkingHours(update.getMessage().getText())
+                                    .setPositionRegistrationService(PositionRegistrationService.SUNDAY_WORKING_HOURS));
                             createMessage(id, "end_of_work_on", "sunday", "format");
                         }
                         break;
-                    case END_WORK_IN_SUNDAY:
-                        LOGGER.info("new service END_WORK_IN_SUNDAY with message text {}", update.getMessage().getText());
+                    case SUNDAY_WORKING_HOURS:
+                        LOGGER.info("new service SUNDAY_WORKING_HOURS with message text {}", update.getMessage().getText());
                         if (changeFormatTime(update.getMessage().getText(), id)) {
-                            ServiceCache.add(serviceDTO.setEndWorkInSunday(update.getMessage().getText())
+                            ServiceCache.add(serviceDTO.setSundayWorkingHours(update.getMessage().getText())
                                     .setPositionRegistrationService(PositionRegistrationService.TIME_BETWEEN_CLIENTS));
                             createMessage(id, "time_between_clients", "format");
                         }
@@ -203,14 +144,14 @@ public class AddService implements Command {
         return isRegistration;
     }
 
-    private ServiceDTO generateServiceFromMessage(Long id) {
-        ServiceDTO dto = new ServiceDTO();
-        dto.setIdTelegram(id)
+    private ua.shpp.eqbot.dto.ServiceDTO generateServiceFromMessage(Long id) {
+        ua.shpp.eqbot.dto.ServiceDTO dto = new ua.shpp.eqbot.dto.ServiceDTO();
+        dto.setTelegramId(id)
                 .setPositionRegistrationService(PositionRegistrationService.INPUT_SERVICE_NAME);
         return dto;
     }
 
-    private ServiceDTO addingDescriptionAndAvatar(Message message, ServiceDTO serviceDTO) {
+    private ua.shpp.eqbot.dto.ServiceDTO addingDescriptionAndAvatar(Message message, ua.shpp.eqbot.dto.ServiceDTO serviceDTO) {
         LOGGER.info("i want to addingDescriptionAndAvatar ");
         if (message.hasPhoto()) {
             List<PhotoSize> photos = message.getPhoto();
@@ -237,7 +178,7 @@ public class AddService implements Command {
         }
     }
 
-    private ServiceEntity convertToEntity(ServiceDTO dto) {
+    private ServiceEntity convertToEntity(ua.shpp.eqbot.dto.ServiceDTO dto) {
         if (dto == null) return null;
         ServiceEntity entity = modelMapper.map(dto, ServiceEntity.class);
         LOGGER.info("convert dto to entity");

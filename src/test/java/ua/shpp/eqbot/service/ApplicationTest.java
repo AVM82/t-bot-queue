@@ -7,10 +7,13 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.cache.Cache;
+import org.springframework.cache.CacheManager;
 import org.springframework.test.context.junit4.SpringRunner;
 import ua.shpp.eqbot.model.ProviderEntity;
 import ua.shpp.eqbot.repository.ProviderRepository;
 
+import java.util.Collection;
 import java.util.Optional;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -22,16 +25,19 @@ public class ApplicationTest {
     @Autowired
     ProviderRepository providerRepository;
     ProviderService providerService;
+    @Autowired
+    CacheManager cacheManager;
 
     @Before
     public void setUp() {
-        providerService = new ProviderService(providerRepository);
+
+        providerService = new ProviderService(providerRepository, cacheManager);
 
         ProviderEntity entity = new ProviderEntity();
         entity.setProviderCity("Dnipro");
         entity.setTelegramId(12L);
 
-        providerService.save(entity);
+        providerService.saveEntity(entity);
     }
 
     @After
@@ -42,8 +48,10 @@ public class ApplicationTest {
     @Test
     public void contextLoads() {
 
-        Optional<ProviderEntity> dnipro = providerService.getByNameAndTelegramId(12L, "Dnipro");
-        assertThat(dnipro.isPresent(), Is.is(true));
+        ProviderEntity dnipro = providerService.getByTelegramIdEntity(12L);
+        //assertThat(dnipro.isPresent(), Is.is(true));
+        assertThat(dnipro.getProviderCity(), Boolean.parseBoolean("Dnipro"));
+
     }
 
 }

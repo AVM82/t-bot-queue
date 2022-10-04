@@ -26,144 +26,75 @@ public class ServiceEntity {
     public void setAvatar(byte[] avatar) {
         this.avatar = avatar;
     }
-    private String startWorkInSunday;
-    private String endWorkInSunday;
-    private String startWorkInMonday;
-    private String endWorkInMonday;
-    private String startWorkInTuesday;
-    private String endWorkInTuesday;
-    private String startWorkInWednesday;
-    private String endWorkInwWednesday;
-    private String startWorkInThursday;
-    private String endWorkInThursday;
-    private String startWorkInFriday;
-    private String endWorkInFriday;
-    private String startWorkInSaturday;
-    private String endWorkInSaturday;
+    private String sundayWorkingHours;
+    private String mondayWorkingHours;
+    private String tuesdayWorkingHours;
+    private String wednesdayWorkingHours;
+    private String thursdayWorkingHours;
+    private String fridayWorkingHours;
+    private String saturdayWorkingHours;
+    private String timeBetweenClients;
 
-    public String getStartWorkInSunday() {
-        return startWorkInSunday;
+    public String getSundayWorkingHours() {
+        return sundayWorkingHours;
     }
 
-    public ServiceEntity setStartWorkInSunday(String startWorkInSunday) {
-        this.startWorkInSunday = startWorkInSunday;
+    public ServiceEntity setSundayWorkingHours(String sundayWorkingHours) {
+        this.sundayWorkingHours = sundayWorkingHours;
         return this;
     }
 
-    public String getEndWorkInSunday() {
-        return endWorkInSunday;
+    public String getMondayWorkingHours() {
+        return mondayWorkingHours;
     }
 
-    public ServiceEntity setEndWorkInSunday(String endWorkInSunday) {
-        this.endWorkInSunday = endWorkInSunday;
+    public ServiceEntity setMondayWorkingHours(String mondayWorkingHours) {
+        this.mondayWorkingHours = mondayWorkingHours;
         return this;
     }
 
-    public String getStartWorkInMonday() {
-        return startWorkInMonday;
+    public String getTuesdayWorkingHours() {
+        return tuesdayWorkingHours;
     }
 
-    public ServiceEntity setStartWorkInMonday(String startWorkInMonday) {
-        this.startWorkInMonday = startWorkInMonday;
+    public ServiceEntity setTuesdayWorkingHours(String tuesdayWorkingHours) {
+        this.tuesdayWorkingHours = tuesdayWorkingHours;
         return this;
     }
 
-    public String getEndWorkInMonday() {
-        return endWorkInMonday;
+    public String getWednesdayWorkingHours() {
+        return wednesdayWorkingHours;
     }
 
-    public ServiceEntity setEndWorkInMonday(String endWorkInMonday) {
-        this.endWorkInMonday = endWorkInMonday;
+    public ServiceEntity setWednesdayWorkingHours(String wednesdayWorkingHours) {
+        this.wednesdayWorkingHours = wednesdayWorkingHours;
         return this;
     }
 
-    public String getStartWorkInTuesday() {
-        return startWorkInTuesday;
+    public String getThursdayWorkingHours() {
+        return thursdayWorkingHours;
     }
 
-    public ServiceEntity setStartWorkInTuesday(String startWorkInTuesday) {
-        this.startWorkInTuesday = startWorkInTuesday;
+    public ServiceEntity setThursdayWorkingHours(String startWorkInThursday) {
+        this.thursdayWorkingHours = startWorkInThursday;
         return this;
     }
 
-    public String getEndWorkInTuesday() {
-        return endWorkInTuesday;
+    public String getFridayWorkingHours() {
+        return fridayWorkingHours;
     }
 
-    public ServiceEntity setEndWorkInTuesday(String endWorkInTuesday) {
-        this.endWorkInTuesday = endWorkInTuesday;
+    public ServiceEntity setFridayWorkingHours(String startWorkInFriday) {
+        this.fridayWorkingHours = startWorkInFriday;
         return this;
     }
 
-    public String getStartWorkInWednesday() {
-        return startWorkInWednesday;
+    public String getSaturdayWorkingHours() {
+        return saturdayWorkingHours;
     }
 
-    public ServiceEntity setStartWorkInWednesday(String startWorkInWednesday) {
-        this.startWorkInWednesday = startWorkInWednesday;
-        return this;
-    }
-
-    public String getEndWorkInwWednesday() {
-        return endWorkInwWednesday;
-    }
-
-    public ServiceEntity setEndWorkInwWednesday(String endWorkInwWednesday) {
-        this.endWorkInwWednesday = endWorkInwWednesday;
-        return this;
-    }
-
-    public String getStartWorkInThursday() {
-        return startWorkInThursday;
-    }
-
-    public ServiceEntity setStartWorkInThursday(String startWorkInThursday) {
-        this.startWorkInThursday = startWorkInThursday;
-        return this;
-    }
-
-    public String getEndWorkInThursday() {
-        return endWorkInThursday;
-    }
-
-    public ServiceEntity setEndWorkInThursday(String endWorkInThursday) {
-        this.endWorkInThursday = endWorkInThursday;
-        return this;
-    }
-
-    public String getStartWorkInFriday() {
-        return startWorkInFriday;
-    }
-
-    public ServiceEntity setStartWorkInFriday(String startWorkInFriday) {
-        this.startWorkInFriday = startWorkInFriday;
-        return this;
-    }
-
-    public String getEndWorkInFriday() {
-        return endWorkInFriday;
-    }
-
-    public ServiceEntity setEndWorkInFriday(String endWorkInFriday) {
-        this.endWorkInFriday = endWorkInFriday;
-        return this;
-    }
-
-    public String getStartWorkInSaturday() {
-        return startWorkInSaturday;
-    }
-
-    public ServiceEntity setStartWorkInSaturday(String startWorkInSaturday) {
-        this.startWorkInSaturday = startWorkInSaturday;
-        return this;
-    }
-
-    public String getEndWorkInSaturday() {
-        return endWorkInSaturday;
-    }
-
-    public ServiceEntity setEndWorkInSaturday(String endWorkInSaturday) {
-        this.endWorkInSaturday = endWorkInSaturday;
+    public ServiceEntity setSaturdayWorkingHours(String startWorkInSaturday) {
+        this.saturdayWorkingHours = startWorkInSaturday;
         return this;
     }
 
@@ -176,10 +107,8 @@ public class ServiceEntity {
         return this;
     }
 
-    private String timeBetweenClients;
-
-    public Long getIdTelegram() {
-        return idTelegram;
+    public Long getTelegramId() {
+        return telegramId;
     }
 
     public ServiceEntity setTelegramId(Long telegramId) {
