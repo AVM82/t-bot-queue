@@ -1,4 +1,4 @@
-package ua.shpp.eqbot.utility;
+package ua.shpp.eqbot.mapper;
 
 import org.junit.Test;
 import ua.shpp.eqbot.dto.UserDto;

@@ -14,7 +14,7 @@ import ua.shpp.eqbot.model.PositionRegistration;
 import ua.shpp.eqbot.model.UserEntity;
 import ua.shpp.eqbot.service.SendBotMessageService;
 import ua.shpp.eqbot.service.UserService;
-import ua.shpp.eqbot.utility.UserMapper;
+import ua.shpp.eqbot.mapper.UserMapper;
 
 @Component
 public class RegistrationNewUser implements Command {

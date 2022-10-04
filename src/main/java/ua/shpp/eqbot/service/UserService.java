@@ -12,7 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import ua.shpp.eqbot.dto.UserDto;
 import ua.shpp.eqbot.model.UserEntity;
 import ua.shpp.eqbot.repository.UserRepository;
-import ua.shpp.eqbot.utility.UserMapper;
+import ua.shpp.eqbot.mapper.UserMapper;
 import ua.shpp.eqbot.validation.UserValidateService;
 
 @Service

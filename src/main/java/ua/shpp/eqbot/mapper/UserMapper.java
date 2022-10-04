@@ -1,4 +1,4 @@
-package ua.shpp.eqbot.utility;
+package ua.shpp.eqbot.mapper;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
