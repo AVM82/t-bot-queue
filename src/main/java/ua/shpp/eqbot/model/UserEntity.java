@@ -7,15 +7,15 @@ import java.util.Objects;
 @Entity
 @Table(name = "appuser")
 public class UserEntity {
-   /* @Id
+    @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;*/
-   @Id
+    private Long id;
     private Long telegramId;
     private String name;
     private String city;
     private String phone;
     private String language;
+    @Column (name = "created_time")
     private LocalDateTime createdTime;
 
     public UserEntity() {

@@ -29,18 +29,10 @@ public class UserService {
         this.cacheManager = cacheManager;
     }
 
-    public UserEntity getEntity(Long telergamId) {
-        LOGGER.info("get userEntity by telergamId {}", telergamId);
-        UserDto dto = getDto(telergamId);
-        //return dto != null ? convertToEntity(dto) : userRepository.findByTelegramId(telergamId);
-        if(dto != null){
-            return convertToEntity(dto);
-        }else{
-            Optional<UserEntity> optionalUser = userRepository.findById(telergamId);
-            if(optionalUser.isPresent())
-                return optionalUser.get();
-            else return null;
-        }
+    public UserEntity getEntity(Long telegramId) {
+        LOGGER.info("get userEntity by telergamId {}", telegramId);
+        UserDto dto = getDto(telegramId);
+        return dto != null ? convertToEntity(dto) : userRepository.findByTelegramId(telegramId);
     }
 
     public UserEntity saveEntity(UserEntity userEntity) {
