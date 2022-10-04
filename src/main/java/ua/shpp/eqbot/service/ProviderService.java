@@ -13,7 +13,6 @@ import ua.shpp.eqbot.dto.ProviderDto;
 import ua.shpp.eqbot.model.ProviderEntity;
 import ua.shpp.eqbot.repository.ProviderRepository;
 
-import java.util.Optional;
 
 @Service
 public class ProviderService {
@@ -77,11 +76,6 @@ public class ProviderService {
         LOGGER.info("remove entityProvider in database");
         providerRepository.delete(entity);
     }
-
-/*    public void remove(Long telegramId) {
-        Optional<ProviderEntity> providerEntity = get(telegramId);
-        providerEntity.ifPresent(providerRepository::delete);
-    }*/
 
     private ProviderEntity convertToEntity(ProviderDto dto) {
         if (dto == null) return null;

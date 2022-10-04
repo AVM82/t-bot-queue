@@ -1,9 +1,11 @@
 package ua.shpp.eqbot.command;
 
+
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
@@ -11,7 +13,6 @@ import ua.shpp.eqbot.dto.UserDto;
 import ua.shpp.eqbot.internationalization.BundleLanguage;
 import ua.shpp.eqbot.stage.PositionMenu;
 import ua.shpp.eqbot.stage.PositionRegistration;
-import ua.shpp.eqbot.dto.UserDto;
 import ua.shpp.eqbot.model.UserEntity;
 import ua.shpp.eqbot.service.SendBotMessageService;
 import ua.shpp.eqbot.service.UserService;
@@ -23,6 +24,7 @@ public class RegistrationNewUser implements Command {
     private final SendBotMessageService sendBotMessageService;
     private final UserService userService;
     private final BundleLanguage bundleLanguage;
+    private final ModelMapper modelMapper = new ModelMapper();
 
     @Autowired
     public RegistrationNewUser(SendBotMessageService sendBotMessageService, UserService userService, BundleLanguage bundleLanguage) {
@@ -134,12 +136,6 @@ public class RegistrationNewUser implements Command {
             }
         }
         return isRegistration;
-    }
-
-    private UserEntity convertToEntity(UserDto userDto) {
-        UserEntity userEntity = modelMapper.map(userDto, UserEntity.class);
-        LOGGER.info("convert dto to entity");
-        return userEntity;
     }
 
     private UserDto convertToDto(UserEntity userEntity) {

@@ -61,10 +61,10 @@ public class RegistrationNewProviderCommand implements Command {
                     providerDto.setCity(update.getMessage().getText())
                             .setPositionRegistrationProvider(PositionRegistrationProvider.DONE);
                     providerService.saveDtoInDataBase(providerDto);
-                    sendBotMessageService.sendMessage(SendMessage.builder()
+                    /*sendBotMessageService.sendMessage(SendMessage.builder()
                             .chatId(id)
                             .text(bundleLanguage.getValue(id, "provider_registered"))
-                            .build());
+                            .build());*/
                     isRegistration =true;
                     }
                     break;

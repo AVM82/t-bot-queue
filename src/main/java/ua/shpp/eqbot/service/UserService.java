@@ -1,6 +1,6 @@
 package ua.shpp.eqbot.service;
 
-import org.modelmapper.ModelMapper;
+import com.sun.xml.bind.v2.schemagen.episode.SchemaBindings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.cache.Cache;
@@ -16,14 +16,14 @@ import ua.shpp.eqbot.repository.UserRepository;
 import ua.shpp.eqbot.mapper.UserMapper;
 import ua.shpp.eqbot.validation.UserValidateService;
 
-import java.util.Optional;
-
 @Service
-public class UserService {
+public class UserService{
     private static final Logger LOGGER = LoggerFactory.getLogger(UserService.class);
     private final UserRepository userRepository;
     private final String dtoCacheName = "cacheUserDto";
     private final CacheManager cacheManager;
+    private  final UserValidateService userValidateService;
+
 
     public UserService(UserRepository userRepository, UserValidateService userValidateService, CacheManager cacheManager) {
         this.userRepository = userRepository;
@@ -34,7 +34,7 @@ public class UserService {
     public UserEntity getEntity(Long telegramId) {
         LOGGER.info("get userEntity by telergamId {}", telegramId);
         UserDto dto = getDto(telegramId);
-        return dto != null ? convertToEntity(dto) : userRepository.findByTelegramId(telegramId);
+        return dto != null ? UserMapper.INSTANCE.userDTOToUserEntity(dto) : userRepository.findByTelegramId(telegramId);
     }
 
     public UserEntity saveEntity(UserEntity userEntity) {
@@ -84,19 +84,5 @@ public class UserService {
             }
             cache.put(userEntity.getTelegramId(), userDto);
         }
-    }
-
-    private UserEntity convertToEntity(UserDto userDto) {
-        if (userDto == null) return null;
-        UserEntity userEntity = modelMapper.map(userDto, UserEntity.class);
-        LOGGER.info("convert dto to entity");
-        return userEntity;
-    }
-
-    private UserDto convertToDto(UserEntity userEntity) {
-        if (userEntity == null) return null;
-        UserDto postDto = modelMapper.map(userEntity, UserDto.class);
-        LOGGER.info("convert entity to dto");
-        return postDto;
     }
 }
