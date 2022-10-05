@@ -10,12 +10,14 @@ import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.PhotoSize;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import ua.shpp.eqbot.cache.ServiceCache;
+import ua.shpp.eqbot.dto.ServiceDTO;
 import ua.shpp.eqbot.internationalization.BundleLanguage;
 import ua.shpp.eqbot.model.ServiceEntity;
 import ua.shpp.eqbot.repository.ServiceRepository;
 import ua.shpp.eqbot.service.ImageService;
 import ua.shpp.eqbot.service.SendBotMessageService;
 import ua.shpp.eqbot.stage.PositionRegistrationService;
+
 import java.util.List;
 
 @Component
@@ -30,7 +32,7 @@ public class AddService implements Command {
 
     @Autowired
     public AddService(SendBotMessageService sendBotMessageService, ServiceRepository serviceRepository,
-                      ImageService imageService,BundleLanguage bundleLanguage) {
+                      ImageService imageService, BundleLanguage bundleLanguage) {
         this.sendBotMessageService = sendBotMessageService;
         this.serviceRepository = serviceRepository;
         this.imageService = imageService;
@@ -39,7 +41,7 @@ public class AddService implements Command {
 
     @Override
     public boolean execute(Update update) {
-        boolean isRegistration =false;
+        boolean isRegistration = false;
         Long id;
         if (update.hasCallbackQuery())
             id = update.getCallbackQuery().getFrom().getId();
@@ -47,7 +49,7 @@ public class AddService implements Command {
             id = update.getMessage().getChatId();
         else
             return false;
-        ua.shpp.eqbot.dto.ServiceDTO serviceDTO = ServiceCache.findBy(id);
+        ServiceDTO serviceDTO = ServiceCache.findBy(id);
         LOGGER.info("i try register new service");
         if (serviceDTO == null) {
             ServiceCache.add(generateServiceFromMessage(id));
@@ -59,15 +61,15 @@ public class AddService implements Command {
                 switch (serviceDTO.getPositionRegistrationService()) {
                     case INPUT_SERVICE_NAME:
                         LOGGER.info("new service INPUT_USERNAME with message text {}", update.getMessage().getText());
-                            ServiceCache.add(serviceDTO.setName(update.getMessage().getText())
-                                    .setPositionRegistrationService(PositionRegistrationService.INPUT_PICTURE));
-                            createMessage(id, "add_desc_and_avatar");
+                        ServiceCache.add(serviceDTO.setName(update.getMessage().getText())
+                                .setPositionRegistrationService(PositionRegistrationService.INPUT_PICTURE));
+                        createMessage(id, "add_desc_and_avatar");
                         break;
                     case INPUT_PICTURE:
                         LOGGER.info("new service INPUT_CITY with message text {}", update.getMessage().getText());
-                            ServiceCache.add(addingDescriptionAndAvatar(update.getMessage(), serviceDTO)
-                                    .setPositionRegistrationService(PositionRegistrationService.MONDAY_WORKING_HOURS));
-                            createMessage(id, "beginning_of_work", "monday", "format");
+                        ServiceCache.add(addingDescriptionAndAvatar(update.getMessage(), serviceDTO)
+                                .setPositionRegistrationService(PositionRegistrationService.MONDAY_WORKING_HOURS));
+                        createMessage(id, "beginning_of_work", "monday", "format");
                         break;
                     case MONDAY_WORKING_HOURS:
                         LOGGER.info("new service MONDAY_WORKING_HOURS with message text {}", update.getMessage().getText());
@@ -144,14 +146,20 @@ public class AddService implements Command {
         return isRegistration;
     }
 
-    private ua.shpp.eqbot.dto.ServiceDTO generateServiceFromMessage(Long id) {
+    /**
+     * receiving the telegramId of the user from the message and setting the initial registration status
+     *
+     * @param id - telegramId user
+     * @return - ServiceDto
+     */
+    private ServiceDTO generateServiceFromMessage(Long id) {
         ua.shpp.eqbot.dto.ServiceDTO dto = new ua.shpp.eqbot.dto.ServiceDTO();
         dto.setTelegramId(id)
                 .setPositionRegistrationService(PositionRegistrationService.INPUT_SERVICE_NAME);
         return dto;
     }
 
-    private ua.shpp.eqbot.dto.ServiceDTO addingDescriptionAndAvatar(Message message, ua.shpp.eqbot.dto.ServiceDTO serviceDTO) {
+    private ServiceDTO addingDescriptionAndAvatar(Message message, ua.shpp.eqbot.dto.ServiceDTO serviceDTO) {
         LOGGER.info("i want to addingDescriptionAndAvatar ");
         if (message.hasPhoto()) {
             List<PhotoSize> photos = message.getPhoto();
@@ -169,19 +177,20 @@ public class AddService implements Command {
         return serviceDTO;
     }
 
-    private boolean changeFormatTime(String time, Long id){
+    private boolean changeFormatTime(String time, Long id) {
         if (time.matches("([0-9]|0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]-([0-9]|0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]"))
             return true;
         else {
-            createMessage(id,"unformatted");
+            createMessage(id, "unformatted");
             return false;
         }
     }
-    private boolean changeFormatTimeBetweenClients(String time, Long id){
+
+    private boolean changeFormatTimeBetweenClients(String time, Long id) {
         if (time.matches("([0-9]|0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]"))
             return true;
         else {
-            createMessage(id,"unformatted");
+            createMessage(id, "unformatted");
             return false;
         }
     }
@@ -202,7 +211,7 @@ public class AddService implements Command {
 
     private void createMessage(Long id, String text1, String text2) {
         sendBotMessageService.sendMessage(SendMessage.builder()
-                .text(bundleLanguage.getValue(id, text1)+ " "+
+                .text(bundleLanguage.getValue(id, text1) + " " +
                         bundleLanguage.getValue(id, text2))
                 .chatId(id)
                 .build());
@@ -210,8 +219,8 @@ public class AddService implements Command {
 
     private void createMessage(Long id, String text1, String text2, String text3) {
         sendBotMessageService.sendMessage(SendMessage.builder()
-                .text(bundleLanguage.getValue(id, text1)+ " "+
-                        bundleLanguage.getValue(id, text2)+ " "+
+                .text(bundleLanguage.getValue(id, text1) + " " +
+                        bundleLanguage.getValue(id, text2) + " " +
                         bundleLanguage.getValue(id, text3))
                 .chatId(id)
                 .build());

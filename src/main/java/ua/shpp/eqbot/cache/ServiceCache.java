@@ -5,6 +5,7 @@ import ua.shpp.eqbot.dto.ServiceDTO;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 @Component
 public class ServiceCache {
@@ -24,8 +25,9 @@ public class ServiceCache {
         services.remove(serviceDTO.getTelegramId());
     }
     public static void remove(Long id){
-        if(findBy(id) != null)
-            remove(findBy(id));
+        ServiceDTO serviceDTO = findBy(id);
+        if(Objects.nonNull(serviceDTO))
+            remove(serviceDTO);
     }
 
     public static ServiceDTO findBy(Long id) {
