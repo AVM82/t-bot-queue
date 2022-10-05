@@ -11,6 +11,9 @@ public enum CommandName {
     CHANGE_ROLE_TO_PROVIDER("Change role to Provider"),
     DELETE_USER("/delete"),
     MAIN_MENU("mainMenu"),
+    ADD_PROVIDER("/add provider"),
+    CHECK_PROVIDER("/check provider"),
+    CHECK_SERVICE("/check service"),
     NO("nocommand");
 
 

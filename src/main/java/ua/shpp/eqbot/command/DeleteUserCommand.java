@@ -4,32 +4,33 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
+import ua.shpp.eqbot.cache.ServiceCache;
+import ua.shpp.eqbot.dto.ProviderDto;
 import ua.shpp.eqbot.internationalization.BundleLanguage;
 import ua.shpp.eqbot.model.ProviderEntity;
 import ua.shpp.eqbot.model.ServiceEntity;
-import ua.shpp.eqbot.repository.ProviderRepository;
 import ua.shpp.eqbot.repository.ServiceRepository;
-import ua.shpp.eqbot.repository.UserRepository;
+import ua.shpp.eqbot.service.ProviderService;
 import ua.shpp.eqbot.service.SendBotMessageService;
 import ua.shpp.eqbot.service.UserService;
 
 import java.util.List;
-
 
 public class DeleteUserCommand implements Command {
     private static final Logger LOGGER = LoggerFactory.getLogger(DeleteUserCommand.class);
     private final SendBotMessageService sendBotMessageService;
     private final UserService userService;
     private final BundleLanguage bundleLanguage;
-    private final ProviderRepository providerRepository;
+    private final ProviderService providerService;
     private final ServiceRepository serviceRepository;
 
-    public DeleteUserCommand(SendBotMessageService sendBotMessageService, UserRepository userRepository,
-                             UserService userService, BundleLanguage bundleLanguage, ProviderRepository providerRepository, ServiceRepository serviceRepository) {
+    public DeleteUserCommand(SendBotMessageService sendBotMessageService, UserService userService,
+                             BundleLanguage bundleLanguage, ProviderService providerService,
+                             ServiceRepository serviceRepository) {
         this.sendBotMessageService = sendBotMessageService;
         this.userService = userService;
         this.bundleLanguage = bundleLanguage;
-        this.providerRepository = providerRepository;
+        this.providerService = providerService;
         this.serviceRepository = serviceRepository;
     }
 
@@ -37,14 +38,22 @@ public class DeleteUserCommand implements Command {
     public boolean execute(Update update) {
         List<ServiceEntity> serviceEntityList = serviceRepository.findAllByTelegramId(update.getMessage().getChatId());
         if (!serviceEntityList.isEmpty()) {
-            LOGGER.info("deleted service");
+            LOGGER.info("deleted service in database");
             serviceRepository.deleteAllInBatch(serviceEntityList);
         }
+        //delete service in cache
+        ServiceCache.remove(update.getMessage().getChatId());
 
-        List<ProviderEntity> providerEntityList = providerRepository.findAllByTelegramId(update.getMessage().getChatId());
-        if (!providerEntityList.isEmpty()) {
-            LOGGER.info("deleted provider");
-            providerRepository.deleteAllInBatch(providerEntityList);
+        ProviderEntity providerEntity = providerService.getByTelegramIdEntity(update.getMessage().getChatId());
+        if (providerEntity != null) {
+            LOGGER.info("deleted provider in database");
+            providerService.removeInDataBase(providerEntity);
+        }
+
+        ProviderDto providerDto = providerService.getProviderDto(update.getMessage().getChatId());
+        if(providerDto != null){
+            LOGGER.info("deleted provider in cache");
+            providerService.remove(update.getMessage().getChatId());
         }
 
         userService.remove(update.getMessage().getChatId());

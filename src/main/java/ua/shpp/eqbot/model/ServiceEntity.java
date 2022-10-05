@@ -4,7 +4,6 @@ import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
 import java.util.Arrays;
-import java.util.Objects;
 
 @Entity
 @Table(name = "services")
@@ -27,8 +26,85 @@ public class ServiceEntity {
     public void setAvatar(byte[] avatar) {
         this.avatar = avatar;
     }
+    private String sundayWorkingHours;
+    private String mondayWorkingHours;
+    private String tuesdayWorkingHours;
+    private String wednesdayWorkingHours;
+    private String thursdayWorkingHours;
+    private String fridayWorkingHours;
+    private String saturdayWorkingHours;
+    private String timeBetweenClients;
 
-    public ServiceEntity() {
+    public String getSundayWorkingHours() {
+        return sundayWorkingHours;
+    }
+
+    public ServiceEntity setSundayWorkingHours(String sundayWorkingHours) {
+        this.sundayWorkingHours = sundayWorkingHours;
+        return this;
+    }
+
+    public String getMondayWorkingHours() {
+        return mondayWorkingHours;
+    }
+
+    public ServiceEntity setMondayWorkingHours(String mondayWorkingHours) {
+        this.mondayWorkingHours = mondayWorkingHours;
+        return this;
+    }
+
+    public String getTuesdayWorkingHours() {
+        return tuesdayWorkingHours;
+    }
+
+    public ServiceEntity setTuesdayWorkingHours(String tuesdayWorkingHours) {
+        this.tuesdayWorkingHours = tuesdayWorkingHours;
+        return this;
+    }
+
+    public String getWednesdayWorkingHours() {
+        return wednesdayWorkingHours;
+    }
+
+    public ServiceEntity setWednesdayWorkingHours(String wednesdayWorkingHours) {
+        this.wednesdayWorkingHours = wednesdayWorkingHours;
+        return this;
+    }
+
+    public String getThursdayWorkingHours() {
+        return thursdayWorkingHours;
+    }
+
+    public ServiceEntity setThursdayWorkingHours(String startWorkInThursday) {
+        this.thursdayWorkingHours = startWorkInThursday;
+        return this;
+    }
+
+    public String getFridayWorkingHours() {
+        return fridayWorkingHours;
+    }
+
+    public ServiceEntity setFridayWorkingHours(String startWorkInFriday) {
+        this.fridayWorkingHours = startWorkInFriday;
+        return this;
+    }
+
+    public String getSaturdayWorkingHours() {
+        return saturdayWorkingHours;
+    }
+
+    public ServiceEntity setSaturdayWorkingHours(String startWorkInSaturday) {
+        this.saturdayWorkingHours = startWorkInSaturday;
+        return this;
+    }
+
+    public String getTimeBetweenClients() {
+        return timeBetweenClients;
+    }
+
+    public ServiceEntity setTimeBetweenClients(String timeBetweenClients) {
+        this.timeBetweenClients = timeBetweenClients;
+        return this;
     }
 
     public Long getTelegramId() {

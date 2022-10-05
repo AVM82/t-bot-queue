@@ -1,4 +1,4 @@
-package ua.shpp.eqbot.model;
+package ua.shpp.eqbot.stage;
 
 public enum PositionRegistration {
     INPUT_USERNAME,

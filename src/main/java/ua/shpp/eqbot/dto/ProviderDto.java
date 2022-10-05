@@ -1,5 +1,6 @@
 package ua.shpp.eqbot.dto;
 
+import ua.shpp.eqbot.stage.PositionRegistrationProvider;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
@@ -7,11 +8,12 @@ import java.util.Objects;
 
 public class ProviderDto implements Serializable {
     @NotNull(message = "{valid.provider.id.notnull.message}")
-    private final Long telegramId;
+    private Long telegramId;
     @Size(min = 3, max = 30, message = "{valid.provider.name.size.message}")
-    private final String name;
+    private String name;
     @Size(min = 3, max = 20, message = "{valid.provider.city.size.message}")
-    private final String city;
+    private String city;
+    private PositionRegistrationProvider positionRegistrationProvider;
 
     public ProviderDto(Long telegramId, String name, String city) {
         this.telegramId = telegramId;
@@ -19,16 +21,44 @@ public class ProviderDto implements Serializable {
         this.city = city;
     }
 
+    public ProviderDto(){
+
+    }
+
     public Long getTelegramId() {
         return telegramId;
+    }
+
+    public ProviderDto setTelegramId(Long telegramId) {
+        this.telegramId = telegramId;
+        return this;
     }
 
     public String getName() {
         return name;
     }
 
+    public ProviderDto setName(String name) {
+        this.name = name;
+        return this;
+    }
+
     public String getCity() {
         return city;
+    }
+
+    public ProviderDto setCity(String city) {
+        this.city = city;
+        return this;
+    }
+
+    public PositionRegistrationProvider getPositionRegistrationProvider() {
+        return positionRegistrationProvider;
+    }
+
+    public ProviderDto setPositionRegistrationProvider(PositionRegistrationProvider positionRegistrationProvider) {
+        this.positionRegistrationProvider = positionRegistrationProvider;
+        return this;
     }
 
     @Override

@@ -8,6 +8,7 @@ import ua.shpp.eqbot.repository.ProviderRepository;
 import ua.shpp.eqbot.repository.ServiceRepository;
 import ua.shpp.eqbot.repository.UserRepository;
 import ua.shpp.eqbot.service.ImageService;
+import ua.shpp.eqbot.service.ProviderService;
 import ua.shpp.eqbot.service.SendBotMessageService;
 import ua.shpp.eqbot.service.UserService;
 
@@ -23,20 +24,28 @@ public class CommandContainer {
     @Autowired
     public CommandContainer(SendBotMessageService sendBotMessageService, UserRepository userRepository,
                             ServiceRepository serviceRepository, ProviderRepository providerRepository,
-                            ImageService imageService, BundleLanguage bundleLanguage, UserService userService) {
+                            ImageService imageService, BundleLanguage bundleLanguage, UserService userService,
+                            ProviderService providerService) {
         commandMap = ImmutableMap.<String, Command>builder()
                 .put(CommandName.REG.getNameCommand(), new RegistrationNewUser(sendBotMessageService, userService, bundleLanguage))
                 .put(CommandName.START.getNameCommand(), new StartCommand(sendBotMessageService, bundleLanguage))
                 .put(CommandName.HELP.getNameCommand(), new HelpCommand(sendBotMessageService))
                 .put(CommandName.NO.getNameCommand(), new NoCommand(sendBotMessageService))
                 .put(CommandName.SETTINGS.getNameCommand(), new SettingsCommand(sendBotMessageService))
-                .put(CommandName.CHANGE_ROLE_TO_PROVIDER.getNameCommand(), new ChangeRoleToProviderCommand(sendBotMessageService, providerRepository))
-                .put(CommandName.ADD_SERVICE.getNameCommand(), new AddService(sendBotMessageService, serviceRepository, imageService, providerRepository, userService, bundleLanguage))
-                .put(CommandName.SEARCH_SERVICE.getNameCommand(), new SearchService(sendBotMessageService, serviceRepository, providerRepository, userService, bundleLanguage))
-                .put(CommandName.DELETE_USER.getNameCommand(), new DeleteUserCommand(sendBotMessageService, userRepository, userService, bundleLanguage, providerRepository, serviceRepository))
-                .put(CommandName.MAIN_MENU.getNameCommand(), new MainMenu(sendBotMessageService))
+                .put(CommandName.CHANGE_ROLE_TO_PROVIDER.getNameCommand(),
+                        new ChangeRoleToProviderCommand(sendBotMessageService, providerRepository))
+                .put(CommandName.ADD_SERVICE.getNameCommand(),
+                        new AddService(sendBotMessageService, serviceRepository, imageService, bundleLanguage))
+                .put(CommandName.DELETE_USER.getNameCommand(), new DeleteUserCommand(sendBotMessageService,
+                        userService, bundleLanguage, providerService, serviceRepository))
+                .put(CommandName.MAIN_MENU.getNameCommand(), new MainMenu(sendBotMessageService, bundleLanguage))
+                .put(CommandName.CHECK_PROVIDER.getNameCommand(),
+                        new CheckProviderRegistrationCommand(sendBotMessageService, providerService, bundleLanguage))
+                .put(CommandName.ADD_PROVIDER.getNameCommand(),
+                        new RegistrationNewProviderCommand(sendBotMessageService, providerService, bundleLanguage))
+                .put(CommandName.CHECK_SERVICE.getNameCommand(),
+                        new CheckServiceRegistrationCommand(sendBotMessageService, bundleLanguage, serviceRepository, imageService))
                 .build();
-
         unknownCommand = new UnknownCommand(sendBotMessageService, bundleLanguage);
     }
 

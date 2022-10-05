@@ -1,13 +1,11 @@
 package ua.shpp.eqbot.dto;
 
-
-import ua.shpp.eqbot.model.PositionMenu;
-import ua.shpp.eqbot.model.PositionRegistration;
+import ua.shpp.eqbot.stage.PositionMenu;
+import ua.shpp.eqbot.stage.PositionRegistration;
 
 public class UserDto {
 
     private Long telegramId;
-
     private String name;
     private String city;
     private String phone;

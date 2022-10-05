@@ -15,24 +15,22 @@ import java.util.List;
 public class MainMenu implements Command {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MainMenu.class);
-
     private final SendBotMessageService sendBotMessageService;
     List<BotCommand> listOfCommand = new ArrayList<>();
+    private final BundleLanguage bundleLanguage;
 
-    public MainMenu(SendBotMessageService sendBotMessageService) {
+    public MainMenu(SendBotMessageService sendBotMessageService, BundleLanguage bundleLanguage) {
         this.sendBotMessageService = sendBotMessageService;
+        this.bundleLanguage = bundleLanguage;
     }
 
     @Override
     public boolean execute(Update update) {
-//        Long id = update.getMessage().getChatId();
-        listOfCommand.add(new BotCommand("/start", "Старт")); //bundleLanguage.getValue(id, "menu_start")
-        listOfCommand.add(new BotCommand("/help", "Допомога"));
-        listOfCommand.add(new BotCommand("/reg", "Реєстрація"));
-        listOfCommand.add(new BotCommand("/stop", "Стоп"));
-        listOfCommand.add(new BotCommand("/settings", "Налаштування"));
-        listOfCommand.add(new BotCommand("/add", "Додати"));
-        listOfCommand.add(new BotCommand("/delete", "Видалити"));
+        Long id = update.getMessage().getChatId();
+        listOfCommand.add(new BotCommand("/start", bundleLanguage.getValue(id, "start")));
+        listOfCommand.add(new BotCommand("/help", bundleLanguage.getValue(id, "help")));
+        listOfCommand.add(new BotCommand("/settings", bundleLanguage.getValue(id, "settings")));
+        listOfCommand.add(new BotCommand("/delete", bundleLanguage.getValue(id, "delete")));
         sendBotMessageService.sendMenu(new SetMyCommands(listOfCommand, new BotCommandScopeDefault(), null));
         LOGGER.info("Created main menu successful.");
         return true;
