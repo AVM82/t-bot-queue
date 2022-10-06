@@ -7,15 +7,9 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.cache.Cache;
-import org.springframework.cache.CacheManager;
 import org.springframework.test.context.junit4.SpringRunner;
 import ua.shpp.eqbot.model.ProviderEntity;
 import ua.shpp.eqbot.repository.ProviderRepository;
-
-import java.util.Collection;
-import java.util.Optional;
-
 import static org.hamcrest.MatcherAssert.assertThat;
 
 @RunWith(SpringRunner.class)
@@ -25,13 +19,11 @@ public class ApplicationTest {
     @Autowired
     ProviderRepository providerRepository;
     ProviderService providerService;
-    @Autowired
-    CacheManager cacheManager;
 
     @Before
     public void setUp() {
 
-        providerService = new ProviderService(providerRepository, cacheManager);
+        providerService = new ProviderService(providerRepository);
 
         ProviderEntity entity = new ProviderEntity();
         entity.setProviderCity("Dnipro");

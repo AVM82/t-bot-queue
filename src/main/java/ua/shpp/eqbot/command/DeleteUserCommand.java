@@ -51,7 +51,7 @@ public class DeleteUserCommand implements Command {
         }
 
         ProviderDto providerDto = providerService.getProviderDto(update.getMessage().getChatId());
-        if(providerDto != null){
+        if (providerDto != null) {
             LOGGER.info("deleted provider in cache");
             providerService.remove(update.getMessage().getChatId());
         }

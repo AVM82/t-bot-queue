@@ -1,6 +1,5 @@
 package ua.shpp.eqbot.service;
 
-import com.sun.xml.bind.v2.schemagen.episode.SchemaBindings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.cache.Cache;
@@ -16,13 +15,15 @@ import ua.shpp.eqbot.repository.UserRepository;
 import ua.shpp.eqbot.mapper.UserMapper;
 import ua.shpp.eqbot.validation.UserValidateService;
 
+import java.util.Objects;
+
 @Service
-public class UserService{
+public class UserService {
     private static final Logger LOGGER = LoggerFactory.getLogger(UserService.class);
     private final UserRepository userRepository;
-    private final String dtoCacheName = "cacheUserDto";
+    private static final String DTO_CACHE_NAME = "cacheUserDto";
     private final CacheManager cacheManager;
-    private  final UserValidateService userValidateService;
+    private final UserValidateService userValidateService;
 
 
     public UserService(UserRepository userRepository, UserValidateService userValidateService, CacheManager cacheManager) {
@@ -32,7 +33,7 @@ public class UserService{
     }
 
     public UserEntity getEntity(Long telegramId) {
-        LOGGER.info("get userEntity by telergamId {}", telegramId);
+        LOGGER.info("get userEntity by telegramId {}", telegramId);
         UserDto dto = getDto(telegramId);
         return dto != null ? UserMapper.INSTANCE.userDTOToUserEntity(dto) : userRepository.findByTelegramId(telegramId);
     }
@@ -43,20 +44,20 @@ public class UserService{
         return userRepository.save(userEntity);
     }
 
-    @CachePut(cacheNames = dtoCacheName, key = "#userDto.telegramId")
+    @CachePut(cacheNames = DTO_CACHE_NAME, key = "#userDto.telegramId")
     public UserDto saveDto(UserDto userDto) {
         LOGGER.info("save userDto {}", userDto);
         return userDto;//****
     }
 
-    @Cacheable(cacheNames = dtoCacheName, key = "#id")
+    @Cacheable(cacheNames = DTO_CACHE_NAME, key = "#id")
     public UserDto getDto(Long id) {
         LOGGER.info("get userDto by id {}", id);
         return null;
     }
 
     @Transactional
-    @CacheEvict(cacheNames = dtoCacheName, key = "#id")
+    @CacheEvict(cacheNames = DTO_CACHE_NAME, key = "#id")
     public boolean remove(Long id) {
         LOGGER.info("delete userDto and All entity");
         UserEntity entity = getEntity(id);
@@ -69,14 +70,14 @@ public class UserService{
      * its need modification
      */
     private void saveDto(UserEntity userEntity) {
-        Cache cache = cacheManager.getCache(dtoCacheName);
+        Cache cache = cacheManager.getCache(DTO_CACHE_NAME);
         if (cache != null) { // first attempt ?
             Cache.ValueWrapper valueWrapper = cache.get(userEntity.getTelegramId());
             UserDto userDto;
             if (valueWrapper == null) {
                 userDto = UserMapper.INSTANCE.userEntityToUserDTO(userEntity);
             } else {
-                userDto = ((UserDto) valueWrapper.get())
+                userDto = ((UserDto) Objects.requireNonNull(valueWrapper.get()))
                         .setName(userEntity.getName())
                         .setLanguage(userEntity.getLanguage())
                         .setCity(userEntity.getCity())

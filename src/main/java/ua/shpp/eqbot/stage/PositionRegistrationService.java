@@ -12,4 +12,4 @@ public enum PositionRegistrationService {
     SATURDAY_WORKING_HOURS,
     TIME_BETWEEN_CLIENTS,
     DONE
-    }
+}

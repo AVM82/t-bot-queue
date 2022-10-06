@@ -12,7 +12,7 @@ import ua.shpp.eqbot.service.SendBotMessageService;
 
 import java.util.List;
 
-public class CheckServiceRegistrationCommand implements Command{
+public class CheckServiceRegistrationCommand implements Command {
     private static final Logger LOGGER = LoggerFactory.getLogger(CheckServiceRegistrationCommand.class);
     private final SendBotMessageService sendBotMessageService;
     private final BundleLanguage bundleLanguage;

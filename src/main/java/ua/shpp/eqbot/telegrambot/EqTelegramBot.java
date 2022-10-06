@@ -29,9 +29,7 @@ public class EqTelegramBot extends TelegramLongPollingBot {
     private static final Logger LOGGER = LoggerFactory.getLogger(EqTelegramBot.class);
     private final CommandContainer commandContainer;
     private final UserService userService;
-    private final BundleLanguage bundleLanguage;
     ProviderRepository providerRepository;
-    private final ProviderService providerService;
 
 
     @Autowired
@@ -41,8 +39,6 @@ public class EqTelegramBot extends TelegramLongPollingBot {
                          ProviderService providerService) {
         this.providerRepository = providerRepository;
         this.userService = userService;
-        this.bundleLanguage = bundleLanguage;
-        this.providerService = providerService;
         this.commandContainer = new CommandContainer(
                 new SendBotMessageServiceImpl(this),
                 userRepository,
@@ -153,7 +149,7 @@ public class EqTelegramBot extends TelegramLongPollingBot {
             commandContainer.retrieveCommand("/start").execute(update);
         } else if (callbackQuery.getData().equals("change_provider_details")) {
             LOGGER.info("change provider details");
-        }else if (callbackQuery.getData().equals("newServiceFromAnExistingProvider")) {
+        } else if (callbackQuery.getData().equals("newServiceFromAnExistingProvider")) {
             LOGGER.info("add new service");
             userService.getDto(update.getCallbackQuery().getFrom().getId())
                     .setPositionMenu(PositionMenu.REGISTRATION_SERVICE);

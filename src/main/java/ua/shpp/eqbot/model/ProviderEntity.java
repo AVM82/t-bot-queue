@@ -1,6 +1,7 @@
 package ua.shpp.eqbot.model;
 
 import javax.persistence.*;
+import java.util.Objects;
 
 @Entity
 @Table(name = "provider_entity")
@@ -11,7 +12,6 @@ public class ProviderEntity {
     private Long telegramId;
     private String name;
     private String providerCity;
-
 
     public Long getId() {
         return id;
@@ -56,7 +56,7 @@ public class ProviderEntity {
 
         ProviderEntity that = (ProviderEntity) o;
 
-        return id != null ? id.equals(that.id) : that.id == null;
+        return Objects.equals(id, that.id);
     }
 
     @Override

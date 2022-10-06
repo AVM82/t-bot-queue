@@ -1,6 +1,7 @@
 package ua.shpp.eqbot.dto;
 
 import ua.shpp.eqbot.stage.PositionRegistrationService;
+
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 

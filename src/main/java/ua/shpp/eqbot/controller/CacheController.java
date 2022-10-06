@@ -14,6 +14,7 @@ import ua.shpp.eqbot.dto.ServiceDTO;
 
 import java.util.Collection;
 import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.ConcurrentMap;
 
 @RestController
@@ -34,20 +35,20 @@ public class CacheController {
 
     @GetMapping("/{cacheName}")
     public String getEntriesForCache(@PathVariable(name = "cacheName") String cacheName) {
-        ConcurrentMap<String, Object> cache = (ConcurrentMap<String, Object>) cacheManager.getCache(cacheName).getNativeCache();
+        ConcurrentMap<String, Object> cache = (ConcurrentMap<String, Object>) Objects.requireNonNull(cacheManager.getCache(cacheName)).getNativeCache();
         ObjectMapper objectMapper = new ObjectMapper();
-        String json;
+        String json = null;
         try {
             json = objectMapper.writeValueAsString(cache);
         } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
+            LOGGER.warn(e.getLocalizedMessage());
         }
         LOGGER.info("return cache");
         return json;
     }
 
-
     @GetMapping("/services")
-        public Map<Long, ServiceDTO> getAllservices(){
-            return ServiceCache.getAll();}
+    public Map<Long, ServiceDTO> getAllServices() {
+        return ServiceCache.getAll();
+    }
 }

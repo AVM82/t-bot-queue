@@ -1,6 +1,7 @@
 package ua.shpp.eqbot.dto;
 
 import ua.shpp.eqbot.stage.PositionRegistrationProvider;
+
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
@@ -21,7 +22,7 @@ public class ProviderDto implements Serializable {
         this.city = city;
     }
 
-    public ProviderDto(){
+    public ProviderDto() {
 
     }
 

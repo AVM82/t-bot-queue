@@ -25,9 +25,9 @@ public class RegistrationNewProviderCommand implements Command {
     @Override
     public boolean execute(Update update) {
         Long id;
-        if(update.hasCallbackQuery())
+        if (update.hasCallbackQuery())
             id = update.getCallbackQuery().getFrom().getId();
-        else if(update.hasMessage())
+        else if (update.hasMessage())
             id = update.getMessage().getChatId();
         else
             return false;
@@ -46,26 +46,26 @@ public class RegistrationNewProviderCommand implements Command {
                 case INPUT_COMPANY_NAME:
                     LOGGER.info("new provider phase INPUT_USERNAME with message text {}", update.getMessage().getText());
                     if (update.getMessage() != null && !update.getMessage().isCommand()) {
-                    providerDto.setName(update.getMessage().getText())
-                            .setPositionRegistrationProvider(PositionRegistrationProvider.INPUT_CITY);
-                    providerService.saveProviderDto(providerDto);
-                    sendBotMessageService.sendMessage(SendMessage.builder()
-                            .chatId(id)
-                            .text(bundleLanguage.getValue(id, "input_city"))
-                            .build());
+                        providerDto.setName(update.getMessage().getText())
+                                .setPositionRegistrationProvider(PositionRegistrationProvider.INPUT_CITY);
+                        providerService.saveProviderDto(providerDto);
+                        sendBotMessageService.sendMessage(SendMessage.builder()
+                                .chatId(id)
+                                .text(bundleLanguage.getValue(id, "input_city"))
+                                .build());
                     }
                     break;
                 case INPUT_CITY:
                     LOGGER.info("new provider phase INPUT_CITY with message text {}", update.getMessage().getText());
                     if (update.getMessage() != null && !update.getMessage().isCommand()) {
-                    providerDto.setCity(update.getMessage().getText())
-                            .setPositionRegistrationProvider(PositionRegistrationProvider.DONE);
-                    providerService.saveDtoInDataBase(providerDto);
+                        providerDto.setCity(update.getMessage().getText())
+                                .setPositionRegistrationProvider(PositionRegistrationProvider.DONE);
+                        providerService.saveDtoInDataBase(providerDto);
                     /*sendBotMessageService.sendMessage(SendMessage.builder()
                             .chatId(id)
                             .text(bundleLanguage.getValue(id, "provider_registered"))
                             .build());*/
-                    isRegistration =true;
+                        isRegistration = true;
                     }
                     break;
                 default:
