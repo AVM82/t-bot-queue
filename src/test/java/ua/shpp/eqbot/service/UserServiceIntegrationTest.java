@@ -7,7 +7,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.cache.CacheManager;
 import org.telegram.telegrambots.starter.TelegramBotInitializer;
-import ua.shpp.eqbot.command.AddService;
+import ua.shpp.eqbot.command.RegistrationServiceCommand;
 import ua.shpp.eqbot.command.CommandContainer;
 import ua.shpp.eqbot.dto.UserDto;
 import ua.shpp.eqbot.model.UserEntity;
@@ -26,7 +26,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @SpringBootTest
 class UserServiceIntegrationTest {
     @MockBean
-    AddService addService;
+    RegistrationServiceCommand registrationServiceCommand;
     @MockBean
     CommandContainer commandContainer;
     @MockBean

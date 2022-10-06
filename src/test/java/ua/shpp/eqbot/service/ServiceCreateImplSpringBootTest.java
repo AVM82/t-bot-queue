@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.telegram.telegrambots.starter.TelegramBotInitializer;
-import ua.shpp.eqbot.command.AddService;
+import ua.shpp.eqbot.command.RegistrationServiceCommand;
 import ua.shpp.eqbot.dto.ServiceDTO;
 import ua.shpp.eqbot.internationalization.BundleLanguage;
 import ua.shpp.eqbot.repository.ProviderRepository;
@@ -36,11 +36,11 @@ public class ServiceCreateImplSpringBootTest {
     @Autowired
     private ServiceRepository serviceRepository;
 
-    private AddService addService;
+    private RegistrationServiceCommand registrationServiceCommand;
 
     @BeforeEach
     void init() {
-        addService = new AddService(sendBotMessageService, serviceRepository, imageService, providerRepository, userService, bundleLanguage);
+        registrationServiceCommand = new RegistrationServiceCommand(sendBotMessageService, serviceRepository, imageService, providerRepository, userService, bundleLanguage);
         serviceRepository.deleteAll();
     }
 
@@ -54,9 +54,9 @@ public class ServiceCreateImplSpringBootTest {
         ServiceDTO serviceDTOTwo = new ServiceDTO(1L, second_service, "Two info");
         ServiceDTO serviceDTOThree = new ServiceDTO(1L, third_service, "Third info");
 
-        final var serviceEntity1 = addService.addService(serviceDTOOne);
-        final var serviceEntity2 = addService.addService(serviceDTOTwo);
-        final var serviceEntity3 = addService.addService(serviceDTOThree);
+        final var serviceEntity1 = registrationServiceCommand.addService(serviceDTOOne);
+        final var serviceEntity2 = registrationServiceCommand.addService(serviceDTOTwo);
+        final var serviceEntity3 = registrationServiceCommand.addService(serviceDTOThree);
 
         assertEquals(1, serviceEntity1.getTelegramId());
         assertEquals(1, serviceEntity2.getTelegramId());

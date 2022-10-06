@@ -36,7 +36,6 @@ public class RegistrationNewProviderCommand implements Command {
         boolean isRegistration = false;
         if (providerDto == null) {
             providerService.saveProviderDto(generateProviderFromMessage(id));
-            assert id != null;
             sendBotMessageService.sendMessage(SendMessage.builder()
                     .chatId(id)
                     .text(bundleLanguage.getValue(id, "company_name"))

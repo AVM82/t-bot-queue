@@ -40,7 +40,7 @@ public class CheckServiceRegistrationCommand implements Command {
                 LOGGER.info("there is provider in the database");
                 return true;
             }
-            return new AddService(sendBotMessageService, serviceRepository, imageService, bundleLanguage).execute(update);
+            return new RegistrationServiceCommand(sendBotMessageService, serviceRepository, imageService, bundleLanguage).execute(update);
         }
 
         return false;
