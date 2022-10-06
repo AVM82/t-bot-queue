@@ -10,13 +10,13 @@ import ua.shpp.eqbot.service.ProviderService;
 import ua.shpp.eqbot.service.SendBotMessageService;
 import ua.shpp.eqbot.stage.PositionRegistrationProvider;
 
-public class RegistrationNewProviderCommand implements Command {
-    private static final Logger LOGGER = LoggerFactory.getLogger(RegistrationNewProviderCommand.class);
+public class RegistrationNewProviderICommand implements ICommand {
+    private static final Logger LOGGER = LoggerFactory.getLogger(RegistrationNewProviderICommand.class);
     private final SendBotMessageService sendBotMessageService;
     private final ProviderService providerService;
     private final BundleLanguage bundleLanguage;
 
-    public RegistrationNewProviderCommand(SendBotMessageService sendBotMessageService, ProviderService providerService, BundleLanguage bundleLanguage) {
+    public RegistrationNewProviderICommand(SendBotMessageService sendBotMessageService, ProviderService providerService, BundleLanguage bundleLanguage) {
         this.sendBotMessageService = sendBotMessageService;
         this.providerService = providerService;
         this.bundleLanguage = bundleLanguage;

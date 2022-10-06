@@ -21,9 +21,9 @@ import ua.shpp.eqbot.stage.PositionRegistrationService;
 import java.util.List;
 
 @Component
-public class RegistrationServiceCommand implements Command {
+public class RegistrationServiceICommand implements ICommand {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(RegistrationServiceCommand.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(RegistrationServiceICommand.class);
     private final SendBotMessageService sendBotMessageService;
     private final ServiceRepository serviceRepository;
     private final ImageService imageService;
@@ -31,8 +31,8 @@ public class RegistrationServiceCommand implements Command {
     private final ModelMapper modelMapper = new ModelMapper();
 
     @Autowired
-    public RegistrationServiceCommand(SendBotMessageService sendBotMessageService, ServiceRepository serviceRepository,
-                                      ImageService imageService, BundleLanguage bundleLanguage) {
+    public RegistrationServiceICommand(SendBotMessageService sendBotMessageService, ServiceRepository serviceRepository,
+                                       ImageService imageService, BundleLanguage bundleLanguage) {
         this.sendBotMessageService = sendBotMessageService;
         this.serviceRepository = serviceRepository;
         this.imageService = imageService;

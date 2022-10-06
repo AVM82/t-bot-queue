@@ -4,11 +4,11 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 import ua.shpp.eqbot.internationalization.BundleLanguage;
 import ua.shpp.eqbot.service.SendBotMessageService;
 
-public class UnknownCommand implements Command {
+public class UnknownICommand implements ICommand {
     private final SendBotMessageService sendBotMessageService;
     private final BundleLanguage bundleLanguage;
 
-    public UnknownCommand(SendBotMessageService sendBotMessageService, BundleLanguage bundleLanguage) {
+    public UnknownICommand(SendBotMessageService sendBotMessageService, BundleLanguage bundleLanguage) {
         this.sendBotMessageService = sendBotMessageService;
         this.bundleLanguage = bundleLanguage;
     }

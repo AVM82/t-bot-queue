@@ -11,15 +11,15 @@ import ua.shpp.eqbot.service.SendBotMessageService;
 import java.util.ArrayList;
 
 
-public class ChangeRoleToProviderCommand implements Command {
+public class ChangeRoleToProviderICommand implements ICommand {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(ChangeRoleToProviderCommand.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(ChangeRoleToProviderICommand.class);
 
     private final SendBotMessageService sendBotMessageService;
 
     ProviderRepository providerRepository;
 
-    public ChangeRoleToProviderCommand(SendBotMessageService sendBotMessageService, ProviderRepository providerRepository) {
+    public ChangeRoleToProviderICommand(SendBotMessageService sendBotMessageService, ProviderRepository providerRepository) {
         this.sendBotMessageService = sendBotMessageService;
 
         this.providerRepository = providerRepository;

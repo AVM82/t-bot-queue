@@ -7,11 +7,11 @@ import ua.shpp.eqbot.service.SendBotMessageService;
 
 import java.util.ArrayList;
 
-public class SettingsCommand implements Command {
+public class SettingsICommand implements ICommand {
 
     private final SendBotMessageService sendBotMessageService;
 
-    public SettingsCommand(SendBotMessageService sendBotMessageService) {
+    public SettingsICommand(SendBotMessageService sendBotMessageService) {
         this.sendBotMessageService = sendBotMessageService;
     }
 

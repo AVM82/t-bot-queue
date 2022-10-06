@@ -11,14 +11,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Start {@link Command}.
+ * Start {@link ICommand}.
  */
-public class StartCommand implements Command {
+public class StartICommand implements ICommand {
 
     private final SendBotMessageService sendBotMessageService;
     private final BundleLanguage bundleLanguage;
 
-    public StartCommand(SendBotMessageService sendBotMessageService, BundleLanguage bundleLanguage) {
+    public StartICommand(SendBotMessageService sendBotMessageService, BundleLanguage bundleLanguage) {
         this.sendBotMessageService = sendBotMessageService;
         this.bundleLanguage = bundleLanguage;
     }

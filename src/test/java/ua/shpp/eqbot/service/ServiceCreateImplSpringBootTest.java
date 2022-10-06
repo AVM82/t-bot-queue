@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.telegram.telegrambots.starter.TelegramBotInitializer;
-import ua.shpp.eqbot.command.RegistrationServiceCommand;
+import ua.shpp.eqbot.command.RegistrationServiceICommand;
 import ua.shpp.eqbot.dto.ServiceDTO;
 import ua.shpp.eqbot.internationalization.BundleLanguage;
 import ua.shpp.eqbot.repository.ProviderRepository;
@@ -36,11 +36,11 @@ public class ServiceCreateImplSpringBootTest {
     @Autowired
     private ServiceRepository serviceRepository;
 
-    private RegistrationServiceCommand registrationServiceCommand;
+    private RegistrationServiceICommand registrationServiceCommand;
 
     @BeforeEach
     void init() {
-        registrationServiceCommand = new RegistrationServiceCommand(sendBotMessageService, serviceRepository, imageService, providerRepository, userService, bundleLanguage);
+        registrationServiceCommand = new RegistrationServiceICommand(sendBotMessageService, serviceRepository, imageService, providerRepository, userService, bundleLanguage);
         serviceRepository.deleteAll();
     }
 

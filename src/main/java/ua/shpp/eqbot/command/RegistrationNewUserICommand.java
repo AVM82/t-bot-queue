@@ -19,15 +19,15 @@ import ua.shpp.eqbot.service.UserService;
 import ua.shpp.eqbot.mapper.UserMapper;
 
 @Component
-public class RegistrationNewUser implements Command {
-    private static final Logger LOGGER = LoggerFactory.getLogger(RegistrationNewUser.class);
+public class RegistrationNewUserICommand implements ICommand {
+    private static final Logger LOGGER = LoggerFactory.getLogger(RegistrationNewUserICommand.class);
     private final SendBotMessageService sendBotMessageService;
     private final UserService userService;
     private final BundleLanguage bundleLanguage;
     private final ModelMapper modelMapper = new ModelMapper();
 
     @Autowired
-    public RegistrationNewUser(SendBotMessageService sendBotMessageService, UserService userService, BundleLanguage bundleLanguage) {
+    public RegistrationNewUserICommand(SendBotMessageService sendBotMessageService, UserService userService, BundleLanguage bundleLanguage) {
         this.sendBotMessageService = sendBotMessageService;
         this.userService = userService;
         this.bundleLanguage = bundleLanguage;

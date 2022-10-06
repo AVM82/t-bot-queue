@@ -3,7 +3,7 @@ package ua.shpp.eqbot.command;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import ua.shpp.eqbot.service.SendBotMessageService;
 
-public class HelpCommand implements Command {
+public class HelpICommand implements ICommand {
 
     private final SendBotMessageService sendBotMessageService;
 
@@ -16,7 +16,7 @@ public class HelpCommand implements Command {
             CommandName.START.getNameCommand(), CommandName.DELETE_USER.getNameCommand(),
             CommandName.STOP.getNameCommand(), CommandName.HELP.getNameCommand());
 
-    public HelpCommand(SendBotMessageService sendBotMessageService) {
+    public HelpICommand(SendBotMessageService sendBotMessageService) {
         this.sendBotMessageService = sendBotMessageService;
     }
 
