@@ -13,6 +13,7 @@ public interface UserMapper {
 
     @Mapping(source = "language", target = "language")
     UserDto userEntityToUserDTO(UserEntity userEntity);
+
     @Mapping(source = "language", target = "language")
     UserEntity userDTOToUserEntity(UserDto userDto);
 }

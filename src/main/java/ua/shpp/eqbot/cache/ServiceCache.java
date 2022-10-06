@@ -23,8 +23,9 @@ public class ServiceCache {
     public static void remove(ServiceDTO serviceDTO) {
         services.remove(serviceDTO.getTelegramId());
     }
-    public static void remove(Long id){
-        if(findBy(id) != null)
+
+    public static void remove(Long id) {
+        if (findBy(id) != null)
             remove(findBy(id));
     }
 

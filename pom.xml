@@ -14,7 +14,7 @@
     </parent>
     <properties>
         <java.version>11</java.version>
-        <!--        <snakeyaml.version>1.33</snakeyaml.version>-->
+                <snakeyaml.version>1.33</snakeyaml.version>
         <org.mapstruct.version>1.5.2.Final</org.mapstruct.version>
     </properties>
     <dependencies>
@@ -39,7 +39,7 @@
         <dependency>
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>
-            <scope>test</scope>
+<!--            <scope>test</scope>-->
         </dependency>
         <dependency>
             <groupId>org.postgresql</groupId>
@@ -84,10 +84,6 @@
             <groupId>org.mapstruct</groupId>
             <artifactId>mapstruct</artifactId>
             <version>${org.mapstruct.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.h2database</groupId>
-            <artifactId>h2</artifactId>
         </dependency>
     </dependencies>
     <build>

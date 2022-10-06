@@ -178,7 +178,7 @@ public class AddService implements Command {
     }
 
     private boolean changeFormatTime(String time, Long id) {
-        if (time.matches("([0-9]|0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]-([0-9]|0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]"))
+        if (time.matches("(\\d|0\\d|1\\d|2[0-3]):[0-5]\\d-(\\d|0\\d|1\\d|2[0-3]):[0-5]\\d"))
             return true;
         else {
             createMessage(id, "unformatted");
@@ -187,7 +187,7 @@ public class AddService implements Command {
     }
 
     private boolean changeFormatTimeBetweenClients(String time, Long id) {
-        if (time.matches("([0-9]|0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]"))
+        if (time.matches("(\\d|0\\d|1\\d|2[0-3]):[0-5]\\d"))
             return true;
         else {
             createMessage(id, "unformatted");

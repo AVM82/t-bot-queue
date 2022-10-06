@@ -13,8 +13,8 @@ public class UserRestDto implements Serializable {
     private final String name;
     @Size(min = 3, max = 30, message = "{valid.user.city.size.message}")
     private final String city;
-    @Pattern(regexp = "^[+]?[(]?[0-9]{3}[)]?[-\\s.]?[0-9]{3}[-\\s.]?[0-9]{4,6}$",
-    message = "{valid.user.phone.pattern.message}")
+    @Pattern(regexp = "^[+]?[(]?\\d{3}[)]?[-\\s.]?\\d{3}[-\\s.]?\\d{4,6}$",
+            message = "{valid.user.phone.pattern.message}")
     private final String phone;
     private final String language;
 

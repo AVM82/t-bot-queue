@@ -1,7 +1,9 @@
 package ua.shpp.eqbot.service;
 
+import com.sun.xml.bind.v2.schemagen.episode.SchemaBindings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
@@ -15,7 +17,7 @@ import ua.shpp.eqbot.repository.UserRepository;
 import ua.shpp.eqbot.validation.UserValidateService;
 
 @Service
-public class UserService {
+public class UserService{
     private static final Logger LOGGER = LoggerFactory.getLogger(UserService.class);
     private final UserRepository userRepository;
     private final String dtoCacheName = "cacheUserDto";
@@ -64,5 +66,25 @@ public class UserService {
             userRepository.delete(getEntity(telegramId));
         return true;
     }
-}
 
+    /**
+     * its need modification
+     */
+    private void saveDto(UserEntity userEntity) {
+        Cache cache = cacheManager.getCache(dtoCacheName);
+        if (cache != null) { // first attempt ?
+            Cache.ValueWrapper valueWrapper = cache.get(userEntity.getTelegramId());
+            UserDto userDto;
+            if (valueWrapper == null) {
+                userDto = UserMapper.INSTANCE.userEntityToUserDTO(userEntity);
+            } else {
+                userDto = ((UserDto) valueWrapper.get())
+                        .setName(userEntity.getName())
+                        .setLanguage(userEntity.getLanguage())
+                        .setCity(userEntity.getCity())
+                        .setPhone(userEntity.getPhone());
+            }
+            cache.put(userEntity.getTelegramId(), userDto);
+        }
+    }
+}
