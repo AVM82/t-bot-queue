@@ -22,7 +22,7 @@ import java.util.List;
 @PropertySource("classpath:language.properties")
 public class RestProviderController {
 
-    Logger log = LoggerFactory.getLogger(RestProviderController.class);
+    Logger LOGGER = LoggerFactory.getLogger(RestProviderController.class);
     final RestProviderService service;
 
     public RestProviderController(RestProviderService service) {
@@ -33,7 +33,7 @@ public class RestProviderController {
     @Operation(summary = "${operation.summary.provider.get_all_providers}",
             description = "${operation.desc.provider.get_all_providers}")
     public List<ProviderEntity> getAllProviders() {
-        log.info("Getting all providers");
+        LOGGER.info("Getting all providers");
         return service.getAllProviders();
     }
 
@@ -41,7 +41,7 @@ public class RestProviderController {
     @Operation(summary = "${operation.summary.provider.get_provider}",
             description = "${operation.desc.provider.get_provider}")
     public ProviderEntity getProvider(@PathVariable Long telegramId) {
-        log.info("Getting provider with Telegram id {}", telegramId);
+        LOGGER.info("Getting provider with Telegram id {}", telegramId);
         return service.getProvider(telegramId);
 
     }
@@ -53,12 +53,12 @@ public class RestProviderController {
         if (bindingResult.hasErrors()) {
             List<FieldError> errors = bindingResult.getFieldErrors();
             for (FieldError error : errors) {
-                log.error(error.getDefaultMessage());
+                LOGGER.error(error.getDefaultMessage());
             }
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Entered data is not valid");
         } else {
             service.postProvider(providerDto);
-            log.info("Adding new provider with name '{}'", providerDto.getName());
+            LOGGER.info("Adding new provider with name '{}'", providerDto.getName());
         }
 
     }
@@ -68,6 +68,6 @@ public class RestProviderController {
             description = "${operation.desc.provider.delete_provider}")
     public void deleteProvider(@PathVariable Long telegramId) {
         service.deleteProvider(telegramId);
-        log.info("Deleting provider with Telegram id [{}]", telegramId);
+        LOGGER.info("Deleting provider with Telegram id [{}]", telegramId);
     }
 }

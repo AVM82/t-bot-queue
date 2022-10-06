@@ -19,7 +19,7 @@ import java.util.List;
 @RequestMapping("/service")
 public class RestServiceController {
 
-    Logger log = LoggerFactory.getLogger(RestServiceController.class);
+    Logger LOGGER = LoggerFactory.getLogger(RestServiceController.class);
     final RestServiceService service;
 
     public RestServiceController(RestServiceService service) {
@@ -30,7 +30,7 @@ public class RestServiceController {
     @Operation(summary = "${operation.summary.service.get_all_services}",
             description = "${operation.desc.service.get_all_services}")
     public List<ServiceEntity> getAllServices() {
-        log.info("Getting all services");
+        LOGGER.info("Getting all services");
         return service.getAllServices();
     }
 
@@ -38,7 +38,7 @@ public class RestServiceController {
     @Operation(summary = "${operation.summary.service.get_service}",
             description = "${operation.desc.service.get_service}")
     public ServiceEntity getService(@PathVariable Long id) {
-        log.info("Getting service with id {}", id);
+        LOGGER.info("Getting service with id {}", id);
         return service.getService(id);
     }
 
@@ -46,7 +46,7 @@ public class RestServiceController {
     @Operation(summary = "${operation.summary.service.get_service_by_telegram}",
             description = "${operation.desc.service.get_service_by_telegram}")
     public List<ServiceEntity> getServicesByTelegramId(@PathVariable Long telegramId) {
-        log.info("Getting all services with telegramId {}", telegramId);
+        LOGGER.info("Getting all services with telegramId {}", telegramId);
         return service.getAllServiceByTelegramId(telegramId);
     }
 
@@ -57,12 +57,12 @@ public class RestServiceController {
         if (bindingResult.hasErrors()) {
             List<FieldError> errors = bindingResult.getFieldErrors();
             for (FieldError error : errors) {
-                log.error(error.getDefaultMessage());
+                LOGGER.error(error.getDefaultMessage());
             }
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Entered data is not valid");
         } else {
             service.postService(serviceDTO);
-            log.info("Adding new service with name '{}'", serviceDTO.getName());
+            LOGGER.info("Adding new service with name '{}'", serviceDTO.getName());
         }
     }
 
@@ -70,7 +70,7 @@ public class RestServiceController {
     @Operation(summary = "${operation.summary.service.delete_service}",
             description = "${operation.desc.service.delete_service}")
     public void deleteService(@PathVariable Long id) {
-        log.info("Deleting service with id {}", id);
+        LOGGER.info("Deleting service with id {}", id);
         service.deleteService(id);
     }
 
