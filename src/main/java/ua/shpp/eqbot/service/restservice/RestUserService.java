@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
-public class RestUserService {
+public class    RestUserService {
 
     final UserRepository repository;
 
