@@ -29,6 +29,7 @@ public class RestServiceService {
     }
 
 
+
     public void postService(ServiceRestDTO serviceDTO) {
         ServiceEntity serviceEntity = new ServiceEntity();
         serviceEntity.setAvatar(null);

@@ -24,8 +24,8 @@ public class RestProviderService {
         return repository.findAllByTelegramId(telegramId);
     }
 
-    public ProviderEntity getProvider(Long telegramId){
-        return repository.findByTelegramId(telegramId);
+    public ProviderEntity getProvider(Long id){
+        return repository.findFirstById(id);
     }
 
     public void postProvider(ProviderDto providerDto){
