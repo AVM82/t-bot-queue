@@ -49,9 +49,9 @@ public class UserService {
         return userDto;//****
     }
 
-    @Cacheable(cacheNames = dtoCacheName, key = "#id")
-    public UserDto getDto(Long id) {
-        LOGGER.info("get userDto by id {}", id);
+    @Cacheable(cacheNames = dtoCacheName, key = "#telegramId")
+    public UserDto getDto(Long telegramId) {
+        LOGGER.info("get userDto by telegramId {}", telegramId);
         return null;
     }
 
