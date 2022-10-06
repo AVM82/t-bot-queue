@@ -1,6 +1,5 @@
 package ua.shpp.eqbot.service.restservice;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ua.shpp.eqbot.dto.ProviderDto;
 import ua.shpp.eqbot.model.ProviderEntity;
@@ -11,22 +10,25 @@ import java.util.List;
 @Service
 public class RestProviderService {
 
-    @Autowired
-    ProviderRepository repository;
+    final ProviderRepository repository;
 
-    public List<ProviderEntity> getAllProviders(){
+    public RestProviderService(ProviderRepository repository) {
+        this.repository = repository;
+    }
+
+    public List<ProviderEntity> getAllProviders() {
         return repository.findAll();
     }
 
-    public List<ProviderEntity> getProviders(Long telegramId){
+    public List<ProviderEntity> getProviders(Long telegramId) {
         return repository.findAllByTelegramId(telegramId);
     }
 
-    public ProviderEntity getProvider(Long telegramId){
+    public ProviderEntity getProvider(Long telegramId) {
         return repository.findByTelegramId(telegramId);
     }
 
-    public void postProvider(ProviderDto providerDto){
+    public void postProvider(ProviderDto providerDto) {
         ProviderEntity providerEntity = new ProviderEntity();
         providerEntity.setTelegramId(providerDto.getTelegramId());
         providerEntity.setProviderCity(providerDto.getCity());
@@ -34,7 +36,7 @@ public class RestProviderService {
         repository.save(providerEntity);
     }
 
-    public void deleteProvider(Long telegramId){
+    public void deleteProvider(Long telegramId) {
         repository.deleteById(telegramId);
     }
 }

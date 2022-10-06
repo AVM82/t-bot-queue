@@ -88,7 +88,12 @@ public class UserEntity {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         UserEntity that = (UserEntity) o;
-        return Objects.equals(telegramId, that.telegramId) && Objects.equals(name, that.name) && Objects.equals(city, that.city) && Objects.equals(phone, that.phone) && Objects.equals(language, that.language) && Objects.equals(createdTime, that.createdTime);
+        return Objects.equals(telegramId, that.telegramId)
+                && Objects.equals(name, that.name)
+                && Objects.equals(city, that.city)
+                && Objects.equals(phone, that.phone)
+                && Objects.equals(language, that.language)
+                && Objects.equals(createdTime, that.createdTime);
     }
 
     @Override
@@ -98,14 +103,12 @@ public class UserEntity {
 
     @Override
     public String toString() {
-        final StringBuilder sb = new StringBuilder("UserEntity{");
-        sb.append("telegramId=").append(telegramId);
-        sb.append(", name='").append(name).append('\'');
-        sb.append(", city='").append(city).append('\'');
-        sb.append(", phone='").append(phone).append('\'');
-        sb.append(", language='").append(language).append('\'');
-        sb.append(", timeCreated=").append(createdTime);
-        sb.append('}');
-        return sb.toString();
+        return "UserEntity{" +
+                "telegramId=" + telegramId +
+                ", name='" + name + '\'' +
+                ", city='" + city + '\'' +
+                ", phone='" + phone + '\'' +
+                ", language='" + language + '\'' +
+                ", timeCreated=" + createdTime + '}';
     }
 }

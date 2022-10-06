@@ -11,23 +11,26 @@ import java.util.List;
 @Service
 public class RestServiceService {
 
-    @Autowired
-    ServiceRepository repository;
+    final ServiceRepository repository;
 
-    public List<ServiceEntity> getAllServices(){
+    public RestServiceService(ServiceRepository repository) {
+        this.repository = repository;
+    }
+
+    public List<ServiceEntity> getAllServices() {
         return repository.findAll();
     }
 
-    public ServiceEntity getService(Long id){
+    public ServiceEntity getService(Long id) {
         return repository.findFirstById(id);
     }
 
-    public List<ServiceEntity> getAllServiceByTelegramId(Long telegramId){
+    public List<ServiceEntity> getAllServiceByTelegramId(Long telegramId) {
         return repository.findAllByTelegramId(telegramId);
     }
 
 
-    public void postService (ServiceRestDTO serviceDTO){
+    public void postService(ServiceRestDTO serviceDTO) {
         ServiceEntity serviceEntity = new ServiceEntity();
         serviceEntity.setAvatar(null);
         serviceEntity.setTelegramId(serviceDTO.getTelegramId());
@@ -36,7 +39,7 @@ public class RestServiceService {
         repository.save(serviceEntity);
     }
 
-    public void deleteService(Long id){
+    public void deleteService(Long id) {
         repository.deleteById(id);
     }
 }

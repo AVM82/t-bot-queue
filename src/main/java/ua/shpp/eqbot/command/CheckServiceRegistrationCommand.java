@@ -12,7 +12,7 @@ import ua.shpp.eqbot.service.SendBotMessageService;
 
 import java.util.List;
 
-public class CheckServiceRegistrationCommand implements Command{
+public class CheckServiceRegistrationCommand implements Command {
     private static final Logger LOGGER = LoggerFactory.getLogger(CheckServiceRegistrationCommand.class);
     private final SendBotMessageService sendBotMessageService;
     private final BundleLanguage bundleLanguage;
@@ -29,12 +29,9 @@ public class CheckServiceRegistrationCommand implements Command{
     @Override
     public boolean execute(Update update) {
         Long id;
-        if (update.hasCallbackQuery())
-            id = update.getCallbackQuery().getFrom().getId();
-        else if (update.hasMessage())
-            id = update.getMessage().getChatId();
-        else
-            return false;
+        if (update.hasCallbackQuery()) id = update.getCallbackQuery().getFrom().getId();
+        else if (update.hasMessage()) id = update.getMessage().getChatId();
+        else return false;
         ua.shpp.eqbot.dto.ServiceDTO serviceDTO = ServiceCache.findBy(id);
         if (serviceDTO == null) {
             LOGGER.info("the provider is not in the cache");

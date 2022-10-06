@@ -31,7 +31,7 @@ public class ApplicationTest {
     @Before
     public void setUp() {
 
-        providerService = new ProviderService(providerRepository, cacheManager);
+        providerService = new ProviderService(providerRepository);
 
         ProviderEntity entity = new ProviderEntity();
         entity.setProviderCity("Dnipro");

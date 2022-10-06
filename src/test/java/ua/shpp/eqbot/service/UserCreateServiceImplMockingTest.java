@@ -30,7 +30,7 @@ public class UserCreateServiceImplMockingTest {
     private final UserRepository userRepository = mock(UserRepository.class);
     private final CacheManager cacheManager = mock(CacheManager.class);
 
-    private final UserService userService = new UserService(userRepository, userValidateService, cacheManager);
+    private final UserService userService = new UserService(userRepository, userValidateService);
 
     @Test
     @DisplayName("Should fail user creation if validation does not pass")

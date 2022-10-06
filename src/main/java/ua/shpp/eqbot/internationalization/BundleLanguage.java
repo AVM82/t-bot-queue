@@ -24,12 +24,8 @@ public class BundleLanguage {
         LOGGER.info("i try set user language");
         UserEntity user = userService.getEntity(userTelegramId);
         String language = "uk";
-        if (user != null)
-            language = user.getLanguage();
-        ResourceBundle resourceBundle = ResourceBundle.getBundle(
-                "language",
-                new Locale(language, value)
-        );
+        if (user != null) language = user.getLanguage();
+        ResourceBundle resourceBundle = ResourceBundle.getBundle("language", new Locale(language, value));
         LOGGER.info("user language is {}", language);
         return resourceBundle.getString(value);
     }

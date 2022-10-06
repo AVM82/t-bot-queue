@@ -51,7 +51,7 @@ class UserServiceIntegrationTest {
 
     @BeforeEach
     void setUp() {
-        userService = new UserService(userRepository, userValidateService, cacheManager);
+        userService = new UserService(userRepository, userValidateService);
     }
 
     @Test
