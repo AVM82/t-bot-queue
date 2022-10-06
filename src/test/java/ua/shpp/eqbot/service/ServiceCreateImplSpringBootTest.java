@@ -18,7 +18,7 @@ import static org.hamcrest.Matchers.is;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest
-public class ServiceCreateImplSpringBootTest {
+class ServiceCreateImplSpringBootTest {
     @MockBean
     EqTelegramBot eqTelegramBot;
     @MockBean

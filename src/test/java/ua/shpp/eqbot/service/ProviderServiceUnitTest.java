@@ -10,7 +10,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import ua.shpp.eqbot.model.ProviderEntity;
 import ua.shpp.eqbot.repository.ProviderRepository;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -46,6 +45,7 @@ class ProviderServiceUnitTest {
 
         assertThat(argumentCaptor.getValue(), is(providerEntity));
     }
+
     @Test
     void whenGetByTelegramIdIntoProviderServiceThanSameEntityUseInProviderRepository() {
         List<ProviderEntity> entityList = List.of(new ProviderEntity());

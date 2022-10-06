@@ -11,17 +11,17 @@ import java.util.Set;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @DataJpaTest
-public class ServiceRepositoryDataJpaTest {
+class ServiceRepositoryDataJpaTest {
 
-        @Autowired
-        private ServiceRepository personRepository;
+    @Autowired
+    private ServiceRepository personRepository;
 
-        @Test
-        void shouldReturnAlLastNames() {
-            personRepository.saveAndFlush(new ServiceEntity().setName("Masha"));
-            personRepository.saveAndFlush(new ServiceEntity().setName("Dasha"));
-            personRepository.saveAndFlush(new ServiceEntity().setName("Masha"));
+    @Test
+    void shouldReturnAlLastNames() {
+        personRepository.saveAndFlush(new ServiceEntity().setName("Masha"));
+        personRepository.saveAndFlush(new ServiceEntity().setName("Dasha"));
+        personRepository.saveAndFlush(new ServiceEntity().setName("Masha"));
 
-            assertEquals(Set.of("Masha", "Dasha"), personRepository.findAllByName());
-        }
+        assertEquals(Set.of("Masha", "Dasha"), personRepository.findAllByName());
     }
+}

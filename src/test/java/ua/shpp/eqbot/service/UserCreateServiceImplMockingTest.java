@@ -1,18 +1,14 @@
 package ua.shpp.eqbot.service;
 
-import org.junit.Ignore;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.cache.CacheManager;
-import org.springframework.data.domain.Example;
 import ua.shpp.eqbot.ecxeption.ValidationFailedException;
 import ua.shpp.eqbot.model.UserEntity;
 import ua.shpp.eqbot.repository.UserRepository;
 import ua.shpp.eqbot.validation.UserValidateService;
 
-import java.util.List;
 import java.util.Objects;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -24,7 +20,7 @@ import static org.mockito.Mockito.*;
  */
 @DataJpaTest
 @DisplayName("UserCreateServiceImpl: tests with mocks")
-public class UserCreateServiceImplMockingTest {
+class UserCreateServiceImplMockingTest {
 
     private final UserValidateService userValidateService = mock(UserValidateService.class);
     private final UserRepository userRepository = mock(UserRepository.class);
