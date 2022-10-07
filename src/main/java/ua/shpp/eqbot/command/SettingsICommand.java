@@ -1,12 +1,16 @@
 package ua.shpp.eqbot.command;
 
+import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardRow;
 import ua.shpp.eqbot.internationalization.BundleLanguage;
 import ua.shpp.eqbot.service.SendBotMessageService;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class SettingsICommand implements ICommand {
 
@@ -20,20 +24,29 @@ public class SettingsICommand implements ICommand {
 
     @Override
     public boolean execute(Update update) {
-        var markup = new ReplyKeyboardMarkup();
-        var keyboardRows = new ArrayList<KeyboardRow>();
-        KeyboardRow changeUserRole = new KeyboardRow();
-        changeUserRole.add(bundleLanguage.getValue(update.getMessage().getChatId(), "change_role_to_provider"));
-        keyboardRows.add(changeUserRole);
-        KeyboardRow changeLang = new KeyboardRow();
-        changeUserRole.add(bundleLanguage.getValue(update.getMessage().getChatId(), "change_language"));
-        keyboardRows.add(changeLang);
-        KeyboardRow changeCity = new KeyboardRow();
-        changeUserRole.add(bundleLanguage.getValue(update.getMessage().getChatId(), "change_city"));
-        keyboardRows.add(changeCity);
-        markup.setKeyboard(keyboardRows);
-        markup.setResizeKeyboard(true);
-        sendBotMessageService.setReplyMarkup(update.getMessage().getChatId().toString(), markup);
+        InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
+        List<List<InlineKeyboardButton>> keyboard = new ArrayList<>();
+        List<InlineKeyboardButton> buttonCreate = new ArrayList<>();
+        buttonCreate.add(InlineKeyboardButton.builder()
+                .text(bundleLanguage.getValue(update.getMessage().getChatId(), "change_role_to_provider"))
+                .callbackData("change_role")
+                .build());
+        keyboard.add(buttonCreate);
+        List<InlineKeyboardButton> buttonLang = new ArrayList<>();
+        buttonCreate.add(InlineKeyboardButton.builder()
+                .text(bundleLanguage.getValue(update.getMessage().getChatId(), "change_language"))
+                .callbackData("change_lang")
+                .build());
+        keyboard.add(buttonLang);
+        inlineKeyboardMarkup.setKeyboard(keyboard);
+        SendMessage sendMessage = new SendMessage();
+        sendMessage.setText(bundleLanguage.getValue(update.getMessage().getChatId(), "choose_menu_option"));
+        sendMessage.setChatId(update.getMessage().getChatId());
+        sendMessage.setReplyMarkup(inlineKeyboardMarkup);
+        sendBotMessageService.sendMessage(sendMessage);
+
+
+
         return true;
     }
 }

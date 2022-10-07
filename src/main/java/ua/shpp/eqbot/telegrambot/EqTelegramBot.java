@@ -154,6 +154,8 @@ public class EqTelegramBot extends TelegramLongPollingBot {
             commandContainer.retrieveCommand("/add provider").execute(update);
             UserDto user = userService.getDto(update.getCallbackQuery().getFrom().getId());
             user.setPositionMenu(REGISTRATION_PROVIDER);
+        }else if (callbackQuery.getData().equals("change_role")) {
+            commandContainer.retrieveCommand("/change_role").execute(update);
         }
     }
 }

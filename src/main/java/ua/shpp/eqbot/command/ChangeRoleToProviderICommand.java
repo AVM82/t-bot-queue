@@ -34,25 +34,34 @@ public class ChangeRoleToProviderICommand implements ICommand {
 
     @Override
     public boolean execute(Update update) {
-        if (providerRepository.findByTelegramId(update.getMessage().getChatId()) != null)/*providerRepository.findById(update.getMessage().getChatId())*/ {
+
+        Long id;
+        if (update.hasCallbackQuery())
+            id = update.getCallbackQuery().getFrom().getId();
+        else if (update.hasMessage())
+            id = update.getMessage().getChatId();
+        else
+            return false;
+
+        if (providerRepository.findByTelegramId(id) != null)/*providerRepository.findById(update.getMessage().getChatId())*/ {
             LOGGER.info("Find provider with such id and enroll as a provider");
             sendBotMessageService.sendMessage(SendMessage.builder()
-                    .chatId(update.getMessage().getChatId())
-                    .text(bundleLanguage.getValue(update.getMessage().getChatId(), "switch_to_provider"))
+                    .chatId(id)
+                    .text(bundleLanguage.getValue(id, "switch_to_provider"))
                     .build());
         } else {
             InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
             List<List<InlineKeyboardButton>> keyboard = new ArrayList<>();
             List<InlineKeyboardButton> buttonCreate = new ArrayList<>();
             buttonCreate.add(InlineKeyboardButton.builder()
-                    .text(bundleLanguage.getValue(update.getMessage().getChatId(), "create_new_provider"))
+                    .text(bundleLanguage.getValue(id, "create_new_provider"))
                     .callbackData("add_provider")
                     .build());
             keyboard.add(buttonCreate);
             inlineKeyboardMarkup.setKeyboard(keyboard);
             SendMessage sendMessage = new SendMessage();
-            sendMessage.setText(bundleLanguage.getValue(update.getMessage().getChatId(), "choose_menu_option"));
-            sendMessage.setChatId(update.getMessage().getChatId());
+            sendMessage.setText(bundleLanguage.getValue(id, "choose_menu_option"));
+            sendMessage.setChatId(id);
             sendMessage.setReplyMarkup(inlineKeyboardMarkup);
             sendBotMessageService.sendMessage(sendMessage);
         }
