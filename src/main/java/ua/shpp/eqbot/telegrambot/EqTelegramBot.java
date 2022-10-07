@@ -23,7 +23,6 @@ import ua.shpp.eqbot.service.SendBotMessageServiceImpl;
 import ua.shpp.eqbot.service.UserService;
 import ua.shpp.eqbot.stage.PositionMenu;
 
-import static ua.shpp.eqbot.command.CommandName.NO;
 import static ua.shpp.eqbot.stage.PositionMenu.*;
 
 @Component
@@ -129,11 +128,7 @@ public class EqTelegramBot extends TelegramLongPollingBot {
             }
         } else {
             commandContainer.retrieveCommand(commandIdentifier).execute(update);
-            if (messageText.equals("Change role to Provider") || messageText.equals("Реєстрація нового провайдера")) {
-                commandContainer.retrieveCommand(messageText).execute(update);
-            } else {
-                commandContainer.retrieveCommand(NO.getNameCommand()).execute(update);
-            }
+
         }
     }
 
@@ -172,6 +167,12 @@ public class EqTelegramBot extends TelegramLongPollingBot {
                 throw new RuntimeException(e);
             }
             userDto.setPositionMenu(DONE);
+        } else if (callbackQuery.getData().equals("add_provider")) {
+            commandContainer.retrieveCommand("/add provider").execute(update);
+            UserDto user = userService.getDto(update.getCallbackQuery().getFrom().getId());
+            user.setPositionMenu(REGISTRATION_PROVIDER);
+        } else if (callbackQuery.getData().equals("change_role")) {
+            commandContainer.retrieveCommand("/change_role").execute(update);
         }
     }
 }
