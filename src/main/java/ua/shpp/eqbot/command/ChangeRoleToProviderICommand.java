@@ -36,12 +36,13 @@ public class ChangeRoleToProviderICommand implements ICommand {
     public boolean execute(Update update) {
 
         Long id;
-        if (update.hasCallbackQuery())
+        if (update.hasCallbackQuery()) {
             id = update.getCallbackQuery().getFrom().getId();
-        else if (update.hasMessage())
+        } else if (update.hasMessage()) {
             id = update.getMessage().getChatId();
-        else
+        } else {
             return false;
+        }
 
         if (providerRepository.findByTelegramId(id) != null)/*providerRepository.findById(update.getMessage().getChatId())*/ {
             LOGGER.info("Find provider with such id and enroll as a provider");

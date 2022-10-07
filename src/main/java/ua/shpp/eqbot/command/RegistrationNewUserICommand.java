@@ -105,7 +105,9 @@ public class RegistrationNewUserICommand implements ICommand {
             switch (userDto.getPositionRegistration()) {
                 case INPUT_USERNAME:
                     LOGGER.info("new user phase INPUT_USERNAME with message text {}", message.getText());
-                    if (message.isCommand()) break;
+                    if (message.isCommand()) {
+                        break;
+                    }
                     userDto.setName(message.getText());
                     userDto.setPositionRegistration(PositionRegistration.INPUT_CITY);
                     sendBotMessageService.sendMessage(createQuery(message.getChatId(),
@@ -113,7 +115,9 @@ public class RegistrationNewUserICommand implements ICommand {
                     break;
                 case INPUT_CITY:
                     LOGGER.info("new user phase INPUT_CITY with message text {}", message.getText());
-                    if (message.isCommand()) break;
+                    if (message.isCommand()) {
+                        break;
+                    }
                     userDto.setCity(message.getText());
                     userDto.setPositionRegistration(PositionRegistration.INPUT_PHONE);
                     sendBotMessageService.sendMessage(createQuery(message.getChatId(),
@@ -121,7 +125,9 @@ public class RegistrationNewUserICommand implements ICommand {
                     break;
                 case INPUT_PHONE:
                     LOGGER.info("new user phase INPUT_PHONE with message text {}", message.getText());
-                    if (message.isCommand()) break;
+                    if (message.isCommand()) {
+                        break;
+                    }
                     userDto.setPhone(message.getText());
                     userDto.setPositionRegistration(PositionRegistration.DONE);
                     UserEntity userEntity = UserMapper.INSTANCE.userDTOToUserEntity(userDto);

@@ -33,12 +33,13 @@ public class CheckProviderRegistrationICommand implements ICommand {
     @Override
     public boolean execute(Update update) {
         Long id;
-        if (update.hasCallbackQuery())
+        if (update.hasCallbackQuery()) {
             id = update.getCallbackQuery().getFrom().getId();
-        else if (update.hasMessage())
+        } else if (update.hasMessage()) {
             id = update.getMessage().getChatId();
-        else
+        } else {
             return false;
+        }
         ProviderDto providerDto = providerService.getProviderDto(id);
         if (providerDto == null) {
             LOGGER.info("the provider is not in the cache");
@@ -60,17 +61,18 @@ public class CheckProviderRegistrationICommand implements ICommand {
             printListProvider(id);
             addRequest(id);
             return true;
-        } else
+        } else {
             return new RegistrationNewProviderICommand(sendBotMessageService, providerService, bundleLanguage).execute(update);
+        }
     }
 
     private void printListProvider(Long id) {
         ProviderDto dto = providerService.getProviderDto(id);
         sendBotMessageService.sendMessage(SendMessage.builder()
                 .chatId(id)
-                .text(bundleLanguage.getValue(id, "registered_to_you") +
-                        "\n" + bundleLanguage.getValue(id, "company_name") + ": " + dto.getName() +
-                        "\n" + bundleLanguage.getValue(id, "city") + ": " + dto.getCity())
+                .text(bundleLanguage.getValue(id, "registered_to_you")
+                        + "\n" + bundleLanguage.getValue(id, "company_name") + ": " + dto.getName()
+                        + "\n" + bundleLanguage.getValue(id, "city") + ": " + dto.getCity())
                 .build());
     }
 

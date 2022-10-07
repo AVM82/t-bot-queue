@@ -41,7 +41,7 @@ public class UserService {
     @CachePut(cacheNames = DTO_CACHE_NAME, key = "#userDto.telegramId")
     public UserDto saveDto(UserDto userDto) {
         LOGGER.info("save userDto {}", userDto);
-        return userDto;//****
+        return userDto;
     }
 
     @Cacheable(cacheNames = DTO_CACHE_NAME, key = "#telegramId")
@@ -55,7 +55,9 @@ public class UserService {
     public boolean remove(Long telegramId) {
         LOGGER.info("delete userDto and All entity");
         UserEntity entity = getEntity(telegramId);
-        if (entity != null) userRepository.delete(getEntity(telegramId));
+        if (entity != null) {
+            userRepository.delete(getEntity(telegramId));
+        }
         return true;
     }
 }

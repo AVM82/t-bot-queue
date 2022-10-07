@@ -52,8 +52,13 @@ public class ProviderEntity {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null
+                || getClass() != o.getClass()) {
+            return false;
+        }
 
         ProviderEntity that = (ProviderEntity) o;
 
@@ -67,11 +72,11 @@ public class ProviderEntity {
 
     @Override
     public String toString() {
-        return "ProviderEntity{" +
-                "id=" + id +
-                ", telegramId=" + telegramId +
-                ", name='" + name + '\'' +
-                ", providerCity='" + providerCity + '\'' +
-                '}';
+        return "ProviderEntity{"
+                + "id=" + id
+                + ", telegramId=" + telegramId
+                + ", name='" + name + '\''
+                + ", providerCity='" + providerCity + '\''
+                + '}';
     }
 }

@@ -48,14 +48,19 @@ public class UserRestDto implements Serializable {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null
+                || getClass() != o.getClass()) {
+            return false;
+        }
         UserRestDto entity = (UserRestDto) o;
-        return Objects.equals(this.telegramId, entity.telegramId) &&
-                Objects.equals(this.name, entity.name) &&
-                Objects.equals(this.city, entity.city) &&
-                Objects.equals(this.phone, entity.phone) &&
-                Objects.equals(this.language, entity.language);
+        return Objects.equals(this.telegramId, entity.telegramId)
+                && Objects.equals(this.name, entity.name)
+                && Objects.equals(this.city, entity.city)
+                && Objects.equals(this.phone, entity.phone)
+                && Objects.equals(this.language, entity.language);
     }
 
     @Override
@@ -65,11 +70,11 @@ public class UserRestDto implements Serializable {
 
     @Override
     public String toString() {
-        return getClass().getSimpleName() + "(" +
-                "telegramId = " + telegramId + ", " +
-                "name = " + name + ", " +
-                "city = " + city + ", " +
-                "phone = " + phone + ", " +
-                "language = " + language + ")";
+        return getClass().getSimpleName() + "("
+                + "telegramId = " + telegramId + ", "
+                + "name = " + name + ", "
+                + "city = " + city + ", "
+                + "phone = " + phone + ", "
+                + "language = " + language + ")";
     }
 }

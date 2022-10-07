@@ -43,12 +43,13 @@ public class RegistrationServiceICommand implements ICommand {
     public boolean execute(Update update) {
         boolean isRegistration = false;
         Long id;
-        if (update.hasCallbackQuery())
+        if (update.hasCallbackQuery()) {
             id = update.getCallbackQuery().getFrom().getId();
-        else if (update.hasMessage())
+        } else if (update.hasMessage()) {
             id = update.getMessage().getChatId();
-        else
+        } else {
             return false;
+        }
         ServiceDTO serviceDTO = ServiceCache.findBy(id);
         LOGGER.info("i try register new service");
         if (serviceDTO == null) {
@@ -178,25 +179,27 @@ public class RegistrationServiceICommand implements ICommand {
     }
 
     private boolean changeFormatTime(String time, Long id) {
-        if (time.matches("(\\d|0\\d|1\\d|2[0-3]):[0-5]\\d-(\\d|0\\d|1\\d|2[0-3]):[0-5]\\d"))
+        if (time.matches("(\\d|0\\d|1\\d|2[0-3]):[0-5]\\d-(\\d|0\\d|1\\d|2[0-3]):[0-5]\\d")) {
             return true;
-        else {
+        } else {
             createMessage(id, "unformatted");
             return false;
         }
     }
 
     private boolean changeFormatTimeBetweenClients(String time, Long id) {
-        if (time.matches("(\\d|0\\d|1\\d|2[0-3]):[0-5]\\d"))
+        if (time.matches("(\\d|0\\d|1\\d|2[0-3]):[0-5]\\d")) {
             return true;
-        else {
+        } else {
             createMessage(id, "unformatted");
             return false;
         }
     }
 
     private ServiceEntity convertToEntity(ua.shpp.eqbot.dto.ServiceDTO dto) {
-        if (dto == null) return null;
+        if (dto == null) {
+            return null;
+        }
         ServiceEntity entity = modelMapper.map(dto, ServiceEntity.class);
         LOGGER.info("convert dto to entity");
         return entity;
@@ -211,17 +214,17 @@ public class RegistrationServiceICommand implements ICommand {
 
     private void createMessage(Long id, String text1, String text2) {
         sendBotMessageService.sendMessage(SendMessage.builder()
-                .text(bundleLanguage.getValue(id, text1) + " " +
-                        bundleLanguage.getValue(id, text2))
+                .text(bundleLanguage.getValue(id, text1) + " "
+                        + bundleLanguage.getValue(id, text2))
                 .chatId(id)
                 .build());
     }
 
     private void createMessage(Long id, String text1, String text2, String text3) {
         sendBotMessageService.sendMessage(SendMessage.builder()
-                .text(bundleLanguage.getValue(id, text1) + " " +
-                        bundleLanguage.getValue(id, text2) + " " +
-                        bundleLanguage.getValue(id, text3))
+                .text(bundleLanguage.getValue(id, text1) + " "
+                        + bundleLanguage.getValue(id, text2) + " "
+                        + bundleLanguage.getValue(id, text3))
                 .chatId(id)
                 .build());
     }

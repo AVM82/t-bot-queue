@@ -29,9 +29,13 @@ public class CheckServiceRegistrationICommand implements ICommand {
     @Override
     public boolean execute(Update update) {
         Long id;
-        if (update.hasCallbackQuery()) id = update.getCallbackQuery().getFrom().getId();
-        else if (update.hasMessage()) id = update.getMessage().getChatId();
-        else return false;
+        if (update.hasCallbackQuery()) {
+            id = update.getCallbackQuery().getFrom().getId();
+        } else if (update.hasMessage()) {
+            id = update.getMessage().getChatId();
+        } else {
+            return false;
+        }
         ua.shpp.eqbot.dto.ServiceDTO serviceDTO = ServiceCache.findBy(id);
         if (serviceDTO == null) {
             LOGGER.info("the provider is not in the cache");

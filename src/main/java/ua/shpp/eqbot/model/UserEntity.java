@@ -89,8 +89,13 @@ public class UserEntity {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null
+                || getClass() != o.getClass()) {
+            return false;
+        }
         UserEntity that = (UserEntity) o;
         return Objects.equals(telegramId, that.telegramId)
                 && Objects.equals(name, that.name)
@@ -107,12 +112,12 @@ public class UserEntity {
 
     @Override
     public String toString() {
-        return "UserEntity{" +
-                "telegramId=" + telegramId +
-                ", name='" + name + '\'' +
-                ", city='" + city + '\'' +
-                ", phone='" + phone + '\'' +
-                ", language='" + language + '\'' +
-                ", timeCreated=" + createdTime + '}';
+        return "UserEntity{"
+                + "telegramId=" + telegramId
+                + ", name='" + name + '\''
+                + ", city='" + city + '\''
+                + ", phone='" + phone + '\''
+                + ", language='" + language + '\''
+                + ", timeCreated=" + createdTime + '}';
     }
 }

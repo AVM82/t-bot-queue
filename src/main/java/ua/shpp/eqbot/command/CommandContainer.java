@@ -22,15 +22,15 @@ public class CommandContainer {
     private final ICommand unknownICommand;
 
     @Autowired
-    public CommandContainer(SendBotMessageService sendBotMessageService, UserRepository userRepository,
-                            ServiceRepository serviceRepository, ProviderRepository providerRepository,
-                            ImageService imageService, BundleLanguage bundleLanguage, UserService userService,
+    public CommandContainer(SendBotMessageService sendBotMessageService, ServiceRepository serviceRepository,
+                            ProviderRepository providerRepository, ImageService imageService,
+                            BundleLanguage bundleLanguage, UserService userService,
                             ProviderService providerService) {
         commandMap = ImmutableMap.<String, ICommand>builder()
                 .put(CommandName.REG.getNameCommand(), new RegistrationNewUserICommand(sendBotMessageService, userService, bundleLanguage))
                 .put(CommandName.START.getNameCommand(), new StartICommand(sendBotMessageService, bundleLanguage))
                 .put(CommandName.HELP.getNameCommand(), new HelpICommand(sendBotMessageService))
-                .put(CommandName.NO.getNameCommand(), new NoICommand(sendBotMessageService))
+                .put(CommandName.NO.getNameCommand(), new NoCommand(sendBotMessageService))
                 .put(CommandName.SETTINGS.getNameCommand(), new SettingsICommand(sendBotMessageService, bundleLanguage))
                 .put(CommandName.CHANGE_ROLE_TO_PROVIDER.getNameCommand(),
                         new ChangeRoleToProviderICommand(sendBotMessageService, providerRepository, bundleLanguage))

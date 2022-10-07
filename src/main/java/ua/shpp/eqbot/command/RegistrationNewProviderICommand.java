@@ -25,12 +25,13 @@ public class RegistrationNewProviderICommand implements ICommand {
     @Override
     public boolean execute(Update update) {
         Long id;
-        if (update.hasCallbackQuery())
+        if (update.hasCallbackQuery()) {
             id = update.getCallbackQuery().getFrom().getId();
-        else if (update.hasMessage())
+        } else if (update.hasMessage()) {
             id = update.getMessage().getChatId();
-        else
+        } else {
             return false;
+        }
         ProviderDto providerDto = providerService.getProviderDto(id);
         LOGGER.info("i try register new provider");
         boolean isRegistration = false;

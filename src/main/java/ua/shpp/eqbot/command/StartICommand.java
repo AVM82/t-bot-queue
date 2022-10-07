@@ -25,10 +25,11 @@ public class StartICommand implements ICommand {
 
     @Override
     public boolean execute(Update update) {
-        if (update.hasCallbackQuery())
+        if (update.hasCallbackQuery()) {
             createStartMenu(update.getCallbackQuery().getFrom().getId());
-        else
+        } else {
             createStartMenu(update.getMessage().getChatId());
+        }
         return true;
     }
 
