@@ -7,8 +7,10 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
+import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
 import org.telegram.telegrambots.meta.api.objects.Update;
+import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import ua.shpp.eqbot.command.CommandContainer;
 import ua.shpp.eqbot.internationalization.BundleLanguage;
 import ua.shpp.eqbot.dto.UserDto;
@@ -21,7 +23,6 @@ import ua.shpp.eqbot.service.SendBotMessageServiceImpl;
 import ua.shpp.eqbot.service.UserService;
 import ua.shpp.eqbot.stage.PositionMenu;
 
-import static ua.shpp.eqbot.command.CommandName.NO;
 import static ua.shpp.eqbot.stage.PositionMenu.*;
 
 @Component
@@ -136,14 +137,19 @@ public class EqTelegramBot extends TelegramLongPollingBot {
 
     private void callbackQueryHandler(Update update) {
         CallbackQuery callbackQuery = update.getCallbackQuery();
+        UserDto userDto = userService.getDto(update.getCallbackQuery().getFrom().getId());
         if (callbackQuery.getData().equals("create_service")) {
             LOGGER.info("create_service");
-            UserDto user = userService.getDto(update.getCallbackQuery().getFrom().getId());
-            user.setPositionMenu(MENU_CREATE_SERVICE);
+            userDto.setPositionMenu(MENU_CREATE_SERVICE);
             if (!commandContainer.retrieveCommand("/check provider").execute(update))
-                user.setPositionMenu(REGISTRATION_PROVIDER);
+                userDto.setPositionMenu(REGISTRATION_PROVIDER);
         } else if (callbackQuery.getData().equals("search_service")) {
             LOGGER.info("search_service");
+            userDto.setPositionMenu(MENU_SEARCH_SERVICE);
+            if (!commandContainer.retrieveCommand("/search").execute(update)) {
+                userDto.setPositionMenu(MENU_START);
+                commandContainer.retrieveCommand("/start").execute(update);
+            }
         } else if (callbackQuery.getData().equals("return_in_menu")) {
             commandContainer.retrieveCommand("/start").execute(update);
         } else if (callbackQuery.getData().equals("change_provider_details")) {
@@ -153,6 +159,17 @@ public class EqTelegramBot extends TelegramLongPollingBot {
             userService.getDto(update.getCallbackQuery().getFrom().getId())
                     .setPositionMenu(PositionMenu.REGISTRATION_SERVICE);
             commandContainer.retrieveCommand("/add").execute(update);
+        } else if (userDto.getPositionMenu() == MENU_SEARCH_SERVICE) {
+            LOGGER.info("The user has successfully selected the service");
+            try {
+                execute(SendMessage.builder()
+                        .chatId(callbackQuery.getFrom().getId())
+                        .text(callbackQuery.getData())
+                        .build());
+            } catch (TelegramApiException e) {
+                throw new RuntimeException(e);
+            }
+            userDto.setPositionMenu(DONE);
         } else if (callbackQuery.getData().equals("add_provider")) {
             commandContainer.retrieveCommand("/add provider").execute(update);
             UserDto user = userService.getDto(update.getCallbackQuery().getFrom().getId());
