@@ -100,8 +100,6 @@ public class EqTelegramBot extends TelegramLongPollingBot {
                     user.setPositionMenu(MENU_START);
                     commandContainer.retrieveCommand("/start").execute(update);
                 }
-            } else if (update.getMessage().getText().equals("Change role to Provider")) {
-                commandContainer.retrieveCommand(update.getMessage().getText()).execute(update);
             } else if (user.getPositionMenu() == PositionMenu.MENU_START) {
                 commandContainer.retrieveCommand("mainMenu").execute(update);
                 commandContainer.retrieveCommand("/start").execute(update);

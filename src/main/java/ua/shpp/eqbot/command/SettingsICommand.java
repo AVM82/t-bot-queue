@@ -45,8 +45,6 @@ public class SettingsICommand implements ICommand {
         sendMessage.setReplyMarkup(inlineKeyboardMarkup);
         sendBotMessageService.sendMessage(sendMessage);
 
-
-
         return true;
     }
 }
