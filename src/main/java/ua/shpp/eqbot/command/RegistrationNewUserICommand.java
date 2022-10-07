@@ -47,7 +47,10 @@ public class RegistrationNewUserICommand implements ICommand {
             UserEntity userEntity = userService.getEntity(update.getMessage().getChatId());
             if (userEntity != null) {
                 LOGGER.info("user present into repo");
-                userService.saveDto(convertToDto(userEntity).setPositionRegistration(PositionRegistration.DONE));
+                //userService.saveDto(convertToDto(userEntity).setPositionRegistration(PositionRegistration.DONE));
+                userService.saveDto(UserMapper.INSTANCE.userEntityToUserDTO(userEntity))
+                        .setPositionRegistration(PositionRegistration.DONE)
+                        .setPositionMenu(PositionMenu.MENU_START);
                 return true;
             }
             return registration(update.getMessage(), null);

@@ -85,28 +85,31 @@ public class EqTelegramBot extends TelegramLongPollingBot {
                     update.getMessage().getChat().getFirstName(),
                     update.getMessage().getChat().getLastName(),
                     update.getMessage().getChat().getId());
-            UserDto user = userService.getDto(update.getMessage().getChat().getId());
             //change registration user
             if (!commandContainer.retrieveCommand("/reg").execute(update)) {
                 LOGGER.info("Registration user");
                 //change registration provider
-            } else if (user.getPositionMenu() == REGISTRATION_PROVIDER) {
-                if (commandContainer.retrieveCommand("/add provider").execute(update) &&
-                        !commandContainer.retrieveCommand("/check service").execute(update))
-                    user.setPositionMenu(PositionMenu.REGISTRATION_SERVICE);
-                //change registration service
-            } else if (user.getPositionMenu() == REGISTRATION_SERVICE) {
-                if (commandContainer.retrieveCommand("/add").execute(update)) {
-                    user.setPositionMenu(MENU_START);
+            } else {
+                UserDto user = userService.getDto(update.getMessage().getChat().getId());
+                if (user.getPositionMenu() == REGISTRATION_PROVIDER) {
+                    if (commandContainer.retrieveCommand("/add provider").execute(update) &&
+                            !commandContainer.retrieveCommand("/check service").execute(update))
+                        user.setPositionMenu(PositionMenu.REGISTRATION_SERVICE);
+                    //change registration service
+                } else if (user.getPositionMenu() == REGISTRATION_SERVICE) {
+                    if (commandContainer.retrieveCommand("/add").execute(update)) {
+                        user.setPositionMenu(MENU_START);
+                        commandContainer.retrieveCommand("/start").execute(update);
+                    }
+                } else if (update.getMessage().getText().equals("Change role to Provider")) {
+                    commandContainer.retrieveCommand(update.getMessage().getText()).execute(update);
+                } else if (user.getPositionMenu() == PositionMenu.MENU_START) {
+                    commandContainer.retrieveCommand("mainMenu").execute(update);
                     commandContainer.retrieveCommand("/start").execute(update);
                 }
-            } else if (update.getMessage().getText().equals("Change role to Provider")) {
-                commandContainer.retrieveCommand(update.getMessage().getText()).execute(update);
-            } else if (user.getPositionMenu() == PositionMenu.MENU_START) {
-                commandContainer.retrieveCommand("mainMenu").execute(update);
-                commandContainer.retrieveCommand("/start").execute(update);
             }
         }
+
     }
 
     private void imageHandler(Update update) {
@@ -154,7 +157,7 @@ public class EqTelegramBot extends TelegramLongPollingBot {
             commandContainer.retrieveCommand("/add provider").execute(update);
             UserDto user = userService.getDto(update.getCallbackQuery().getFrom().getId());
             user.setPositionMenu(REGISTRATION_PROVIDER);
-        }else if (callbackQuery.getData().equals("change_role")) {
+        } else if (callbackQuery.getData().equals("change_role")) {
             commandContainer.retrieveCommand("/change_role").execute(update);
         }
     }
