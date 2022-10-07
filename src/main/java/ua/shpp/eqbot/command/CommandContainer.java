@@ -31,9 +31,9 @@ public class CommandContainer {
                 .put(CommandName.START.getNameCommand(), new StartICommand(sendBotMessageService, bundleLanguage))
                 .put(CommandName.HELP.getNameCommand(), new HelpICommand(sendBotMessageService))
                 .put(CommandName.NO.getNameCommand(), new NoICommand(sendBotMessageService))
-                .put(CommandName.SETTINGS.getNameCommand(), new SettingsICommand(sendBotMessageService))
+                .put(CommandName.SETTINGS.getNameCommand(), new SettingsICommand(sendBotMessageService, bundleLanguage))
                 .put(CommandName.CHANGE_ROLE_TO_PROVIDER.getNameCommand(),
-                        new ChangeRoleToProviderICommand(sendBotMessageService, providerRepository))
+                        new ChangeRoleToProviderICommand(sendBotMessageService, providerRepository, bundleLanguage))
                 .put(CommandName.ADD_SERVICE.getNameCommand(),
                         new RegistrationServiceICommand(sendBotMessageService, serviceRepository, imageService, bundleLanguage))
                 .put(CommandName.DELETE_USER.getNameCommand(), new DeleteUserICommand(sendBotMessageService,

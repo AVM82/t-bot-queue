@@ -61,6 +61,10 @@ public class RegistrationNewProviderICommand implements ICommand {
                                 .setPositionRegistrationProvider(PositionRegistrationProvider.DONE);
                         providerService.saveDtoInDataBase(providerDto);
                         isRegistration = true;
+                        sendBotMessageService.sendMessage(SendMessage.builder()
+                                .chatId(id)
+                                .text(bundleLanguage.getValue(id, "registered_new_provider"))
+                                .build());
                     }
                     break;
                 default:

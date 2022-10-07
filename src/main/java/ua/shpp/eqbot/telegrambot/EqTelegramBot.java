@@ -127,11 +127,7 @@ public class EqTelegramBot extends TelegramLongPollingBot {
             }
         } else {
             commandContainer.retrieveCommand(commandIdentifier).execute(update);
-            if (messageText.equals("Change role to Provider") || messageText.equals("Реєстрація нового провайдера")) {
-                commandContainer.retrieveCommand(messageText).execute(update);
-            } else {
-                commandContainer.retrieveCommand(NO.getNameCommand()).execute(update);
-            }
+
         }
     }
 
@@ -154,6 +150,10 @@ public class EqTelegramBot extends TelegramLongPollingBot {
             userService.getDto(update.getCallbackQuery().getFrom().getId())
                     .setPositionMenu(PositionMenu.REGISTRATION_SERVICE);
             commandContainer.retrieveCommand("/add").execute(update);
+        } else if (callbackQuery.getData().equals("add_provider")) {
+            commandContainer.retrieveCommand("/add provider").execute(update);
+            UserDto user = userService.getDto(update.getCallbackQuery().getFrom().getId());
+            user.setPositionMenu(REGISTRATION_PROVIDER);
         }
     }
 }
