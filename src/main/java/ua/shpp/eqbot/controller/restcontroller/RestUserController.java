@@ -19,7 +19,7 @@ import java.util.List;
 @RequestMapping("/user")
 public class RestUserController {
 
-    Logger LOGGER = LoggerFactory.getLogger(RestUserController.class);
+    Logger logger = LoggerFactory.getLogger(RestUserController.class);
     final RestUserService service;
 
     public RestUserController(RestUserService service) {
@@ -30,7 +30,7 @@ public class RestUserController {
     @Operation(summary = "${operation.summary.user.get_all_users}",
             description = "${operation.desc.user.get_all_users}")
     public List<UserEntity> getAllUsers() {
-        LOGGER.info("Getting all users");
+        logger.info("Getting all users");
         return service.getAllUsers();
     }
 
@@ -38,7 +38,7 @@ public class RestUserController {
     @Operation(summary = "${operation.summary.user.get_user}",
             description = "${operation.desc.user.get_user}")
     public UserEntity getUser(@PathVariable Long telegramId) {
-        LOGGER.info("Getting user with Telegram {}", telegramId);
+        logger.info("Getting user with Telegram {}", telegramId);
         return service.getUser(telegramId);
     }
 
@@ -49,12 +49,12 @@ public class RestUserController {
         if (bindingResult.hasErrors()) {
             List<FieldError> errors = bindingResult.getFieldErrors();
             for (FieldError error : errors) {
-                LOGGER.error(error.getDefaultMessage());
+                logger.error(error.getDefaultMessage());
             }
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Entered data is not valid");
         } else {
             service.postUser(userDto);
-            LOGGER.info("Adding new service with name '{}'", userDto.getName());
+            logger.info("Adding new service with name '{}'", userDto.getName());
         }
 
     }
@@ -63,7 +63,7 @@ public class RestUserController {
     @Operation(summary = "${operation.summary.user.delete_user}",
             description = "${operation.desc.user.delete_user}")
     public void deleteUser(@PathVariable Long telegramId) {
-        LOGGER.info("Deleting user with Telegram id {}", telegramId);
+        logger.info("Deleting user with Telegram id {}", telegramId);
         service.deleteUser(telegramId);
     }
 
