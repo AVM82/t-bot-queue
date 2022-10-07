@@ -1,6 +1,8 @@
 package ua.shpp.eqbot.model;
 
 import javax.persistence.*;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotBlank;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
@@ -11,8 +13,10 @@ public class UserEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private Long telegramId;
+    @NotBlank
     private String name;
     private String city;
+    @Min(5)
     private String phone;
     private String language;
     private LocalDateTime createdTime;
