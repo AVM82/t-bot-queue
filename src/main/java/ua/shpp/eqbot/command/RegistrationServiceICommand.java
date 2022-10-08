@@ -70,14 +70,14 @@ public class RegistrationServiceICommand implements ICommand {
                         LOGGER.info("new service INPUT_CITY with message text {}", update.getMessage().getText());
                         ServiceCache.add(addingDescriptionAndAvatar(update.getMessage(), serviceDTO)
                                 .setPositionRegistrationService(PositionRegistrationService.MONDAY_WORKING_HOURS));
-                        createMessage(id, "beginning_of_work", "monday", "format");
+                        createMessage(id, "work_day_schedule", "monday", "format");
                         break;
                     case MONDAY_WORKING_HOURS:
                         LOGGER.info("new service MONDAY_WORKING_HOURS with message text {}", update.getMessage().getText());
                         if (changeFormatTime(update.getMessage().getText(), id)) {
                             ServiceCache.add(serviceDTO.setMondayWorkingHours(update.getMessage().getText())
                                     .setPositionRegistrationService(PositionRegistrationService.TUESDAY_WORKING_HOURS));
-                            createMessage(id, "end_of_work_on", "tuesday", "format");
+                            createMessage(id, "work_day_schedule", "tuesday", "format");
                         }
                         break;
                     case TUESDAY_WORKING_HOURS:
@@ -85,7 +85,7 @@ public class RegistrationServiceICommand implements ICommand {
                         if (changeFormatTime(update.getMessage().getText(), id)) {
                             ServiceCache.add(serviceDTO.setThursdayWorkingHours(update.getMessage().getText())
                                     .setPositionRegistrationService(PositionRegistrationService.WEDNESDAY_WORKING_HOURS));
-                            createMessage(id, "end_of_work_on", "wednesday", "format");
+                            createMessage(id, "work_day_schedule", "wednesday", "format");
                         }
                         break;
                     case WEDNESDAY_WORKING_HOURS:
@@ -93,7 +93,7 @@ public class RegistrationServiceICommand implements ICommand {
                         if (changeFormatTime(update.getMessage().getText(), id)) {
                             ServiceCache.add(serviceDTO.setWednesdayWorkingHours(update.getMessage().getText())
                                     .setPositionRegistrationService(PositionRegistrationService.THURSDAY_WORKING_HOURS));
-                            createMessage(id, "end_of_work_on", "thursday", "format");
+                            createMessage(id, "work_day_schedule", "thursday", "format");
                         }
                         break;
                     case THURSDAY_WORKING_HOURS:
@@ -101,7 +101,7 @@ public class RegistrationServiceICommand implements ICommand {
                         if (changeFormatTime(update.getMessage().getText(), id)) {
                             ServiceCache.add(serviceDTO.setThursdayWorkingHours(update.getMessage().getText())
                                     .setPositionRegistrationService(PositionRegistrationService.FRIDAY_WORKING_HOURS));
-                            createMessage(id, "end_of_work_on", "friday", "format");
+                            createMessage(id, "work_day_schedule", "friday", "format");
                         }
                         break;
                     case FRIDAY_WORKING_HOURS:
@@ -109,7 +109,7 @@ public class RegistrationServiceICommand implements ICommand {
                         if (changeFormatTime(update.getMessage().getText(), id)) {
                             ServiceCache.add(serviceDTO.setFridayWorkingHours(update.getMessage().getText())
                                     .setPositionRegistrationService(PositionRegistrationService.SATURDAY_WORKING_HOURS));
-                            createMessage(id, "end_of_work_on", "saturday", "format");
+                            createMessage(id, "work_day_schedule", "saturday", "format");
                         }
                         break;
                     case SATURDAY_WORKING_HOURS:
@@ -117,7 +117,7 @@ public class RegistrationServiceICommand implements ICommand {
                         if (changeFormatTime(update.getMessage().getText(), id)) {
                             ServiceCache.add(serviceDTO.setSaturdayWorkingHours(update.getMessage().getText())
                                     .setPositionRegistrationService(PositionRegistrationService.SUNDAY_WORKING_HOURS));
-                            createMessage(id, "end_of_work_on", "sunday", "format");
+                            createMessage(id, "work_day_schedule", "sunday", "format");
                         }
                         break;
                     case SUNDAY_WORKING_HOURS:
