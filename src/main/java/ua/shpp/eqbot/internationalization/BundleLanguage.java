@@ -31,6 +31,4 @@ public class BundleLanguage {
         LOGGER.info("user language is {}", language);
         return resourceBundle.getString(value);
     }
-
-    //instance of this class is not needed
 }

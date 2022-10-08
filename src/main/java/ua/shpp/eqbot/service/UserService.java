@@ -2,6 +2,7 @@ package ua.shpp.eqbot.service;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
@@ -13,15 +14,22 @@ import ua.shpp.eqbot.model.UserEntity;
 import ua.shpp.eqbot.repository.UserRepository;
 import ua.shpp.eqbot.validation.UserValidateService;
 
+import javax.validation.ConstraintViolation;
+import javax.validation.Validator;
+import java.util.Set;
+
 @Service
 public class UserService {
     private static final Logger LOGGER = LoggerFactory.getLogger(UserService.class);
     private final UserRepository userRepository;
     private static final String DTO_CACHE_NAME = "cacheUserDto";
-
+    private final UserValidateService userValidateService;
+    @Autowired
+    private Validator validator;
 
     public UserService(UserRepository userRepository, UserValidateService userValidateService) {
         this.userRepository = userRepository;
+        this.userValidateService = userValidateService;
     }
 
     @Cacheable(cacheNames = "cacheEntity", key = "#telegramId")
@@ -34,8 +42,22 @@ public class UserService {
     @CachePut(cacheNames = "cacheEntity")
     public UserEntity saveEntity(UserEntity userEntity) {
         LOGGER.info("save userEntity {}", userEntity);
+        Set<ConstraintViolation<UserEntity>> violations = validator.validate(userEntity);
+        if (!violations.isEmpty() || !(userValidateService.checkUserCreation(userEntity.getName(), userEntity.getPhone()))) {
+            StringBuilder stringBuilder = new StringBuilder();
+            for (ConstraintViolation<UserEntity> constraintViolation : violations) {
+                stringBuilder.append(constraintViolation.getMessage());
+            }
+            LOGGER.info("the model was not inserted into the database because it did not pass validation");
+            LOGGER.error("Error occurred: {}, {}", stringBuilder, validator);
+
+            return null;
+        }
+        LOGGER.info("model save to DB with id {}", userEntity.getTelegramId());
+        UserEntity result = userRepository.save(userEntity);
         saveDto(UserMapper.INSTANCE.userEntityToUserDTO(userEntity)); // additional
-        return userRepository.save(userEntity);
+        LOGGER.info("success created new userEntity");
+        return result;
     }
 
     @CachePut(cacheNames = DTO_CACHE_NAME, key = "#userDto.telegramId")

@@ -1,12 +1,14 @@
 package ua.shpp.eqbot.validation;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ua.shpp.eqbot.ecxeption.ValidationFailedException;
 import ua.shpp.eqbot.repository.UserRepository;
 
 @Service
 public class UserValidateServiceImpl implements UserValidateService {
+    private static final Logger LOGGER = LoggerFactory.getLogger(UserValidateServiceImpl.class);
 
     private final UserRepository userRepository;
 
@@ -16,9 +18,11 @@ public class UserValidateServiceImpl implements UserValidateService {
 
     @Override
     @Transactional(readOnly = true)
-    public void checkUserCreation(String firstName, String lastName) {
-        if (userRepository.existsByNameAndPhone(firstName, lastName)) {
-            throw new ValidationFailedException("Such person already exists");
+    public boolean checkUserCreation(String name, String phone) {
+        if (userRepository.existsByNameAndPhone(name, phone)) {
+            LOGGER.error("Such person already exists");
+            return false;
         }
+        return true;
     }
 }

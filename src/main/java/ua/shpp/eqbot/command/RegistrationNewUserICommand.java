@@ -11,12 +11,12 @@ import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import ua.shpp.eqbot.dto.UserDto;
 import ua.shpp.eqbot.internationalization.BundleLanguage;
-import ua.shpp.eqbot.stage.PositionMenu;
-import ua.shpp.eqbot.stage.PositionRegistration;
+import ua.shpp.eqbot.mapper.UserMapper;
 import ua.shpp.eqbot.model.UserEntity;
 import ua.shpp.eqbot.service.SendBotMessageService;
 import ua.shpp.eqbot.service.UserService;
-import ua.shpp.eqbot.mapper.UserMapper;
+import ua.shpp.eqbot.stage.PositionMenu;
+import ua.shpp.eqbot.stage.PositionRegistration;
 
 @Component
 public class RegistrationNewUserICommand implements ICommand {
@@ -131,25 +131,27 @@ public class RegistrationNewUserICommand implements ICommand {
                     userDto.setPhone(message.getText());
                     userDto.setPositionRegistration(PositionRegistration.DONE);
                     UserEntity userEntity = UserMapper.INSTANCE.userDTOToUserEntity(userDto);
-                    userService.saveEntity(userEntity);
-                    LOGGER.info("save entity to database {}", userEntity);
-                    isRegistration = true;
-                    sendBotMessageService.sendMessage(createQuery(message.getChatId(),
-                            String.format(bundleLanguage.getValue(
-                                            message.getChatId(), "registered"),
-                                    userDto.getTelegramId(), userDto.getName(), userDto.getCity(), userDto.getPhone())));
-                    break;
+                    UserEntity resultSaveToRepository = userService.saveEntity(userEntity);
+                    if (resultSaveToRepository != null) {
+                        LOGGER.info("save entity to database {}", userEntity);
+                        isRegistration = true;
+                        sendBotMessageService.sendMessage(createQuery(message.getChatId(),
+                                String.format(bundleLanguage.getValue(
+                                                message.getChatId(), "registered"),
+                                        userDto.getTelegramId(), userDto.getName(), userDto.getCity(), userDto.getPhone())));
+                        break;
+                    } else {
+                        LOGGER.warn("when saving to database an error occurred");
+                        sendBotMessageService.sendMessage(createQuery(message.getChatId(),
+                                String.format(bundleLanguage.getValue(
+                                        message.getChatId(), "no_successfully"))));
+                        userService.remove(userDto.getTelegramId());
+                    }
                 default:
                     //do nothing
                     break;
             }
         }
         return isRegistration;
-    }
-
-    private UserDto convertToDto(UserEntity userEntity) {
-        UserDto postDto = modelMapper.map(userEntity, UserDto.class);
-        LOGGER.info("convert entity to dto");
-        return postDto;
     }
 }
