@@ -2,6 +2,7 @@ package ua.shpp.eqbot.service;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +22,7 @@ class ImageServiceTest {
     @Mock
     EqTelegramBot bot;
 
+    @InjectMocks
     ImageService imageService = new ImageService(bot);
 
     @Test
@@ -60,31 +62,5 @@ class ImageServiceTest {
 
     }
 
-    @Test
-    void sendImageToAWS() {
-    }
 
-    @Test
-    void sendImageFromAWS() {
-    }
-
-    @Test
-    void getArrayOfLogo() {
-    }
-
-    @Test
-    void sendBigImageToAWS() {
-    }
-
-    @Test
-    void photoToStream() {
-    }
-
-    @Test
-    void sendImageFromDB() {
-    }
-
-    @Test
-    void sendImage() {
-    }
 }

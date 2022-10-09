@@ -54,7 +54,7 @@ public class SearchServiceCommand implements ICommand {
 
         UserDto user = userService.getDto(id);
         String city = user.getCity();
-        List<ProviderEntity> providerEntityByCityList = providerRepository.findAllByProviderCityIgnoreCase(city);
+        List<ProviderEntity> providerEntityByCityList = providerRepository.findAllByProviderCity(city);
         if (providerEntityByCityList.isEmpty()) {
             LOGGER.info("No service providers were found for the user's city of registration");
             sendBotMessageService.sendMessage(String.valueOf(id),
