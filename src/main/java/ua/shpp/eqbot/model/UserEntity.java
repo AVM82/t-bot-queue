@@ -16,7 +16,6 @@ public class UserEntity {
     @NotBlank
     private String name;
     private String city;
-    @Min(5)
     private String phone;
     private String language;
     private LocalDateTime createdTime;
