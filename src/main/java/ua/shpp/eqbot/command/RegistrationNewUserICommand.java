@@ -1,7 +1,5 @@
 package ua.shpp.eqbot.command;
 
-
-import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +22,6 @@ public class RegistrationNewUserICommand implements ICommand {
     private final SendBotMessageService sendBotMessageService;
     private final UserService userService;
     private final BundleLanguage bundleLanguage;
-    private final ModelMapper modelMapper = new ModelMapper();
 
     @Autowired
     public RegistrationNewUserICommand(SendBotMessageService sendBotMessageService, UserService userService, BundleLanguage bundleLanguage) {
@@ -47,7 +44,6 @@ public class RegistrationNewUserICommand implements ICommand {
             UserEntity userEntity = userService.getEntity(update.getMessage().getChatId());
             if (userEntity != null) {
                 LOGGER.info("user present into repo");
-                //userService.saveDto(convertToDto(userEntity).setPositionRegistration(PositionRegistration.DONE));
                 userService.saveDto(UserMapper.INSTANCE.userEntityToUserDTO(userEntity))
                         .setPositionRegistration(PositionRegistration.DONE)
                         .setPositionMenu(PositionMenu.MENU_START);
@@ -147,6 +143,7 @@ public class RegistrationNewUserICommand implements ICommand {
                                         message.getChatId(), "no_successfully"))));
                         userService.remove(userDto.getTelegramId());
                     }
+                    break;
                 default:
                     //do nothing
                     break;

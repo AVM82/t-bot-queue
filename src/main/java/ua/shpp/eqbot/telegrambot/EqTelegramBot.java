@@ -31,7 +31,6 @@ public class EqTelegramBot extends TelegramLongPollingBot {
     private final UserService userService;
     ProviderRepository providerRepository;
 
-
     @Autowired
     public EqTelegramBot(ServiceRepository serviceRepository,
                          ProviderRepository providerRepository, @Lazy ImageService imageService,
@@ -165,7 +164,7 @@ public class EqTelegramBot extends TelegramLongPollingBot {
                         .text(callbackQuery.getData())
                         .build());
             } catch (TelegramApiException e) {
-                throw new RuntimeException(e);
+                LOGGER.warn(e.getLocalizedMessage());
             }
             userDto.setPositionMenu(DONE);
         } else if (callbackQuery.getData().equals("add_provider")) {

@@ -67,5 +67,4 @@ public class RestUserController {
         service.deleteUser(telegramId);
     }
 
-
 }

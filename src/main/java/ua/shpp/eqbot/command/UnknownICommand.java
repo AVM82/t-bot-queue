@@ -17,7 +17,9 @@ public class UnknownICommand implements ICommand {
 
     @Override
     public boolean execute(Update update) {
-        sendBotMessageService.sendMessage(update.getMessage().getChatId().toString(), bundleLanguage.getValue(update.getMessage().getChatId(), UNKNOWN_MESSAGE));
+        sendBotMessageService.sendMessage(
+                update.getMessage().getChatId().toString(),
+                bundleLanguage.getValue(update.getMessage().getChatId(), UNKNOWN_MESSAGE));
         return true;
     }
 }

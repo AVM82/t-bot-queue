@@ -17,7 +17,6 @@ public class RestUserService {
         this.repository = repository;
     }
 
-
     public List<UserEntity> getAllUsers() {
         return repository.findAll();
     }

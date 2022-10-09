@@ -1,37 +1,33 @@
-package ua.shpp.eqbot.service;
+package eqbot.service;
 
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.jupiter.api.MethodOrderer;
-import org.junit.jupiter.api.TestMethodOrder;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.cache.CacheManager;
 import org.springframework.test.context.junit4.SpringRunner;
 import ua.shpp.eqbot.model.ProviderEntity;
 import ua.shpp.eqbot.repository.ProviderRepository;
+import ua.shpp.eqbot.service.ProviderService;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.is;
-
-@TestMethodOrder(MethodOrderer.DisplayName.class)
 @RunWith(SpringRunner.class)
 @DataJpaTest
-public class ProviderServiceIntegrationTest {
-
+//@SpringBootTest()
+public class ApplicationTest {
     @Autowired
     ProviderRepository providerRepository;
-
     ProviderService providerService;
-    ProviderEntity entity;
-
+    @Autowired
+    CacheManager cacheManager;
 
     @Before
     public void setUp() {
+
         providerService = new ProviderService(providerRepository);
 
-        entity = new ProviderEntity();
+        ProviderEntity entity = new ProviderEntity();
         entity.setProviderCity("Dnipro");
         entity.setTelegramId(12L);
         entity.setName("Sashko");
@@ -46,8 +42,9 @@ public class ProviderServiceIntegrationTest {
 
     @Test
     public void contextLoads() {
+
         ProviderEntity dnipro = providerService.getByTelegramIdEntity(12L);
-        assertThat(dnipro, is(entity));
+
     }
 
 }

@@ -1,7 +1,8 @@
-package ua.shpp.eqbot.mapper;
+package eqbot.mapper;
 
 import org.junit.Test;
 import ua.shpp.eqbot.dto.UserDto;
+import ua.shpp.eqbot.mapper.UserMapper;
 import ua.shpp.eqbot.model.UserEntity;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
@@ -16,9 +17,9 @@ public class UserMapperTest {
         UserEntity userEntity = UserMapper.INSTANCE.userDTOToUserEntity(userDto);
 
         //then
-        assertThat(userEntity).isNotNull();
-        assertThat(userEntity.getName()).isEqualTo("Oleksandr");
-        assertThat(userEntity.getCity()).isEqualTo("Kiev");
+        AssertionsForClassTypes.assertThat(userEntity).isNotNull();
+        AssertionsForClassTypes.assertThat(userEntity.getName()).isEqualTo("Oleksandr");
+        AssertionsForClassTypes.assertThat(userEntity.getCity()).isEqualTo("Kiev");
     }
 
     @Test
@@ -30,8 +31,8 @@ public class UserMapperTest {
         UserDto userDto = UserMapper.INSTANCE.userEntityToUserDTO(userEntity);
 
         //then
-        assertThat(userDto).isNotNull();
-        assertThat(userDto.getName()).isEqualTo("Oleksandr");
-        assertThat(userDto.getPhone()).isEqualTo("777");
+        AssertionsForClassTypes.assertThat(userDto).isNotNull();
+        AssertionsForClassTypes.assertThat(userDto.getName()).isEqualTo("Oleksandr");
+        AssertionsForClassTypes.assertThat(userDto.getPhone()).isEqualTo("777");
     }
 }

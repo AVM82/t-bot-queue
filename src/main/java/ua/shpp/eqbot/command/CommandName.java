@@ -16,7 +16,6 @@ public enum CommandName {
     CHECK_SERVICE("/check service"),
     NO("nocommand");
 
-
     private final String nameCommand;
 
     CommandName(String commandName) {

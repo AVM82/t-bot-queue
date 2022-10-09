@@ -2,7 +2,6 @@ package ua.shpp.eqbot.service;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
@@ -24,12 +23,12 @@ public class UserService {
     private final UserRepository userRepository;
     private static final String DTO_CACHE_NAME = "cacheUserDto";
     private final UserValidateService userValidateService;
-    @Autowired
-    private Validator validator;
+    private final Validator validator;
 
-    public UserService(UserRepository userRepository, UserValidateService userValidateService) {
+    public UserService(UserRepository userRepository, UserValidateService userValidateService, Validator validator) {
         this.userRepository = userRepository;
         this.userValidateService = userValidateService;
+        this.validator = validator;
     }
 
     @Cacheable(cacheNames = "cacheEntity", key = "#telegramId")
@@ -83,4 +82,3 @@ public class UserService {
         return true;
     }
 }
-

@@ -1,4 +1,4 @@
-package ua.shpp.eqbot.registration;
+package eqbot.registration;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -12,6 +12,8 @@ import ua.shpp.eqbot.stage.PositionMenu;
 import ua.shpp.eqbot.stage.PositionRegistration;
 import ua.shpp.eqbot.validation.UserValidateService;
 
+import javax.validation.Validator;
+
 @ExtendWith(MockitoExtension.class)
 class RegistrationUserTest {
 
@@ -22,11 +24,13 @@ class RegistrationUserTest {
 
     @Mock
     private UserValidateService userValidateService;
+    @Mock
+    private Validator validator;
 
     @BeforeEach
     public void setUp() {
 
-        userService = new UserService(userRepository, userValidateService);
+        userService = new UserService(userRepository, userValidateService, validator);
 
         UserDto dto = new UserDto();
         dto.setPositionMenu(PositionMenu.MENU_START)

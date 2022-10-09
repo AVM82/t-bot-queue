@@ -23,8 +23,10 @@ public class CheckProviderRegistrationICommand implements ICommand {
     private final ProviderService providerService;
     private final BundleLanguage bundleLanguage;
 
-    public CheckProviderRegistrationICommand(SendBotMessageService sendBotMessageService,
-                                             ProviderService providerService, BundleLanguage bundleLanguage) {
+    public CheckProviderRegistrationICommand(
+            SendBotMessageService sendBotMessageService,
+            ProviderService providerService,
+            BundleLanguage bundleLanguage) {
         this.sendBotMessageService = sendBotMessageService;
         this.providerService = providerService;
         this.bundleLanguage = bundleLanguage;
@@ -51,10 +53,8 @@ public class CheckProviderRegistrationICommand implements ICommand {
                 addRequest(id);
                 return true;
             }
-            sendBotMessageService.sendMessage(SendMessage.builder()
-                    .chatId(id)
-                    .text(bundleLanguage.getValue(id, "no_registration_provider"))
-                    .build());
+            sendBotMessageService.sendMessage(SendMessage.builder().chatId(id)
+                    .text(bundleLanguage.getValue(id, "no_registration_provider")).build());
             return new RegistrationNewProviderICommand(sendBotMessageService, providerService, bundleLanguage).execute(update);
         }
         if (providerDto.getPositionRegistrationProvider() == PositionRegistrationProvider.DONE) {
@@ -68,20 +68,19 @@ public class CheckProviderRegistrationICommand implements ICommand {
 
     private void printListProvider(Long id) {
         ProviderDto dto = providerService.getProviderDto(id);
-        sendBotMessageService.sendMessage(SendMessage.builder()
-                .chatId(id)
+        sendBotMessageService.sendMessage(SendMessage.builder().chatId(id)
                 .text(bundleLanguage.getValue(id, "registered_to_you")
-                        + "\n" + bundleLanguage.getValue(id, "company_name") + ": " + dto.getName()
-                        + "\n" + bundleLanguage.getValue(id, "city") + ": " + dto.getCity())
-                .build());
+                        + "\n" + bundleLanguage.getValue(id, "company_name")
+                        + ": " + dto.getName()
+                        + "\n" + bundleLanguage.getValue(id, "city")
+                        + ": " + dto.getCity()).build());
     }
 
     private void addRequest(Long id) {
         InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
         List<List<InlineKeyboardButton>> keyboard = new ArrayList<>();
         keyboard.add(createButton(id, "change_provider_details", "change_provider_details"));
-        keyboard.add(createButton(id, "newServiceFromAnExistingProvider",
-                "newServiceFromAnExistingProvider"));
+        keyboard.add(createButton(id, "newServiceFromAnExistingProvider", "newServiceFromAnExistingProvider"));
         keyboard.add(createButton(id, "return_in_menu", "return_in_menu"));
         inlineKeyboardMarkup.setKeyboard(keyboard);
         SendMessage sendMessage = new SendMessage();
@@ -93,10 +92,7 @@ public class CheckProviderRegistrationICommand implements ICommand {
 
     private List<InlineKeyboardButton> createButton(Long id, String nameButton, String dataButton) {
         List<InlineKeyboardButton> button = new ArrayList<>();
-        button.add(InlineKeyboardButton.builder()
-                .text(bundleLanguage.getValue(id, nameButton))
-                .callbackData(dataButton)
-                .build());
+        button.add(InlineKeyboardButton.builder().text(bundleLanguage.getValue(id, nameButton)).callbackData(dataButton).build());
         return button;
     }
 }

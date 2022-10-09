@@ -1,4 +1,4 @@
-package ua.shpp.eqbot;
+package eqbot;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

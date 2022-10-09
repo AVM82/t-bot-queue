@@ -1,4 +1,4 @@
-package ua.shpp.eqbot.service;
+package eqbot.service;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +22,6 @@ class ServiceRepositoryDataJpaTest {
             personRepository.saveAndFlush(new ServiceEntity().setName("Dasha"));
             personRepository.saveAndFlush(new ServiceEntity().setName("Masha"));
 
-            assertEquals(Set.of("Masha", "Dasha"), personRepository.findAllByName());
+            Assertions.assertEquals(Set.of("Masha", "Dasha"), personRepository.findAllByName());
         }
     }
