@@ -23,6 +23,4 @@ public interface ServiceRepository extends JpaRepository<ServiceEntity, Long> {
 
     @Query("select distinct t.name from ServiceEntity t ")
     Set<String> findAllByName();
-
-    void deleteAllByTelegramId(Long telegramId);
 }
