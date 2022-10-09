@@ -8,5 +8,5 @@ public interface UserValidateService {
      * @param name  - name user
      * @param phone - phone user
      */
-    void checkUserCreation(String name, String phone);
+    boolean checkUserCreation(String name, String phone);
 }

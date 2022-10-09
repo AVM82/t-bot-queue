@@ -1,6 +1,8 @@
 package ua.shpp.eqbot.model;
 
 import javax.persistence.*;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotBlank;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
@@ -11,8 +13,10 @@ public class UserEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private Long telegramId;
+    @NotBlank
     private String name;
     private String city;
+    @Min(5)
     private String phone;
     private String language;
     private LocalDateTime createdTime;
@@ -85,10 +89,20 @@ public class UserEntity {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null
+                || getClass() != o.getClass()) {
+            return false;
+        }
         UserEntity that = (UserEntity) o;
-        return Objects.equals(telegramId, that.telegramId) && Objects.equals(name, that.name) && Objects.equals(city, that.city) && Objects.equals(phone, that.phone) && Objects.equals(language, that.language) && Objects.equals(createdTime, that.createdTime);
+        return Objects.equals(telegramId, that.telegramId)
+                && Objects.equals(name, that.name)
+                && Objects.equals(city, that.city)
+                && Objects.equals(phone, that.phone)
+                && Objects.equals(language, that.language)
+                && Objects.equals(createdTime, that.createdTime);
     }
 
     @Override
@@ -98,12 +112,12 @@ public class UserEntity {
 
     @Override
     public String toString() {
-        return "UserEntity{" + "telegramId=" + telegramId +
-                ", name='" + name + '\'' +
-                ", city='" + city + '\'' +
-                ", phone='" + phone + '\'' +
-                ", language='" + language + '\'' +
-                ", timeCreated=" + createdTime +
-                '}';
+        return "UserEntity{"
+                + "telegramId=" + telegramId
+                + ", name='" + name + '\''
+                + ", city='" + city + '\''
+                + ", phone='" + phone + '\''
+                + ", language='" + language + '\''
+                + ", timeCreated=" + createdTime + '}';
     }
 }

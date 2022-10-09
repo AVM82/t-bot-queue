@@ -10,8 +10,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import ua.shpp.eqbot.model.ProviderEntity;
 import ua.shpp.eqbot.repository.ProviderRepository;
 
-import java.util.List;
-
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.ArgumentMatchers.any;
@@ -40,7 +38,7 @@ class ProviderServiceUnitTest {
 
         when(providerRepository.save(any())).thenReturn(providerEntity);
 
-        providerService.save(providerEntity);
+        providerService.saveEntity(providerEntity);
         verify(providerRepository).save(argumentCaptor.capture());
 
         assertThat(argumentCaptor.getValue(), is(providerEntity));
@@ -48,12 +46,13 @@ class ProviderServiceUnitTest {
 
     @Test
     void whenGetByTelegramIdIntoProviderServiceThanSameEntityUseInProviderRepository() {
-        List<ProviderEntity> entityList = List.of(new ProviderEntity());
+//        List<ProviderEntity> entityList = List.of(new ProviderEntity());
+        ProviderEntity entity = new ProviderEntity();
 
-        when(providerRepository.findAllByTelegramId(any())).thenReturn(entityList);
+        when(providerRepository.findByTelegramId(any())).thenReturn(entity);
 
-        providerService.getByTelegramId(17L);
-        verify(providerRepository).findAllByTelegramId(captor.capture());
+        providerService.getByTelegramIdEntity(17L);
+        verify(providerRepository).findByTelegramId(captor.capture());
 
         assertThat(captor.getValue(), is(17L));
     }

@@ -10,13 +10,13 @@ import ua.shpp.eqbot.service.ProviderService;
 import ua.shpp.eqbot.service.SendBotMessageService;
 import ua.shpp.eqbot.stage.PositionRegistrationProvider;
 
-public class RegistrationNewProviderCommand implements Command {
-    private static final Logger LOGGER = LoggerFactory.getLogger(RegistrationNewProviderCommand.class);
+public class RegistrationNewProviderICommand implements ICommand {
+    private static final Logger LOGGER = LoggerFactory.getLogger(RegistrationNewProviderICommand.class);
     private final SendBotMessageService sendBotMessageService;
     private final ProviderService providerService;
     private final BundleLanguage bundleLanguage;
 
-    public RegistrationNewProviderCommand(SendBotMessageService sendBotMessageService, ProviderService providerService, BundleLanguage bundleLanguage) {
+    public RegistrationNewProviderICommand(SendBotMessageService sendBotMessageService, ProviderService providerService, BundleLanguage bundleLanguage) {
         this.sendBotMessageService = sendBotMessageService;
         this.providerService = providerService;
         this.bundleLanguage = bundleLanguage;
@@ -25,18 +25,18 @@ public class RegistrationNewProviderCommand implements Command {
     @Override
     public boolean execute(Update update) {
         Long id;
-        if (update.hasCallbackQuery())
+        if (update.hasCallbackQuery()) {
             id = update.getCallbackQuery().getFrom().getId();
-        else if (update.hasMessage())
+        } else if (update.hasMessage()) {
             id = update.getMessage().getChatId();
-        else
+        } else {
             return false;
+        }
         ProviderDto providerDto = providerService.getProviderDto(id);
         LOGGER.info("i try register new provider");
         boolean isRegistration = false;
         if (providerDto == null) {
             providerService.saveProviderDto(generateProviderFromMessage(id));
-            assert id != null;
             sendBotMessageService.sendMessage(SendMessage.builder()
                     .chatId(id)
                     .text(bundleLanguage.getValue(id, "company_name"))
@@ -61,11 +61,11 @@ public class RegistrationNewProviderCommand implements Command {
                         providerDto.setCity(update.getMessage().getText())
                                 .setPositionRegistrationProvider(PositionRegistrationProvider.DONE);
                         providerService.saveDtoInDataBase(providerDto);
-                    /*sendBotMessageService.sendMessage(SendMessage.builder()
-                            .chatId(id)
-                            .text(bundleLanguage.getValue(id, "provider_registered"))
-                            .build());*/
                         isRegistration = true;
+                        sendBotMessageService.sendMessage(SendMessage.builder()
+                                .chatId(id)
+                                .text(bundleLanguage.getValue(id, "registered_new_provider"))
+                                .build());
                     }
                     break;
                 default:

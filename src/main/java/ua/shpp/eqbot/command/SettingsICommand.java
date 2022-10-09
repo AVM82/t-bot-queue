@@ -3,55 +3,48 @@ package ua.shpp.eqbot.command;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardRow;
 import ua.shpp.eqbot.internationalization.BundleLanguage;
 import ua.shpp.eqbot.service.SendBotMessageService;
 
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Start {@link Command}.
- */
-public class StartCommand implements Command {
+public class SettingsICommand implements ICommand {
 
     private final SendBotMessageService sendBotMessageService;
     private final BundleLanguage bundleLanguage;
 
-    public StartCommand(SendBotMessageService sendBotMessageService, BundleLanguage bundleLanguage) {
+    public SettingsICommand(SendBotMessageService sendBotMessageService, BundleLanguage bundleLanguage) {
         this.sendBotMessageService = sendBotMessageService;
         this.bundleLanguage = bundleLanguage;
     }
 
     @Override
     public boolean execute(Update update) {
-        if (update.hasCallbackQuery())
-            createStartMenu(update.getCallbackQuery().getFrom().getId());
-        else
-            createStartMenu(update.getMessage().getChatId());
-        return true;
-    }
-
-    private void createStartMenu(Long chatId) {
         InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
         List<List<InlineKeyboardButton>> keyboard = new ArrayList<>();
         List<InlineKeyboardButton> buttonCreate = new ArrayList<>();
         buttonCreate.add(InlineKeyboardButton.builder()
-                .text(bundleLanguage.getValue(chatId, "create_service"))
-                .callbackData("create_service")
-                .build());
-        List<InlineKeyboardButton> buttonSearch = new ArrayList<>();
-        buttonCreate.add(InlineKeyboardButton.builder()
-                .text(bundleLanguage.getValue(chatId, "search_service"))
-                .callbackData("search_service")
+                .text(bundleLanguage.getValue(update.getMessage().getChatId(), "change_role_to_provider"))
+                .callbackData("change_role")
                 .build());
         keyboard.add(buttonCreate);
-        keyboard.add(buttonSearch);
+        List<InlineKeyboardButton> buttonLang = new ArrayList<>();
+        buttonCreate.add(InlineKeyboardButton.builder()
+                .text(bundleLanguage.getValue(update.getMessage().getChatId(), "change_language"))
+                .callbackData("change_lang")
+                .build());
+        keyboard.add(buttonLang);
         inlineKeyboardMarkup.setKeyboard(keyboard);
         SendMessage sendMessage = new SendMessage();
-        sendMessage.setText(bundleLanguage.getValue(chatId, "choose_menu_option"));
-        sendMessage.setChatId(chatId);
+        sendMessage.setText(bundleLanguage.getValue(update.getMessage().getChatId(), "choose_menu_option"));
+        sendMessage.setChatId(update.getMessage().getChatId());
         sendMessage.setReplyMarkup(inlineKeyboardMarkup);
         sendBotMessageService.sendMessage(sendMessage);
+
+        return true;
     }
 }

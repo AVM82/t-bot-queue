@@ -16,17 +16,17 @@ import ua.shpp.eqbot.service.UserService;
 
 import java.util.List;
 
-public class DeleteUserCommand implements Command {
-    private static final Logger LOGGER = LoggerFactory.getLogger(DeleteUserCommand.class);
+public class DeleteUserICommand implements ICommand {
+    private static final Logger LOGGER = LoggerFactory.getLogger(DeleteUserICommand.class);
     private final SendBotMessageService sendBotMessageService;
     private final UserService userService;
     private final BundleLanguage bundleLanguage;
     private final ProviderService providerService;
     private final ServiceRepository serviceRepository;
 
-    public DeleteUserCommand(SendBotMessageService sendBotMessageService, UserService userService,
-                             BundleLanguage bundleLanguage, ProviderService providerService,
-                             ServiceRepository serviceRepository) {
+    public DeleteUserICommand(SendBotMessageService sendBotMessageService, UserService userService,
+                              BundleLanguage bundleLanguage, ProviderService providerService,
+                              ServiceRepository serviceRepository) {
         this.sendBotMessageService = sendBotMessageService;
         this.userService = userService;
         this.bundleLanguage = bundleLanguage;

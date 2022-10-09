@@ -1,5 +1,6 @@
 package ua.shpp.eqbot.service;
 
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -26,9 +27,10 @@ class UserCreateServiceImplMockingTest {
     private final UserRepository userRepository = mock(UserRepository.class);
     private final CacheManager cacheManager = mock(CacheManager.class);
 
-    private final UserService userService = new UserService(userRepository, userValidateService, cacheManager);
+    private final UserService userService = new UserService(userRepository, userValidateService);
 
     @Test
+    @Disabled
     @DisplayName("Should fail user creation if validation does not pass")
     void shouldFailUserCreation() {
         final var name = "Jack";
@@ -57,20 +59,21 @@ class UserCreateServiceImplMockingTest {
                     return user.setTelegramId(1L);
                 });
     }
-//    @Test
-//    @Disabled
-//    void shouldRollbackIfAnyUserIsNotValidated() {
-//        final var name = "Oleksandr";
-//        final var phone = "777";
-//        UserEntity userEntity = new UserEntity();
-//        userEntity.setName(name).setPhone(phone);
-//        userService.saveEntity(userEntity);
-//        doThrow(new ValidationFailedException(""))
-//                .when(userValidateService)
-//                .checkUserCreation("Oleksandr", "777 ");
-//
-//        assertThrows(ValidationFailedException.class, () -> userService.saveEntity(userEntity));
-//
-//        assertEquals(0, userRepository.count());
-//    }
+
+    @Test
+    @Disabled
+    void shouldRollbackIfAnyUserIsNotValidated() {
+        final var name = "Oleksandr";
+        final var phone = "777";
+        UserEntity userEntity = new UserEntity();
+        userEntity.setName(name).setPhone(phone);
+        userService.saveEntity(userEntity);
+        doThrow(new ValidationFailedException(""))
+                .when(userValidateService)
+                .checkUserCreation("Oleksandr", "777 ");
+
+        assertThrows(ValidationFailedException.class, () -> userService.saveEntity(userEntity));
+
+        assertEquals(0, userRepository.count());
+    }
 }

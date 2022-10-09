@@ -138,27 +138,40 @@ public class ServiceEntity {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null
+                || getClass() != o.getClass()) {
+            return false;
+        }
 
         ServiceEntity that = (ServiceEntity) o;
 
-        if (!Objects.equals(id, that.id)) return false;
-        if (!Objects.equals(telegramId, that.telegramId)) return false;
-        if (!Objects.equals(name, that.name)) return false;
-        if (!Objects.equals(description, that.description)) return false;
+        if (!Objects.equals(id, that.id)) {
+            return false;
+        }
+        if (!Objects.equals(telegramId, that.telegramId)) {
+            return false;
+        }
+        if (!Objects.equals(name, that.name)) {
+            return false;
+        }
+        if (!Objects.equals(description, that.description)) {
+            return false;
+        }
         return Arrays.equals(avatar, that.avatar);
     }
 
     @Override
     public String toString() {
-        return "ServiceEntity{" +
-                "id=" + id +
-                ", telegramId=" + telegramId +
-                ", name='" + name + '\'' +
-                ", description='" + description + '\'' +
-                ", avatar=" + Arrays.toString(avatar) +
-                '}';
+        return "ServiceEntity{"
+                + "id=" + id
+                + ", telegramId=" + telegramId
+                + ", name='" + name + '\''
+                + ", description='" + description + '\''
+                + ", avatar=" + Arrays.toString(avatar)
+                + '}';
     }
 
     public Long getId() {

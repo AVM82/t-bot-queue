@@ -47,8 +47,9 @@ public class CacheController {
         return json;
     }
 
+
     @GetMapping("/services")
-    public Map<Long, ServiceDTO> getAllServices() {
+    public Map<Long, ServiceDTO> getAllservices() {
         return ServiceCache.getAll();
     }
 }

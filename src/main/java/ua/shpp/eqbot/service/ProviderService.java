@@ -59,8 +59,9 @@ public class ProviderService {
     public boolean remove(Long id) {
         LOGGER.info("delete provider dto and All entity");
         ProviderEntity entity = providerRepository.findByTelegramId(id);
-        if (entity != null)
+        if (entity != null) {
             providerRepository.delete(entity);
+        }
         return true;
     }
 
@@ -75,14 +76,18 @@ public class ProviderService {
     }
 
     private ProviderEntity convertToEntity(ProviderDto dto) {
-        if (dto == null) return null;
+        if (dto == null) {
+            return null;
+        }
         ProviderEntity entity = modelMapper.map(dto, ProviderEntity.class);
         LOGGER.info("convert dto to entity");
         return entity;
     }
 
     private ProviderDto convertToDto(ProviderEntity entity) {
-        if (entity == null) return null;
+        if (entity == null) {
+            return null;
+        }
         ProviderDto dto = modelMapper.map(entity, ProviderDto.class);
         LOGGER.info("convert entity to dto");
         return dto;

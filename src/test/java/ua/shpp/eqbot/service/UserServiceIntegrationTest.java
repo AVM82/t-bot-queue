@@ -5,9 +5,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.cache.CacheManager;
 import org.telegram.telegrambots.starter.TelegramBotInitializer;
-import ua.shpp.eqbot.command.AddService;
+import ua.shpp.eqbot.command.RegistrationServiceICommand;
 import ua.shpp.eqbot.command.CommandContainer;
 import ua.shpp.eqbot.dto.UserDto;
 import ua.shpp.eqbot.model.UserEntity;
@@ -26,7 +25,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @SpringBootTest
 class UserServiceIntegrationTest {
     @MockBean
-    AddService addService;
+    RegistrationServiceICommand registrationServiceCommand;
     @MockBean
     CommandContainer commandContainer;
     @MockBean
@@ -41,8 +40,6 @@ class UserServiceIntegrationTest {
     ProviderRepository providerRepository;
     @Autowired
     private UserValidateService userValidateService;
-    @Autowired
-    private CacheManager cacheManager;
 
     @Autowired
     private UserRepository userRepository;
@@ -51,7 +48,7 @@ class UserServiceIntegrationTest {
 
     @BeforeEach
     void setUp() {
-        userService = new UserService(userRepository, userValidateService, cacheManager);
+        userService = new UserService(userRepository, userValidateService);
     }
 
     @Test

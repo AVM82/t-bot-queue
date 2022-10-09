@@ -21,9 +21,9 @@ import ua.shpp.eqbot.stage.PositionRegistrationService;
 import java.util.List;
 
 @Component
-public class AddService implements Command {
+public class RegistrationServiceICommand implements ICommand {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(AddService.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(RegistrationServiceICommand.class);
     private final SendBotMessageService sendBotMessageService;
     private final ServiceRepository serviceRepository;
     private final ImageService imageService;
@@ -31,8 +31,8 @@ public class AddService implements Command {
     private final ModelMapper modelMapper = new ModelMapper();
 
     @Autowired
-    public AddService(SendBotMessageService sendBotMessageService, ServiceRepository serviceRepository,
-                      ImageService imageService, BundleLanguage bundleLanguage) {
+    public RegistrationServiceICommand(SendBotMessageService sendBotMessageService, ServiceRepository serviceRepository,
+                                       ImageService imageService, BundleLanguage bundleLanguage) {
         this.sendBotMessageService = sendBotMessageService;
         this.serviceRepository = serviceRepository;
         this.imageService = imageService;
@@ -43,12 +43,13 @@ public class AddService implements Command {
     public boolean execute(Update update) {
         boolean isRegistration = false;
         Long id;
-        if (update.hasCallbackQuery())
+        if (update.hasCallbackQuery()) {
             id = update.getCallbackQuery().getFrom().getId();
-        else if (update.hasMessage())
+        } else if (update.hasMessage()) {
             id = update.getMessage().getChatId();
-        else
+        } else {
             return false;
+        }
         ServiceDTO serviceDTO = ServiceCache.findBy(id);
         LOGGER.info("i try register new service");
         if (serviceDTO == null) {
@@ -69,14 +70,14 @@ public class AddService implements Command {
                         LOGGER.info("new service INPUT_CITY with message text {}", update.getMessage().getText());
                         ServiceCache.add(addingDescriptionAndAvatar(update.getMessage(), serviceDTO)
                                 .setPositionRegistrationService(PositionRegistrationService.MONDAY_WORKING_HOURS));
-                        createMessage(id, "beginning_of_work", "monday", "format");
+                        createMessage(id, "work_day_schedule", "monday", "format");
                         break;
                     case MONDAY_WORKING_HOURS:
                         LOGGER.info("new service MONDAY_WORKING_HOURS with message text {}", update.getMessage().getText());
                         if (changeFormatTime(update.getMessage().getText(), id)) {
                             ServiceCache.add(serviceDTO.setMondayWorkingHours(update.getMessage().getText())
                                     .setPositionRegistrationService(PositionRegistrationService.TUESDAY_WORKING_HOURS));
-                            createMessage(id, "end_of_work_on", "tuesday", "format");
+                            createMessage(id, "work_day_schedule", "tuesday", "format");
                         }
                         break;
                     case TUESDAY_WORKING_HOURS:
@@ -84,7 +85,7 @@ public class AddService implements Command {
                         if (changeFormatTime(update.getMessage().getText(), id)) {
                             ServiceCache.add(serviceDTO.setThursdayWorkingHours(update.getMessage().getText())
                                     .setPositionRegistrationService(PositionRegistrationService.WEDNESDAY_WORKING_HOURS));
-                            createMessage(id, "end_of_work_on", "wednesday", "format");
+                            createMessage(id, "work_day_schedule", "wednesday", "format");
                         }
                         break;
                     case WEDNESDAY_WORKING_HOURS:
@@ -92,7 +93,7 @@ public class AddService implements Command {
                         if (changeFormatTime(update.getMessage().getText(), id)) {
                             ServiceCache.add(serviceDTO.setWednesdayWorkingHours(update.getMessage().getText())
                                     .setPositionRegistrationService(PositionRegistrationService.THURSDAY_WORKING_HOURS));
-                            createMessage(id, "end_of_work_on", "thursday", "format");
+                            createMessage(id, "work_day_schedule", "thursday", "format");
                         }
                         break;
                     case THURSDAY_WORKING_HOURS:
@@ -100,7 +101,7 @@ public class AddService implements Command {
                         if (changeFormatTime(update.getMessage().getText(), id)) {
                             ServiceCache.add(serviceDTO.setThursdayWorkingHours(update.getMessage().getText())
                                     .setPositionRegistrationService(PositionRegistrationService.FRIDAY_WORKING_HOURS));
-                            createMessage(id, "end_of_work_on", "friday", "format");
+                            createMessage(id, "work_day_schedule", "friday", "format");
                         }
                         break;
                     case FRIDAY_WORKING_HOURS:
@@ -108,7 +109,7 @@ public class AddService implements Command {
                         if (changeFormatTime(update.getMessage().getText(), id)) {
                             ServiceCache.add(serviceDTO.setFridayWorkingHours(update.getMessage().getText())
                                     .setPositionRegistrationService(PositionRegistrationService.SATURDAY_WORKING_HOURS));
-                            createMessage(id, "end_of_work_on", "saturday", "format");
+                            createMessage(id, "work_day_schedule", "saturday", "format");
                         }
                         break;
                     case SATURDAY_WORKING_HOURS:
@@ -116,7 +117,7 @@ public class AddService implements Command {
                         if (changeFormatTime(update.getMessage().getText(), id)) {
                             ServiceCache.add(serviceDTO.setSaturdayWorkingHours(update.getMessage().getText())
                                     .setPositionRegistrationService(PositionRegistrationService.SUNDAY_WORKING_HOURS));
-                            createMessage(id, "end_of_work_on", "sunday", "format");
+                            createMessage(id, "work_day_schedule", "sunday", "format");
                         }
                         break;
                     case SUNDAY_WORKING_HOURS:
@@ -178,25 +179,27 @@ public class AddService implements Command {
     }
 
     private boolean changeFormatTime(String time, Long id) {
-        if (time.matches("(\\d|0\\d|1\\d|2[0-3]):[0-5]\\d-(\\d|0\\d|1\\d|2[0-3]):[0-5]\\d"))
+        if (time.matches("(\\d|0\\d|1\\d|2[0-3]):[0-5]\\d-(\\d|0\\d|1\\d|2[0-3]):[0-5]\\d")) {
             return true;
-        else {
+        } else {
             createMessage(id, "unformatted");
             return false;
         }
     }
 
     private boolean changeFormatTimeBetweenClients(String time, Long id) {
-        if (time.matches("(\\d|0\\d|1\\d|2[0-3]):[0-5]\\d"))
+        if (time.matches("(\\d|0\\d|1\\d|2[0-3]):[0-5]\\d")) {
             return true;
-        else {
+        } else {
             createMessage(id, "unformatted");
             return false;
         }
     }
 
     private ServiceEntity convertToEntity(ua.shpp.eqbot.dto.ServiceDTO dto) {
-        if (dto == null) return null;
+        if (dto == null) {
+            return null;
+        }
         ServiceEntity entity = modelMapper.map(dto, ServiceEntity.class);
         LOGGER.info("convert dto to entity");
         return entity;
@@ -211,17 +214,17 @@ public class AddService implements Command {
 
     private void createMessage(Long id, String text1, String text2) {
         sendBotMessageService.sendMessage(SendMessage.builder()
-                .text(bundleLanguage.getValue(id, text1) + " " +
-                        bundleLanguage.getValue(id, text2))
+                .text(bundleLanguage.getValue(id, text1) + " "
+                        + bundleLanguage.getValue(id, text2))
                 .chatId(id)
                 .build());
     }
 
     private void createMessage(Long id, String text1, String text2, String text3) {
         sendBotMessageService.sendMessage(SendMessage.builder()
-                .text(bundleLanguage.getValue(id, text1) + " " +
-                        bundleLanguage.getValue(id, text2) + " " +
-                        bundleLanguage.getValue(id, text3))
+                .text(bundleLanguage.getValue(id, text1) + " "
+                        + bundleLanguage.getValue(id, text2) + " "
+                        + bundleLanguage.getValue(id, text3))
                 .chatId(id)
                 .build());
     }

@@ -16,15 +16,15 @@ import ua.shpp.eqbot.stage.PositionRegistrationProvider;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CheckProviderRegistrationCommand implements Command {
+public class CheckProviderRegistrationICommand implements ICommand {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(CheckProviderRegistrationCommand.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(CheckProviderRegistrationICommand.class);
     private final SendBotMessageService sendBotMessageService;
     private final ProviderService providerService;
     private final BundleLanguage bundleLanguage;
 
-    public CheckProviderRegistrationCommand(SendBotMessageService sendBotMessageService,
-                                            ProviderService providerService, BundleLanguage bundleLanguage) {
+    public CheckProviderRegistrationICommand(SendBotMessageService sendBotMessageService,
+                                             ProviderService providerService, BundleLanguage bundleLanguage) {
         this.sendBotMessageService = sendBotMessageService;
         this.providerService = providerService;
         this.bundleLanguage = bundleLanguage;
@@ -33,12 +33,13 @@ public class CheckProviderRegistrationCommand implements Command {
     @Override
     public boolean execute(Update update) {
         Long id;
-        if (update.hasCallbackQuery())
+        if (update.hasCallbackQuery()) {
             id = update.getCallbackQuery().getFrom().getId();
-        else if (update.hasMessage())
+        } else if (update.hasMessage()) {
             id = update.getMessage().getChatId();
-        else
+        } else {
             return false;
+        }
         ProviderDto providerDto = providerService.getProviderDto(id);
         if (providerDto == null) {
             LOGGER.info("the provider is not in the cache");
@@ -54,23 +55,24 @@ public class CheckProviderRegistrationCommand implements Command {
                     .chatId(id)
                     .text(bundleLanguage.getValue(id, "no_registration_provider"))
                     .build());
-            return new RegistrationNewProviderCommand(sendBotMessageService, providerService, bundleLanguage).execute(update);
+            return new RegistrationNewProviderICommand(sendBotMessageService, providerService, bundleLanguage).execute(update);
         }
         if (providerDto.getPositionRegistrationProvider() == PositionRegistrationProvider.DONE) {
             printListProvider(id);
             addRequest(id);
             return true;
-        } else
-            return new RegistrationNewProviderCommand(sendBotMessageService, providerService, bundleLanguage).execute(update);
+        } else {
+            return new RegistrationNewProviderICommand(sendBotMessageService, providerService, bundleLanguage).execute(update);
+        }
     }
 
     private void printListProvider(Long id) {
         ProviderDto dto = providerService.getProviderDto(id);
         sendBotMessageService.sendMessage(SendMessage.builder()
                 .chatId(id)
-                .text(bundleLanguage.getValue(id, "registered_to_you") +
-                        "\n" + bundleLanguage.getValue(id, "company_name") + ": " + dto.getName() +
-                        "\n" + bundleLanguage.getValue(id, "city") + ": " + dto.getCity())
+                .text(bundleLanguage.getValue(id, "registered_to_you")
+                        + "\n" + bundleLanguage.getValue(id, "company_name") + ": " + dto.getName()
+                        + "\n" + bundleLanguage.getValue(id, "city") + ": " + dto.getCity())
                 .build());
     }
 

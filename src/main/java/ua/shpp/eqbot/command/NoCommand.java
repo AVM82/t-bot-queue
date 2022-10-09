@@ -4,7 +4,7 @@ import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import ua.shpp.eqbot.service.SendBotMessageService;
 
-public class NoCommand implements Command {
+public class NoCommand implements ICommand {
     private final SendBotMessageService sendBotMessageService;
 
     public NoCommand(SendBotMessageService sendBotMessageService) {
