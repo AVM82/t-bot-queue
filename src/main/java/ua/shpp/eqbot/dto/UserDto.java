@@ -86,8 +86,8 @@ public class UserDto {
 
     @Override
     public String toString() {
-        return "UserDto{" +
-                "telegramId=" + telegramId
+        return "UserDto{"
+                + "telegramId=" + telegramId
                 + ", name='" + name + '\''
                 + ", city='" + city + '\''
                 + ", phone='" + phone + '\''
