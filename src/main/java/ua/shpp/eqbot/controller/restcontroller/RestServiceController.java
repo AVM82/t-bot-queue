@@ -66,11 +66,11 @@ public class RestServiceController {
         }
     }
 
-    @DeleteMapping("/all/{telegramId}")
+    @DeleteMapping("/{id}")
     @Operation(summary = "${operation.summary.service.delete_service}",
             description = "${operation.desc.service.delete_service}")
-    public void deleteServicesByTelegramId(@PathVariable Long telegramId) {
-        logger.info("Deleting service with Telegram id {}", telegramId);
-        service.deleteService(telegramId);
+    public void deleteService(@PathVariable Long id) {
+        logger.info("Deleting service with id {}", id);
+        service.deleteService(id);
     }
 }
