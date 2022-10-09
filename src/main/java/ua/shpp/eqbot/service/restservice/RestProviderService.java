@@ -16,11 +16,11 @@ public class RestProviderService {
         this.repository = repository;
     }
 
-    public List<ProviderEntity> getAllProviders(){
+    public List<ProviderEntity> getAllProviders() {
         return repository.findAll();
     }
 
-    public List<ProviderEntity> getProviders(Long telegramId){
+    public List<ProviderEntity> getProviders(Long telegramId) {
         return repository.findAllByTelegramId(telegramId);
     }
 
@@ -28,7 +28,7 @@ public class RestProviderService {
         return repository.findFirstById(id);
     }
 
-    public void postProvider(ProviderDto providerDto){
+    public void postProvider(ProviderDto providerDto) {
         ProviderEntity providerEntity = new ProviderEntity();
         providerEntity.setTelegramId(providerDto.getTelegramId());
         providerEntity.setProviderCity(providerDto.getCity());
@@ -36,7 +36,7 @@ public class RestProviderService {
         repository.save(providerEntity);
     }
 
-    public void deleteProvider(Long telegramId){
+    public void deleteProvider(Long telegramId) {
         repository.deleteById(telegramId);
     }
 }
