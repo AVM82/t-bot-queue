@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
-public class RestUserService {
+public class    RestUserService {
 
     final UserRepository repository;
 
@@ -21,8 +21,8 @@ public class RestUserService {
         return repository.findAll();
     }
 
-    public UserEntity getUser(Long telegramId) {
-        return repository.findByTelegramId(telegramId);
+    public UserEntity getUser(Long id) {
+        return repository.findById(id).get();
     }
 
     public void postUser(UserRestDto userDto) {
@@ -36,7 +36,8 @@ public class RestUserService {
         repository.save(userEntity);
     }
 
-    public void deleteUser(Long telegramId) {
-        repository.deleteById(telegramId);
+    public void deleteUser(Long id) {
+        repository.deleteById(id);
     }
+
 }

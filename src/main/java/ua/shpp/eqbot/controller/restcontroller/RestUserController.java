@@ -34,12 +34,12 @@ public class RestUserController {
         return service.getAllUsers();
     }
 
-    @GetMapping("/{telegramId}")
+    @GetMapping("/{id}")
     @Operation(summary = "${operation.summary.user.get_user}",
             description = "${operation.desc.user.get_user}")
-    public UserEntity getUser(@PathVariable Long telegramId) {
-        logger.info("Getting user with Telegram {}", telegramId);
-        return service.getUser(telegramId);
+    public UserEntity getUser(@PathVariable Long id) {
+        logger.info("Getting user with id {}", id);
+        return service.getUser(id);
     }
 
     @PostMapping
@@ -59,12 +59,11 @@ public class RestUserController {
 
     }
 
-    @DeleteMapping("/{telegramId}")
+    @DeleteMapping("/{id}")
     @Operation(summary = "${operation.summary.user.delete_user}",
             description = "${operation.desc.user.delete_user}")
-    public void deleteUser(@PathVariable Long telegramId) {
-        logger.info("Deleting user with Telegram id {}", telegramId);
-        service.deleteUser(telegramId);
+    public void deleteUser(@PathVariable Long id) {
+        logger.info("Deleting user with Telegram id {}", id);
+        service.deleteUser(id);
     }
-
 }

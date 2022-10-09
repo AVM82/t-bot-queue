@@ -1,5 +1,6 @@
 package ua.shpp.eqbot.service.restservice;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ua.shpp.eqbot.model.ServiceEntity;
 import ua.shpp.eqbot.dto.ServiceRestDTO;
@@ -27,6 +28,7 @@ public class RestServiceService {
     public List<ServiceEntity> getAllServiceByTelegramId(Long telegramId) {
         return repository.findAllByTelegramId(telegramId);
     }
+
 
     public void postService(ServiceRestDTO serviceDTO) {
         ServiceEntity serviceEntity = new ServiceEntity();

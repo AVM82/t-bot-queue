@@ -60,8 +60,6 @@ public class EqTelegramBot extends TelegramLongPollingBot {
             callbackQueryHandler(update);
         } else if (update.getMessage().hasText() && update.getMessage().isCommand()) {
             commandHandler(update);
-        } else if (update.getMessage().hasPhoto()) {
-            imageHandler(update);
         } else {
             textHandler(update);
         }
@@ -78,7 +76,7 @@ public class EqTelegramBot extends TelegramLongPollingBot {
     }
 
     private void textHandler(Update update) {
-        if (update.hasMessage() && update.getMessage().hasText()) {
+        if (update.hasMessage() && (update.getMessage().hasText() || update.getMessage().hasPhoto())) {
             LOGGER.info("Message from {} {} (id = {}).",
                     update.getMessage().getChat().getFirstName(),
                     update.getMessage().getChat().getLastName(),
@@ -109,12 +107,6 @@ public class EqTelegramBot extends TelegramLongPollingBot {
 
     }
 
-    private void imageHandler(Update update) {
-        UserDto user = userService.getDto(update.getMessage().getChat().getId());
-        if (user.getPositionMenu() == MENU_CREATE_SERVICE) {
-            commandContainer.retrieveCommand("/add").execute(update);
-        }
-    }
 
     private void commandHandler(Update update) {
         String messageText = update.getMessage().getText().trim();
