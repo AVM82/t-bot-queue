@@ -19,7 +19,7 @@ import java.util.List;
 @RequestMapping("/user")
 public class RestUserController {
 
-    Logger log = LoggerFactory.getLogger(RestUserController.class);
+    Logger logger = LoggerFactory.getLogger(RestUserController.class);
     final RestUserService service;
 
     public RestUserController(RestUserService service) {
@@ -30,7 +30,7 @@ public class RestUserController {
     @Operation(summary = "${operation.summary.user.get_all_users}",
             description = "${operation.desc.user.get_all_users}")
     public List<UserEntity> getAllUsers() {
-        log.info("Getting all users");
+        logger.info("Getting all users");
         return service.getAllUsers();
     }
 
@@ -38,7 +38,7 @@ public class RestUserController {
     @Operation(summary = "${operation.summary.user.get_user}",
             description = "${operation.desc.user.get_user}")
     public UserEntity getUser(@PathVariable Long id) {
-        log.info("Getting user with id {}", id);
+        logger.info("Getting user with id {}", id);
         return service.getUser(id);
     }
 
@@ -49,12 +49,12 @@ public class RestUserController {
         if (bindingResult.hasErrors()) {
             List<FieldError> errors = bindingResult.getFieldErrors();
             for (FieldError error : errors) {
-                log.error(error.getDefaultMessage());
+                logger.error(error.getDefaultMessage());
             }
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Entered data is not valid");
         } else {
             service.postUser(userDto);
-            log.info("Adding new service with name '{}'", userDto.getName());
+            logger.info("Adding new service with name '{}'", userDto.getName());
         }
 
     }
@@ -63,7 +63,7 @@ public class RestUserController {
     @Operation(summary = "${operation.summary.user.delete_user}",
             description = "${operation.desc.user.delete_user}")
     public void deleteUser(@PathVariable Long id) {
-        log.info("Deleting user with Telegram id {}", id);
+        logger.info("Deleting user with Telegram id {}", id);
         service.deleteUser(id);
     }
 }
