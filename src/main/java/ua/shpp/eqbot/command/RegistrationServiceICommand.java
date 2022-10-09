@@ -86,7 +86,7 @@ public class RegistrationServiceICommand implements ICommand {
                     case TUESDAY_WORKING_HOURS:
                         LOGGER.info("new service TUESDAY_WORKING_HOURS with message text {}", update.getMessage().getText());
                         if (changeFormatTime(update.getMessage().getText(), id)) {
-                            ServiceCache.add(serviceDTO.setThursdayWorkingHours(update.getMessage().getText())
+                            ServiceCache.add(serviceDTO.setTuesdayWorkingHours(update.getMessage().getText())
                                     .setPositionRegistrationService(PositionRegistrationService.WEDNESDAY_WORKING_HOURS));
                             createMessage(id, new String[]{TEXT, "wednesday", FORMAT});
                         }
