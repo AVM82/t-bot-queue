@@ -1,5 +1,7 @@
 package eqbot.service;
 
+import org.hamcrest.MatcherAssert;
+import org.hamcrest.Matchers;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -12,9 +14,6 @@ import org.springframework.test.context.junit4.SpringRunner;
 import ua.shpp.eqbot.model.ProviderEntity;
 import ua.shpp.eqbot.repository.ProviderRepository;
 import ua.shpp.eqbot.service.ProviderService;
-
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.is;
 
 @TestMethodOrder(MethodOrderer.DisplayName.class)
 @RunWith(SpringRunner.class)

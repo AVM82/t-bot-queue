@@ -1,5 +1,6 @@
 package eqbot.mapper;
 
+import org.assertj.core.api.AssertionsForClassTypes;
 import org.junit.Test;
 import ua.shpp.eqbot.dto.UserDto;
 import ua.shpp.eqbot.mapper.UserMapper;
