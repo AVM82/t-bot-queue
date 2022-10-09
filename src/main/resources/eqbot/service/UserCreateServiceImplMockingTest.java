@@ -1,4 +1,4 @@
-package ua.shpp.eqbot.service;
+package eqbot.service;
 
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
@@ -8,7 +8,9 @@ import org.springframework.cache.CacheManager;
 import ua.shpp.eqbot.ecxeption.ValidationFailedException;
 import ua.shpp.eqbot.model.UserEntity;
 import ua.shpp.eqbot.repository.UserRepository;
+import ua.shpp.eqbot.service.UserService;
 import ua.shpp.eqbot.validation.UserValidateService;
+import javax.validation.Validator;
 
 import java.util.Objects;
 
@@ -23,11 +25,11 @@ import static org.mockito.Mockito.*;
 @DisplayName("UserCreateServiceImpl: tests with mocks")
 class UserCreateServiceImplMockingTest {
 
-    private final UserValidateService userValidateService = mock(UserValidateService.class);
-    private final UserRepository userRepository = mock(UserRepository.class);
-    private final CacheManager cacheManager = mock(CacheManager.class);
-
-    private final UserService userService = new UserService(userRepository, userValidateService);
+    private final UserValidateService userValidateService = Mockito.mock(UserValidateService.class);
+    private final UserRepository userRepository = Mockito.mock(UserRepository.class);
+    private final CacheManager cacheManager = Mockito.mock(CacheManager.class);
+    private Validator validator;
+    private final UserService userService = new UserService(userRepository, userValidateService, validator);
 
     @Test
     @Disabled
@@ -37,10 +39,10 @@ class UserCreateServiceImplMockingTest {
         final var phone = "123";
         UserEntity userEntity = new UserEntity();
         userEntity.setName(name).setPhone(phone);
-        doThrow(new ValidationFailedException(""))
+        Mockito.doThrow(new ValidationFailedException(""))
                 .when(userValidateService)
                 .checkUserCreation(name, phone);
-        assertThrows(ValidationFailedException.class, () -> userService.saveEntity(userEntity));
+        Assertions.assertThrows(ValidationFailedException.class, () -> userService.saveEntity(userEntity));
     }
 
     @Test
@@ -51,7 +53,7 @@ class UserCreateServiceImplMockingTest {
         UserEntity userEntity = new UserEntity();
         userEntity.setName(name).setPhone(phone);
 
-        when(userRepository.save(any()))
+        Mockito.when(userRepository.save(ArgumentMatchers.any()))
                 .thenAnswer(invocation -> {
                     UserEntity user = invocation.getArgument(0);
                     assert Objects.equals(user.getName(), name);
@@ -68,12 +70,12 @@ class UserCreateServiceImplMockingTest {
         UserEntity userEntity = new UserEntity();
         userEntity.setName(name).setPhone(phone);
         userService.saveEntity(userEntity);
-        doThrow(new ValidationFailedException(""))
+        Mockito.doThrow(new ValidationFailedException(""))
                 .when(userValidateService)
                 .checkUserCreation("Oleksandr", "777 ");
 
-        assertThrows(ValidationFailedException.class, () -> userService.saveEntity(userEntity));
+        Assertions.assertThrows(ValidationFailedException.class, () -> userService.saveEntity(userEntity));
 
-        assertEquals(0, userRepository.count());
+        Assertions.assertEquals(0, userRepository.count());
     }
 }

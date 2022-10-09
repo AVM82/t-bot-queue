@@ -27,7 +27,6 @@ import java.util.List;
 public class ImageService {
 
     final EqTelegramBot bot;
-
     Logger logger = LoggerFactory.getLogger(ImageService.class);
     public static final int IMAGE_MAX_WIDTH = 100;
     public static final int TIMEOUT = 5000;
@@ -37,8 +36,11 @@ public class ImageService {
     }
 
     public PhotoSize getBiggestImageSmallerThan(List<PhotoSize> photos, int sizeLimit) {
-        return photos.stream().filter(x -> x.getWidth() < sizeLimit).filter(x -> x.getHeight() < sizeLimit)
-                .max(Comparator.comparing(PhotoSize::getFileSize)).orElse(null);
+        return photos.stream()
+                .filter(x -> x.getWidth() < sizeLimit)
+                .filter(x -> x.getHeight() < sizeLimit)
+                .max(Comparator.comparing(PhotoSize::getFileSize))
+                .orElse(null);
     }
 
     public PhotoSize getBiggestImage(List<PhotoSize> photos) {
@@ -61,8 +63,7 @@ public class ImageService {
         AWSCredentials credentials = new BasicAWSCredentials(awsId, awsAccessKey);
         AmazonS3 s3client = AmazonS3ClientBuilder.standard()
                 .withCredentials(new AWSStaticCredentialsProvider(credentials))
-                .withRegion(awsRegion)
-                .build();
+                .withRegion(awsRegion).build();
         if (!s3client.doesBucketExistV2(s3BucketName)) {
             logger.warn("Bucket with such name is not exists");
             return null;

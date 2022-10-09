@@ -22,6 +22,8 @@ public interface ProviderRepository extends JpaRepository<ProviderEntity, Long> 
 
     Optional<ProviderEntity> findProviderEntitiesByTelegramIdAndProviderCity(Long telegramId, String name);
 
-    List<ProviderEntity> findAllByProviderCityIgnoreCase(String city);
+    List<ProviderEntity> findAllByProviderCity(String city);
+
+    ProviderEntity findFirstById(Long id);
 
 }

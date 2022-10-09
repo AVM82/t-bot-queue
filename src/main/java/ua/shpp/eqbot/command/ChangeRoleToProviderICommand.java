@@ -5,17 +5,13 @@ import org.slf4j.LoggerFactory;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
-import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
-import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardRow;
 import ua.shpp.eqbot.internationalization.BundleLanguage;
 import ua.shpp.eqbot.repository.ProviderRepository;
-import ua.shpp.eqbot.service.ProviderService;
 import ua.shpp.eqbot.service.SendBotMessageService;
 
 import java.util.ArrayList;
 import java.util.List;
-
 
 public class ChangeRoleToProviderICommand implements ICommand {
 
@@ -26,7 +22,10 @@ public class ChangeRoleToProviderICommand implements ICommand {
     ProviderRepository providerRepository;
     private final BundleLanguage bundleLanguage;
 
-    public ChangeRoleToProviderICommand(SendBotMessageService sendBotMessageService, ProviderRepository providerRepository, BundleLanguage bundleLanguage) {
+    public ChangeRoleToProviderICommand(
+            SendBotMessageService sendBotMessageService,
+            ProviderRepository providerRepository,
+            BundleLanguage bundleLanguage) {
         this.sendBotMessageService = sendBotMessageService;
         this.providerRepository = providerRepository;
         this.bundleLanguage = bundleLanguage;
@@ -44,20 +43,17 @@ public class ChangeRoleToProviderICommand implements ICommand {
             return false;
         }
 
-        if (providerRepository.findByTelegramId(id) != null)/*providerRepository.findById(update.getMessage().getChatId())*/ {
+        if (providerRepository.findByTelegramId(id) != null) {
             LOGGER.info("Find provider with such id and enroll as a provider");
-            sendBotMessageService.sendMessage(SendMessage.builder()
-                    .chatId(id)
-                    .text(bundleLanguage.getValue(id, "switch_to_provider"))
-                    .build());
+            sendBotMessageService.sendMessage(
+                    SendMessage.builder().chatId(id).text(bundleLanguage.getValue(id, "switch_to_provider")).build());
         } else {
             InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
             List<List<InlineKeyboardButton>> keyboard = new ArrayList<>();
             List<InlineKeyboardButton> buttonCreate = new ArrayList<>();
             buttonCreate.add(InlineKeyboardButton.builder()
                     .text(bundleLanguage.getValue(id, "create_new_provider"))
-                    .callbackData("add_provider")
-                    .build());
+                    .callbackData("add_provider").build());
             keyboard.add(buttonCreate);
             inlineKeyboardMarkup.setKeyboard(keyboard);
             SendMessage sendMessage = new SendMessage();

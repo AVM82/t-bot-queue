@@ -1,4 +1,4 @@
-package ua.shpp.eqbot.service;
+package eqbot.service;
 
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -9,6 +9,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import ua.shpp.eqbot.model.ProviderEntity;
 import ua.shpp.eqbot.repository.ProviderRepository;
+import ua.shpp.eqbot.service.ProviderService;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
@@ -36,12 +37,12 @@ class ProviderServiceUnitTest {
         providerEntity.setTelegramId(1L);
         providerEntity.setName("provider");
 
-        when(providerRepository.save(any())).thenReturn(providerEntity);
+        Mockito.when(providerRepository.save(ArgumentMatchers.any())).thenReturn(providerEntity);
 
         providerService.saveEntity(providerEntity);
-        verify(providerRepository).save(argumentCaptor.capture());
+        Mockito.verify(providerRepository).save(argumentCaptor.capture());
 
-        assertThat(argumentCaptor.getValue(), is(providerEntity));
+        MatcherAssert.assertThat(argumentCaptor.getValue(), Matchers.is(providerEntity));
     }
 
     @Test
@@ -49,12 +50,12 @@ class ProviderServiceUnitTest {
 //        List<ProviderEntity> entityList = List.of(new ProviderEntity());
         ProviderEntity entity = new ProviderEntity();
 
-        when(providerRepository.findByTelegramId(any())).thenReturn(entity);
+        Mockito.when(providerRepository.findByTelegramId(ArgumentMatchers.any())).thenReturn(entity);
 
         providerService.getByTelegramIdEntity(17L);
-        verify(providerRepository).findByTelegramId(captor.capture());
+        Mockito.verify(providerRepository).findByTelegramId(captor.capture());
 
-        assertThat(captor.getValue(), is(17L));
+        MatcherAssert.assertThat(captor.getValue(), Matchers.is(17L));
     }
 
 }

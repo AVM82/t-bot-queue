@@ -1,10 +1,11 @@
 package ua.shpp.eqbot.cache;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.springframework.stereotype.Component;
 import ua.shpp.eqbot.dto.ServiceDTO;
 
-import java.util.HashMap;
-import java.util.Map;
 
 @Component
 public class ServiceCache {

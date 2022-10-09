@@ -6,7 +6,6 @@ import org.springframework.stereotype.Service;
 import ua.shpp.eqbot.internationalization.BundleLanguage;
 import ua.shpp.eqbot.repository.ProviderRepository;
 import ua.shpp.eqbot.repository.ServiceRepository;
-import ua.shpp.eqbot.repository.UserRepository;
 import ua.shpp.eqbot.service.ImageService;
 import ua.shpp.eqbot.service.ProviderService;
 import ua.shpp.eqbot.service.SendBotMessageService;

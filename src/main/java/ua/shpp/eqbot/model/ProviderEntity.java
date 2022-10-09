@@ -13,7 +13,6 @@ public class ProviderEntity {
     private String name;
     private String providerCity;
 
-
     public Long getId() {
         return id;
     }

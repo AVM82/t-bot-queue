@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import ua.shpp.eqbot.cache.ServiceCache;
+import ua.shpp.eqbot.dto.ServiceDTO;
 import ua.shpp.eqbot.internationalization.BundleLanguage;
 import ua.shpp.eqbot.model.ServiceEntity;
 import ua.shpp.eqbot.repository.ServiceRepository;
@@ -19,7 +20,11 @@ public class CheckServiceRegistrationICommand implements ICommand {
     private final ServiceRepository serviceRepository;
     private final ImageService imageService;
 
-    public CheckServiceRegistrationICommand(SendBotMessageService sendBotMessageService, BundleLanguage bundleLanguage, ServiceRepository serviceRepository, ImageService imageService) {
+    public CheckServiceRegistrationICommand(
+            SendBotMessageService sendBotMessageService,
+            BundleLanguage bundleLanguage,
+            ServiceRepository serviceRepository,
+            ImageService imageService) {
         this.sendBotMessageService = sendBotMessageService;
         this.bundleLanguage = bundleLanguage;
         this.serviceRepository = serviceRepository;
@@ -36,7 +41,7 @@ public class CheckServiceRegistrationICommand implements ICommand {
         } else {
             return false;
         }
-        ua.shpp.eqbot.dto.ServiceDTO serviceDTO = ServiceCache.findBy(id);
+        ServiceDTO serviceDTO = ServiceCache.findBy(id);
         if (serviceDTO == null) {
             LOGGER.info("the provider is not in the cache");
             List<ServiceEntity> serviceEntityList = serviceRepository.findAllByTelegramId(id);

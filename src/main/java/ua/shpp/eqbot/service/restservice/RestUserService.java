@@ -7,6 +7,7 @@ import ua.shpp.eqbot.repository.UserRepository;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class RestUserService {
@@ -17,13 +18,13 @@ public class RestUserService {
         this.repository = repository;
     }
 
-
     public List<UserEntity> getAllUsers() {
         return repository.findAll();
     }
 
-    public UserEntity getUser(Long telegramId) {
-        return repository.findByTelegramId(telegramId);
+    public UserEntity getUser(Long id) {
+        Optional<UserEntity> value = repository.findById(id);
+        return value.orElse(null);
     }
 
     public void postUser(UserRestDto userDto) {
@@ -37,7 +38,8 @@ public class RestUserService {
         repository.save(userEntity);
     }
 
-    public void deleteUser(Long telegramId) {
-        repository.deleteById(telegramId);
+    public void deleteUser(Long id) {
+        repository.deleteById(id);
     }
+
 }

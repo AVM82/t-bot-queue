@@ -30,6 +30,9 @@ public class RegistrationServiceICommand implements ICommand {
     private final BundleLanguage bundleLanguage;
     private final ModelMapper modelMapper = new ModelMapper();
 
+    private static final String TEXT = "work_day_schedule";
+    private static final String FORMAT = "format";
+
     @Autowired
     public RegistrationServiceICommand(SendBotMessageService sendBotMessageService, ServiceRepository serviceRepository,
                                        ImageService imageService, BundleLanguage bundleLanguage) {
@@ -64,20 +67,20 @@ public class RegistrationServiceICommand implements ICommand {
                         LOGGER.info("new service INPUT_USERNAME with message text {}", update.getMessage().getText());
                         ServiceCache.add(serviceDTO.setName(update.getMessage().getText())
                                 .setPositionRegistrationService(PositionRegistrationService.INPUT_PICTURE));
-                        createMessage(id, "add_desc_and_avatar");
+                        createMessage(id, new String[]{"add_desc_and_avatar"});
                         break;
                     case INPUT_PICTURE:
                         LOGGER.info("new service INPUT_CITY with message text {}", update.getMessage().getText());
                         ServiceCache.add(addingDescriptionAndAvatar(update.getMessage(), serviceDTO)
                                 .setPositionRegistrationService(PositionRegistrationService.MONDAY_WORKING_HOURS));
-                        createMessage(id, "work_day_schedule", "monday", "format");
+                        createMessage(id, new String[]{TEXT, "monday", FORMAT});
                         break;
                     case MONDAY_WORKING_HOURS:
                         LOGGER.info("new service MONDAY_WORKING_HOURS with message text {}", update.getMessage().getText());
                         if (changeFormatTime(update.getMessage().getText(), id)) {
                             ServiceCache.add(serviceDTO.setMondayWorkingHours(update.getMessage().getText())
                                     .setPositionRegistrationService(PositionRegistrationService.TUESDAY_WORKING_HOURS));
-                            createMessage(id, "work_day_schedule", "tuesday", "format");
+                            createMessage(id, new String[]{TEXT, "tuesday", FORMAT});
                         }
                         break;
                     case TUESDAY_WORKING_HOURS:
@@ -85,7 +88,7 @@ public class RegistrationServiceICommand implements ICommand {
                         if (changeFormatTime(update.getMessage().getText(), id)) {
                             ServiceCache.add(serviceDTO.setThursdayWorkingHours(update.getMessage().getText())
                                     .setPositionRegistrationService(PositionRegistrationService.WEDNESDAY_WORKING_HOURS));
-                            createMessage(id, "work_day_schedule", "wednesday", "format");
+                            createMessage(id, new String[]{TEXT, "wednesday", FORMAT});
                         }
                         break;
                     case WEDNESDAY_WORKING_HOURS:
@@ -93,7 +96,7 @@ public class RegistrationServiceICommand implements ICommand {
                         if (changeFormatTime(update.getMessage().getText(), id)) {
                             ServiceCache.add(serviceDTO.setWednesdayWorkingHours(update.getMessage().getText())
                                     .setPositionRegistrationService(PositionRegistrationService.THURSDAY_WORKING_HOURS));
-                            createMessage(id, "work_day_schedule", "thursday", "format");
+                            createMessage(id, new String[]{TEXT, "thursday", FORMAT});
                         }
                         break;
                     case THURSDAY_WORKING_HOURS:
@@ -101,7 +104,7 @@ public class RegistrationServiceICommand implements ICommand {
                         if (changeFormatTime(update.getMessage().getText(), id)) {
                             ServiceCache.add(serviceDTO.setThursdayWorkingHours(update.getMessage().getText())
                                     .setPositionRegistrationService(PositionRegistrationService.FRIDAY_WORKING_HOURS));
-                            createMessage(id, "work_day_schedule", "friday", "format");
+                            createMessage(id, new String[]{TEXT, "friday", FORMAT});
                         }
                         break;
                     case FRIDAY_WORKING_HOURS:
@@ -109,7 +112,7 @@ public class RegistrationServiceICommand implements ICommand {
                         if (changeFormatTime(update.getMessage().getText(), id)) {
                             ServiceCache.add(serviceDTO.setFridayWorkingHours(update.getMessage().getText())
                                     .setPositionRegistrationService(PositionRegistrationService.SATURDAY_WORKING_HOURS));
-                            createMessage(id, "work_day_schedule", "saturday", "format");
+                            createMessage(id, new String[]{TEXT, "saturday", FORMAT});
                         }
                         break;
                     case SATURDAY_WORKING_HOURS:
@@ -117,7 +120,7 @@ public class RegistrationServiceICommand implements ICommand {
                         if (changeFormatTime(update.getMessage().getText(), id)) {
                             ServiceCache.add(serviceDTO.setSaturdayWorkingHours(update.getMessage().getText())
                                     .setPositionRegistrationService(PositionRegistrationService.SUNDAY_WORKING_HOURS));
-                            createMessage(id, "work_day_schedule", "sunday", "format");
+                            createMessage(id, new String[]{TEXT, "sunday", FORMAT});
                         }
                         break;
                     case SUNDAY_WORKING_HOURS:
@@ -125,7 +128,7 @@ public class RegistrationServiceICommand implements ICommand {
                         if (changeFormatTime(update.getMessage().getText(), id)) {
                             ServiceCache.add(serviceDTO.setSundayWorkingHours(update.getMessage().getText())
                                     .setPositionRegistrationService(PositionRegistrationService.TIME_BETWEEN_CLIENTS));
-                            createMessage(id, "time_between_clients", "format_between");
+                            createMessage(id, new String[]{"time_between_clients", "format_between"});
                         }
                         break;
                     case TIME_BETWEEN_CLIENTS:
@@ -206,26 +209,14 @@ public class RegistrationServiceICommand implements ICommand {
     }
 
     private void createMessage(Long id, String text) {
-        sendBotMessageService.sendMessage(SendMessage.builder()
-                .text(bundleLanguage.getValue(id, text))
-                .chatId(id)
-                .build());
+        sendBotMessageService.sendMessage(SendMessage.builder().text(bundleLanguage.getValue(id, text)).chatId(id).build());
     }
 
-    private void createMessage(Long id, String text1, String text2) {
-        sendBotMessageService.sendMessage(SendMessage.builder()
-                .text(bundleLanguage.getValue(id, text1) + " "
-                        + bundleLanguage.getValue(id, text2))
-                .chatId(id)
-                .build());
-    }
-
-    private void createMessage(Long id, String text1, String text2, String text3) {
-        sendBotMessageService.sendMessage(SendMessage.builder()
-                .text(bundleLanguage.getValue(id, text1) + " "
-                        + bundleLanguage.getValue(id, text2) + " "
-                        + bundleLanguage.getValue(id, text3))
-                .chatId(id)
-                .build());
+    private void createMessage(Long id, String[] text) {
+        StringBuilder resultText = new StringBuilder();
+        for (String t : text) {
+            resultText.append(bundleLanguage.getValue(id, t)).append(" ");
+        }
+        sendBotMessageService.sendMessage(SendMessage.builder().text(resultText.toString()).chatId(id).build());
     }
 }

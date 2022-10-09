@@ -16,7 +16,9 @@ public class RegistrationNewProviderICommand implements ICommand {
     private final ProviderService providerService;
     private final BundleLanguage bundleLanguage;
 
-    public RegistrationNewProviderICommand(SendBotMessageService sendBotMessageService, ProviderService providerService, BundleLanguage bundleLanguage) {
+    public RegistrationNewProviderICommand(SendBotMessageService sendBotMessageService,
+                                           ProviderService providerService,
+                                           BundleLanguage bundleLanguage) {
         this.sendBotMessageService = sendBotMessageService;
         this.providerService = providerService;
         this.bundleLanguage = bundleLanguage;

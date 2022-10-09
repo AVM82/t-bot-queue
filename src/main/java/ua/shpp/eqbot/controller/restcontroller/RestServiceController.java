@@ -73,5 +73,4 @@ public class RestServiceController {
         logger.info("Deleting service with id {}", id);
         service.deleteService(id);
     }
-
 }
