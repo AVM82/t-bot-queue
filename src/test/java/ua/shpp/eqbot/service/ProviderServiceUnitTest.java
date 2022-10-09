@@ -1,14 +1,14 @@
-package eqbot.service;
+package ua.shpp.eqbot.service;
 
-import org.hamcrest.MatcherAssert;
-import org.hamcrest.Matchers;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.*;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import ua.shpp.eqbot.model.ProviderEntity;
 import ua.shpp.eqbot.repository.ProviderRepository;
-import ua.shpp.eqbot.service.ProviderService;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
@@ -36,12 +36,12 @@ class ProviderServiceUnitTest {
         providerEntity.setTelegramId(1L);
         providerEntity.setName("provider");
 
-        Mockito.when(providerRepository.save(ArgumentMatchers.any())).thenReturn(providerEntity);
+        when(providerRepository.save(any())).thenReturn(providerEntity);
 
         providerService.saveEntity(providerEntity);
-        Mockito.verify(providerRepository).save(argumentCaptor.capture());
+        verify(providerRepository).save(argumentCaptor.capture());
 
-        MatcherAssert.assertThat(argumentCaptor.getValue(), Matchers.is(providerEntity));
+        assertThat(argumentCaptor.getValue(), is(providerEntity));
     }
 
     @Test
@@ -49,12 +49,12 @@ class ProviderServiceUnitTest {
 //        List<ProviderEntity> entityList = List.of(new ProviderEntity());
         ProviderEntity entity = new ProviderEntity();
 
-        Mockito.when(providerRepository.findByTelegramId(ArgumentMatchers.any())).thenReturn(entity);
+        when(providerRepository.findByTelegramId(any())).thenReturn(entity);
 
         providerService.getByTelegramIdEntity(17L);
-        Mockito.verify(providerRepository).findByTelegramId(captor.capture());
+        verify(providerRepository).findByTelegramId(captor.capture());
 
-        MatcherAssert.assertThat(captor.getValue(), Matchers.is(17L));
+        assertThat(captor.getValue(), is(17L));
     }
 
 }

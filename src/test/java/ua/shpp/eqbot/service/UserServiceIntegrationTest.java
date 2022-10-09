@@ -1,27 +1,23 @@
-package eqbot.service;
+package ua.shpp.eqbot.service;
 
-import org.hamcrest.MatcherAssert;
-import org.hamcrest.Matchers;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.security.web.SecurityFilterChain;
 import org.telegram.telegrambots.starter.TelegramBotInitializer;
-import ua.shpp.eqbot.command.RegistrationServiceICommand;
 import ua.shpp.eqbot.command.CommandContainer;
+import ua.shpp.eqbot.command.RegistrationServiceICommand;
+import ua.shpp.eqbot.config.SecurityConfiguration;
 import ua.shpp.eqbot.dto.UserDto;
+import ua.shpp.eqbot.mapper.UserMapper;
 import ua.shpp.eqbot.model.UserEntity;
 import ua.shpp.eqbot.repository.ProviderRepository;
 import ua.shpp.eqbot.repository.UserRepository;
-import ua.shpp.eqbot.service.ImageService;
-import ua.shpp.eqbot.service.ProviderService;
-import ua.shpp.eqbot.service.UserService;
 import ua.shpp.eqbot.telegrambot.EqTelegramBot;
-import ua.shpp.eqbot.mapper.UserMapper;
 import ua.shpp.eqbot.validation.UserValidateService;
+
 import javax.validation.Validator;
 import java.time.LocalDateTime;
 
@@ -45,6 +41,12 @@ class UserServiceIntegrationTest {
     ProviderService providerService;
     @MockBean
     ProviderRepository providerRepository;
+    @MockBean
+    Validator validator;
+    @MockBean
+    SecurityConfiguration securityConfiguration;
+    @MockBean
+    SecurityFilterChain securityFilterChain;
     @Autowired
     private UserValidateService userValidateService;
 
@@ -52,8 +54,6 @@ class UserServiceIntegrationTest {
     private UserRepository userRepository;
 
     private UserService userService;
-    @Mock
-    private Validator validator;
 
     @BeforeEach
     void setUp() {
@@ -69,7 +69,7 @@ class UserServiceIntegrationTest {
         userService.saveEntity(userEntity);
         UserEntity dto = userService.getEntity(1L);
 
-        MatcherAssert.assertThat(dto.getName(), Matchers.is("kolobok"));
+        assertThat(dto.getName(), is("kolobok"));
     }
 
     @Test
@@ -82,10 +82,10 @@ class UserServiceIntegrationTest {
 
         UserEntity dto = userService.getEntity(1L);
 
-        MatcherAssert.assertThat(dto.getName(), Matchers.is("Did Moroz"));
+        assertThat(dto.getName(), is("Did Moroz"));
         userService.remove(1L);
 
-        Assertions.assertNull(userService.getEntity(1L));
+        assertNull(userService.getEntity(1L));
     }
 
     @Test
@@ -97,21 +97,9 @@ class UserServiceIntegrationTest {
 
         final var user = userRepository.save(userEntity);
 
-        Assertions.assertEquals(7L, user.getTelegramId());
-        Assertions.assertEquals(name, user.getName());
-        Assertions.assertEquals(phone, user.getPhone());
-        Assertions.assertTrue(user.getCreatedTime().isBefore(LocalDateTime.now()));
-    }
-
-    @Test
-    void saveDto() {
-    }
-
-    @Test
-    void getDto() {
-    }
-
-    @Test
-    void remove() {
+        assertEquals(7L, user.getTelegramId());
+        assertEquals(name, user.getName());
+        assertEquals(phone, user.getPhone());
+        assertTrue(user.getCreatedTime().isBefore(LocalDateTime.now()));
     }
 }
