@@ -101,47 +101,43 @@ public class RegistrationNewUserICommand implements ICommand {
             switch (userDto.getPositionRegistration()) {
                 case INPUT_USERNAME:
                     LOGGER.info("new user phase INPUT_USERNAME with message text {}", message.getText());
-                    if (message.isCommand()) {
-                        break;
+                    if (!message.isCommand()) {
+                        userDto.setName(message.getText());
+                        userDto.setPositionRegistration(PositionRegistration.INPUT_CITY);
+                        sendBotMessageService.sendMessage(createQuery(message.getChatId(),
+                                bundleLanguage.getValue(message.getChatId(), "input_city")));
                     }
-                    userDto.setName(message.getText());
-                    userDto.setPositionRegistration(PositionRegistration.INPUT_CITY);
-                    sendBotMessageService.sendMessage(createQuery(message.getChatId(),
-                            bundleLanguage.getValue(message.getChatId(), "input_city")));
                     break;
                 case INPUT_CITY:
                     LOGGER.info("new user phase INPUT_CITY with message text {}", message.getText());
-                    if (message.isCommand()) {
-                        break;
+                    if (!message.isCommand()) {
+                        userDto.setCity(message.getText());
+                        userDto.setPositionRegistration(PositionRegistration.INPUT_PHONE);
+                        sendBotMessageService.sendMessage(createQuery(message.getChatId(),
+                                bundleLanguage.getValue(message.getChatId(), "input_phone_number")));
                     }
-                    userDto.setCity(message.getText());
-                    userDto.setPositionRegistration(PositionRegistration.INPUT_PHONE);
-                    sendBotMessageService.sendMessage(createQuery(message.getChatId(),
-                            bundleLanguage.getValue(message.getChatId(), "input_phone_number")));
                     break;
                 case INPUT_PHONE:
                     LOGGER.info("new user phase INPUT_PHONE with message text {}", message.getText());
-                    if (message.isCommand()) {
-                        break;
-                    }
-                    userDto.setPhone(message.getText());
-                    userDto.setPositionRegistration(PositionRegistration.DONE);
-                    UserEntity userEntity = UserMapper.INSTANCE.userDTOToUserEntity(userDto);
-                    UserEntity resultSaveToRepository = userService.saveEntity(userEntity);
-                    if (resultSaveToRepository != null) {
-                        LOGGER.info("save entity to database {}", userEntity);
-                        isRegistration = true;
-                        sendBotMessageService.sendMessage(createQuery(message.getChatId(),
-                                String.format(bundleLanguage.getValue(
-                                                message.getChatId(), "registered"),
-                                        userDto.getTelegramId(), userDto.getName(), userDto.getCity(), userDto.getPhone())));
-                        break;
-                    } else {
-                        LOGGER.warn("when saving to database an error occurred");
-                        sendBotMessageService.sendMessage(createQuery(message.getChatId(),
-                                String.format(bundleLanguage.getValue(
-                                        message.getChatId(), "no_successfully"))));
-                        userService.remove(userDto.getTelegramId());
+                    if (!message.isCommand()) {
+                        userDto.setPhone(message.getText());
+                        userDto.setPositionRegistration(PositionRegistration.DONE);
+                        UserEntity userEntity = UserMapper.INSTANCE.userDTOToUserEntity(userDto);
+                        UserEntity resultSaveToRepository = userService.saveEntity(userEntity);
+                        if (resultSaveToRepository != null) {
+                            LOGGER.info("save entity to database {}", userEntity);
+                            isRegistration = true;
+                            sendBotMessageService.sendMessage(createQuery(message.getChatId(),
+                                    String.format(bundleLanguage.getValue(
+                                                    message.getChatId(), "registered"),
+                                            userDto.getTelegramId(), userDto.getName(), userDto.getCity(), userDto.getPhone())));
+                        } else {
+                            LOGGER.warn("when saving to database an error occurred");
+                            sendBotMessageService.sendMessage(createQuery(message.getChatId(),
+                                    String.format(bundleLanguage.getValue(
+                                            message.getChatId(), "no_successfully"))));
+                            userService.remove(userDto.getTelegramId());
+                        }
                     }
                     break;
                 default:
