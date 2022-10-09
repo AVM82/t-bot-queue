@@ -53,7 +53,7 @@ public class RestProviderController {
         if (bindingResult.hasErrors()) {
             List<FieldError> errors = bindingResult.getFieldErrors();
             for (FieldError error : errors) {
-                LOGGER.error(error.getDefaultMessage());
+                logger.error(error.getDefaultMessage());
             }
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Entered data is not valid");
         } else {
