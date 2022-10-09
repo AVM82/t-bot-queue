@@ -7,9 +7,10 @@ import ua.shpp.eqbot.repository.UserRepository;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @Service
-public class    RestUserService {
+public class RestUserService {
 
     final UserRepository repository;
 
@@ -22,7 +23,8 @@ public class    RestUserService {
     }
 
     public UserEntity getUser(Long id) {
-        return repository.findById(id).get();
+        Optional<UserEntity> value = repository.findById(id);
+        return value.orElse(null);
     }
 
     public void postUser(UserRestDto userDto) {

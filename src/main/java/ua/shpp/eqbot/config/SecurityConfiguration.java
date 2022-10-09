@@ -4,7 +4,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -17,11 +16,9 @@ import static org.springframework.security.config.Customizer.withDefaults;
 @Configuration
 public class SecurityConfiguration {
 
-
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http.authorizeHttpRequests((authz) -> authz
-                        .anyRequest().authenticated())
+        http.authorizeHttpRequests(auth -> auth.anyRequest().authenticated())
                 .httpBasic(withDefaults());
         http.csrf().disable();
         http.headers().frameOptions().disable();
@@ -33,7 +30,6 @@ public class SecurityConfiguration {
 
     @Value("${spring.security.user.password}")
     private String password;
-
 
     @Bean
     public InMemoryUserDetailsManager userDetailsService() {
