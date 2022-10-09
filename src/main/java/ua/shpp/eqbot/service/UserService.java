@@ -43,7 +43,8 @@ public class UserService {
     public UserEntity saveEntity(UserEntity userEntity) {
         LOGGER.info("save userEntity {}", userEntity);
         Set<ConstraintViolation<UserEntity>> violations = validator.validate(userEntity);
-        if (!violations.isEmpty() || !(userValidateService.checkUserCreation(userEntity.getName(), userEntity.getPhone()))) {
+        if (userRepository.findByTelegramId(userEntity.getTelegramId()) == null
+                && (!violations.isEmpty() || !(userValidateService.checkUserCreation(userEntity.getName(), userEntity.getPhone())))) {
             StringBuilder stringBuilder = new StringBuilder();
             for (ConstraintViolation<UserEntity> constraintViolation : violations) {
                 stringBuilder.append(constraintViolation.getMessage());

@@ -84,4 +84,16 @@ public class UserDto {
         return this;
     }
 
+    @Override
+    public String toString() {
+        return "UserDto{" +
+                "telegramId=" + telegramId
+                + ", name='" + name + '\''
+                + ", city='" + city + '\''
+                + ", phone='" + phone + '\''
+                + ", language='" + language + '\''
+                + ", positionRegistration=" + positionRegistration
+                + ", positionMenu=" + positionMenu
+                + '}';
+    }
 }

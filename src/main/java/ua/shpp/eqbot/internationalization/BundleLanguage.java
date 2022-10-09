@@ -17,7 +17,7 @@ public class BundleLanguage {
 
     public String getValue(long userTelegramId, String value) {
         UserDto user = userService.getDto(userTelegramId);
-        String language = "uk";
+        String language = "en";
         if (user != null) {
             language = user.getLanguage();
         }
