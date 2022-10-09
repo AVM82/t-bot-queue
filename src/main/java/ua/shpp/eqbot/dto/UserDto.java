@@ -86,14 +86,15 @@ public class UserDto {
 
     @Override
     public String toString() {
-        return "UserDto{" +
-                "telegramId=" + telegramId
-                + ", name='" + name + '\''
-                + ", city='" + city + '\''
-                + ", phone='" + phone + '\''
-                + ", language='" + language + '\''
-                + ", positionRegistration=" + positionRegistration
-                + ", positionMenu=" + positionMenu
-                + '}';
+        final StringBuilder sb = new StringBuilder("UserDto{");
+        sb.append("telegramId=").append(telegramId);
+        sb.append(", name='").append(name).append('\'');
+        sb.append(", city='").append(city).append('\'');
+        sb.append(", phone='").append(phone).append('\'');
+        sb.append(", language='").append(language).append('\'');
+        sb.append(", positionRegistration=").append(positionRegistration);
+        sb.append(", positionMenu=").append(positionMenu);
+        sb.append('}');
+        return sb.toString();
     }
 }
