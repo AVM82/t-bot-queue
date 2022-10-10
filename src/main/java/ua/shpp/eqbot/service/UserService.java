@@ -1,6 +1,5 @@
 package ua.shpp.eqbot.service;
 
-import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.cache.annotation.CacheEvict;
@@ -16,6 +15,7 @@ import ua.shpp.eqbot.validation.UserValidateService;
 
 import javax.validation.ConstraintViolation;
 import javax.validation.Validator;
+import javax.validation.constraints.NotNull;
 import java.util.Set;
 
 @Service
