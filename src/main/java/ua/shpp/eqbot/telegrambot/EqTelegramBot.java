@@ -12,6 +12,7 @@ import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import ua.shpp.eqbot.command.CommandContainer;
+import ua.shpp.eqbot.command.CommandName;
 import ua.shpp.eqbot.internationalization.BundleLanguage;
 import ua.shpp.eqbot.dto.UserDto;
 import ua.shpp.eqbot.repository.ProviderRepository;
@@ -132,12 +133,18 @@ public class EqTelegramBot extends TelegramLongPollingBot {
                 userDto.setPositionMenu(REGISTRATION_PROVIDER);
             }
         } else if (callbackQuery.getData().equals("search_service")) {
-            LOGGER.info("search_service");
-            userDto.setPositionMenu(MENU_SEARCH_SERVICE);
+            LOGGER.info("search_menu");
+            commandContainer.retrieveCommand(CommandName.SEARCH_MENU.getNameCommand()).execute(update);
+        } else if (callbackQuery.getData().equals("searchName")) {
+            LOGGER.info("search by name");
+            userDto.setPositionMenu(SEARCH_BY_NAME);
             if (!commandContainer.retrieveCommand("/search").execute(update)) {
                 userDto.setPositionMenu(MENU_START);
                 commandContainer.retrieveCommand("/start").execute(update);
             }
+        } else if (callbackQuery.getData().equals("searchId")) {
+            LOGGER.info("search by id");
+
         } else if (callbackQuery.getData().equals("return_in_menu")) {
             commandContainer.retrieveCommand("/start").execute(update);
         } else if (callbackQuery.getData().equals("change_provider_details")) {
@@ -147,7 +154,7 @@ public class EqTelegramBot extends TelegramLongPollingBot {
             userService.getDto(update.getCallbackQuery().getFrom().getId())
                     .setPositionMenu(PositionMenu.REGISTRATION_SERVICE);
             commandContainer.retrieveCommand("/add").execute(update);
-        } else if (userDto.getPositionMenu() == MENU_SEARCH_SERVICE) {
+        } else if (userDto.getPositionMenu() == SEARCH_BY_NAME) {
             LOGGER.info("The user has successfully selected the service");
             try {
                 execute(SendMessage.builder()
