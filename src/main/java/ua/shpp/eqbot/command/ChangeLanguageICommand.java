@@ -35,6 +35,8 @@ public class ChangeLanguageICommand implements ICommand {
 
         UserDto userDto = userService.getDto(id);
 
+        System.out.println(userService.getEntity(id));
+
         if (userDto == null) {
             LOGGER.info("User not found");
             return false;
