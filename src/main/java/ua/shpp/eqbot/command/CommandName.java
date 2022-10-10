@@ -9,6 +9,7 @@ public enum CommandName {
     ADD_SERVICE("/add"),
     SEARCH_SERVICE("/search"),
     SEARCH_MENU("/searchMenu"),
+    SEARCH_BY_ID("/searchId"),
     CHANGE_ROLE_TO_PROVIDER("/change_role"),
     CHANGE_LANGUAGE("/change_language"),
     DELETE_USER("/delete"),
