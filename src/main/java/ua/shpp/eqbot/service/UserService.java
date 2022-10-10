@@ -1,5 +1,6 @@
 package ua.shpp.eqbot.service;
 
+import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.cache.annotation.CacheEvict;
@@ -81,5 +82,12 @@ public class UserService {
             userRepository.delete(getEntity(telegramId));
         }
         return true;
+    }
+
+    public void updateUserInDB(@NotNull UserDto dto) {
+        LOGGER.info("update user language");
+        UserEntity myUser = userRepository.findByTelegramId(dto.getTelegramId());
+        UserMapper.INSTANCE.updateUserFromDto(dto, myUser);
+        userRepository.save(myUser);
     }
 }

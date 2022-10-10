@@ -119,7 +119,6 @@ public class EqTelegramBot extends TelegramLongPollingBot {
             }
         } else {
             commandContainer.retrieveCommand(commandIdentifier).execute(update);
-
         }
     }
 

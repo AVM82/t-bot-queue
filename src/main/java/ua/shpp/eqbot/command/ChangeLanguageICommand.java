@@ -7,6 +7,8 @@ import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import ua.shpp.eqbot.dto.UserDto;
 import ua.shpp.eqbot.internationalization.BundleLanguage;
+import ua.shpp.eqbot.mapper.UserMapper;
+import ua.shpp.eqbot.model.UserEntity;
 import ua.shpp.eqbot.service.SendBotMessageService;
 import ua.shpp.eqbot.service.UserService;
 
@@ -47,6 +49,8 @@ public class ChangeLanguageICommand implements ICommand {
         }
 
         userService.saveDto(userDto);
+        userService.updateUserInDB(userDto);
+
         LOGGER.info("The interface language has been changed");
         sendBotMessageService.sendMessage(String.valueOf(id), bundleLanguage.getValue(id, "change_language_success"));
 
