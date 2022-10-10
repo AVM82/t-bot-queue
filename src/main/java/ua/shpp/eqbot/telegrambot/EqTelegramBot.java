@@ -97,11 +97,16 @@ public class EqTelegramBot extends TelegramLongPollingBot {
                 } else if (user.getPositionMenu() == REGISTRATION_SERVICE) {
                     if (commandContainer.retrieveCommand("/add").execute(update)) {
                         user.setPositionMenu(MENU_START);
-                        commandContainer.retrieveCommand("/start").execute(update);
+                        commandContainer.retrieveCommand(CommandName.START.getNameCommand()).execute(update);
                     }
                 } else if (user.getPositionMenu() == PositionMenu.MENU_START) {
                     commandContainer.retrieveCommand("mainMenu").execute(update);
-                    commandContainer.retrieveCommand("/start").execute(update);
+                    commandContainer.retrieveCommand(CommandName.START.getNameCommand()).execute(update);
+                } else if (user.getPositionMenu() == SEARCH_BY_ID) {
+                    LOGGER.info("input id for search");
+                    if (!commandContainer.retrieveCommand(CommandName.SEARCH_BY_ID.getNameCommand()).execute(update)) {
+                        commandContainer.retrieveCommand(CommandName.SEARCH_MENU.getNameCommand()).execute(update);
+                    }
                 }
             }
         }
@@ -114,9 +119,9 @@ public class EqTelegramBot extends TelegramLongPollingBot {
         String commandIdentifier = messageText.split(" ")[0].toLowerCase();
         LOGGER.info("new command here {}", commandIdentifier);
 
-        if (commandIdentifier.equals("/start")) {
+        if (commandIdentifier.equals(CommandName.START.getNameCommand())) {
             if (commandContainer.retrieveCommand("/reg").execute(update)) {
-                commandContainer.retrieveCommand("/start").execute(update);
+                commandContainer.retrieveCommand(CommandName.START.getNameCommand()).execute(update);
             }
         } else {
             commandContainer.retrieveCommand(commandIdentifier).execute(update);
@@ -138,15 +143,16 @@ public class EqTelegramBot extends TelegramLongPollingBot {
         } else if (callbackQuery.getData().equals("searchName")) {
             LOGGER.info("search by name");
             userDto.setPositionMenu(SEARCH_BY_NAME);
+            commandContainer.retrieveCommand("/search").execute(update);
             if (!commandContainer.retrieveCommand("/search").execute(update)) {
                 userDto.setPositionMenu(MENU_START);
-                commandContainer.retrieveCommand("/start").execute(update);
+                commandContainer.retrieveCommand(CommandName.START.getNameCommand()).execute(update);
             }
         } else if (callbackQuery.getData().equals("searchId")) {
             LOGGER.info("search by id");
-
+            commandContainer.retrieveCommand(CommandName.SEARCH_BY_ID.getNameCommand()).execute(update);
         } else if (callbackQuery.getData().equals("return_in_menu")) {
-            commandContainer.retrieveCommand("/start").execute(update);
+            commandContainer.retrieveCommand(CommandName.START.getNameCommand()).execute(update);
         } else if (callbackQuery.getData().equals("change_provider_details")) {
             LOGGER.info("change provider details");
         } else if (callbackQuery.getData().equals("newServiceFromAnExistingProvider")) {
@@ -164,7 +170,8 @@ public class EqTelegramBot extends TelegramLongPollingBot {
             } catch (TelegramApiException e) {
                 LOGGER.warn(e.getLocalizedMessage());
             }
-            userDto.setPositionMenu(DONE);
+            userDto.setPositionMenu(MENU_START);
+            commandContainer.retrieveCommand("/start").execute(update);
         } else if (callbackQuery.getData().equals("add_provider")) {
             commandContainer.retrieveCommand("/add provider").execute(update);
             UserDto user = userService.getDto(update.getCallbackQuery().getFrom().getId());
