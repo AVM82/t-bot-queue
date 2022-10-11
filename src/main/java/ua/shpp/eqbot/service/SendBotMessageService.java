@@ -22,4 +22,6 @@ public interface SendBotMessageService {
     void setReplyMarkup(String chatId, ReplyKeyboardMarkup replyKeyboardMarkup);
 
     void sendMenu(SetMyCommands command);
+
+    SendMessage sendButtonToUser(SendMessage sendMessage, String telegramId, String text);
 }
