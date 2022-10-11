@@ -15,6 +15,8 @@ import ua.shpp.eqbot.command.CommandContainer;
 import ua.shpp.eqbot.command.CommandName;
 import ua.shpp.eqbot.dto.UserDto;
 import ua.shpp.eqbot.internationalization.BundleLanguage;
+import ua.shpp.eqbot.mapper.UserMapper;
+import ua.shpp.eqbot.model.UserEntity;
 import ua.shpp.eqbot.repository.ProviderRepository;
 import ua.shpp.eqbot.repository.ServiceRepository;
 import ua.shpp.eqbot.service.ImageService;
@@ -22,6 +24,7 @@ import ua.shpp.eqbot.service.ProviderService;
 import ua.shpp.eqbot.service.SendBotMessageServiceImpl;
 import ua.shpp.eqbot.service.UserService;
 import ua.shpp.eqbot.stage.PositionMenu;
+import ua.shpp.eqbot.stage.PositionRegistration;
 
 import static ua.shpp.eqbot.stage.PositionMenu.*;
 
@@ -105,7 +108,7 @@ public class EqTelegramBot extends TelegramLongPollingBot {
                     if (!commandContainer.retrieveCommand(CommandName.SEARCH_BY_ID.getNameCommand()).execute(update)) {
                         commandContainer.retrieveCommand(CommandName.SEARCH_MENU.getNameCommand()).execute(update);
                     }
-                }else if (user.getPositionMenu() == SEARCH_USES_NAME_SERVICE) {
+                } else if (user.getPositionMenu() == SEARCH_USES_NAME_SERVICE) {
                     LOGGER.info("enter a few letters that you want to search for");
                     if (!commandContainer.retrieveCommand(CommandName.SEARCH_USES_NAME_SERVICE.getNameCommand()).execute(update)) {
                         commandContainer.retrieveCommand(CommandName.SEARCH_MENU.getNameCommand()).execute(update);
@@ -132,8 +135,9 @@ public class EqTelegramBot extends TelegramLongPollingBot {
     }
 
     private void callbackQueryHandler(Update update) {
+        LOGGER.info("callbackQueryHandler start work");
         CallbackQuery callbackQuery = update.getCallbackQuery();
-        UserDto userDto = userService.getDto(update.getCallbackQuery().getFrom().getId());
+        UserDto userDto = findDtoIfPossible(update);
         if (callbackQuery.getData().equals("create_service")) {
             LOGGER.info("create_service");
             userDto.setPositionMenu(MENU_CREATE_SERVICE);
@@ -151,16 +155,13 @@ public class EqTelegramBot extends TelegramLongPollingBot {
                 userDto.setPositionMenu(MENU_START);
                 commandContainer.retrieveCommand(CommandName.START.getNameCommand()).execute(update);
             }
-        }
-        else if (callbackQuery.getData().equals("searchId")) {
+        } else if (callbackQuery.getData().equals("searchId")) {
             LOGGER.info("search by id");
             commandContainer.retrieveCommand(CommandName.SEARCH_BY_ID.getNameCommand()).execute(update);
-        }
-        else if (callbackQuery.getData().equals("searchString")) {
+        } else if (callbackQuery.getData().equals("searchString")) {
             LOGGER.info("search uses name service");
             commandContainer.retrieveCommand(CommandName.SEARCH_USES_NAME_SERVICE.getNameCommand()).execute(update);
-        }
-        else if (callbackQuery.getData().equals("return_in_menu")) {
+        } else if (callbackQuery.getData().equals("return_in_menu")) {
             commandContainer.retrieveCommand(CommandName.START.getNameCommand()).execute(update);
         } else if (callbackQuery.getData().equals("change_provider_details")) {
             LOGGER.info("change provider details");
@@ -190,6 +191,24 @@ public class EqTelegramBot extends TelegramLongPollingBot {
         } else if (callbackQuery.getData().equals("change_lang")) {
             commandContainer.retrieveCommand("/change_language").execute(update);
             commandContainer.retrieveCommand("/start").execute(update);
+        } else {
+            commandContainer.retrieveCommand("/start").execute(update);
         }
+    }
+
+    private UserDto findDtoIfPossible(Update update) {
+        long telegramId = update.getCallbackQuery().getFrom().getId();
+        UserDto userDto = userService.getDto(telegramId);
+        UserEntity entity = null;
+        if (userDto == null) {
+            entity = userService.getEntity(telegramId);
+        }
+        if (entity != null) {
+            userDto = UserMapper.INSTANCE.userEntityToUserDTO(entity);
+            userDto.setPositionMenu(MENU_START);
+            userDto.setPositionRegistration(PositionRegistration.DONE);
+            userService.saveDto(userDto);
+        }
+        return userDto;
     }
 }
