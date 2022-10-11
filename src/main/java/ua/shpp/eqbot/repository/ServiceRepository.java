@@ -27,5 +27,5 @@ public interface ServiceRepository extends JpaRepository<ServiceEntity, Long> {
 //    @Query("SELECT * FROM services WHERE (services.description LIKE '%ремо%') OR (services.name LIKE '%ремо%');")
 //    List<ServiceEntity> findAllByDescriptionAndName(String description, String name);
 //
-    List<ServiceEntity> findByDescriptionContaining(String description);
+    List<ServiceEntity> findByDescriptionContainingIgnoreCaseOrNameContainingIgnoreCase(String description, String name);
 }
