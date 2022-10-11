@@ -42,7 +42,7 @@ public class ChangeLanguageICommand implements ICommand {
             return false;
         }
 
-        if (userDto.getLanguage().equals("uk")) {
+        if (!userDto.getLanguage().equals("en")) {
             userDto.setLanguage("en");
         } else {
             userDto.setLanguage("uk");
