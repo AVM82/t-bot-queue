@@ -2,6 +2,7 @@ package ua.shpp.eqbot.dto;
 
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 
 public class RegistrationForTheServiceDto {
@@ -9,8 +10,7 @@ public class RegistrationForTheServiceDto {
     private Long serviceId;
     @NotNull(message = "{valid.idUser.notnull.message}")
     private Long userId;
-    private LocalTime serviceRegistrationTime;
-    private LocalDate serviceRegistrationDate;
+    private LocalDateTime serviceRegistrationDateTime;
 
     public Long getServiceId() {
         return serviceId;
@@ -28,19 +28,11 @@ public class RegistrationForTheServiceDto {
         this.userId = userId;
     }
 
-    public LocalTime getServiceRegistrationTime() {
-        return serviceRegistrationTime;
+    public LocalDateTime getServiceRegistrationDateTime() {
+        return serviceRegistrationDateTime;
     }
 
-    public void setServiceRegistrationTime(LocalTime serviceRegistrationTime) {
-        this.serviceRegistrationTime = serviceRegistrationTime;
-    }
-
-    public LocalDate getServiceRegistrationDate() {
-        return serviceRegistrationDate;
-    }
-
-    public void setServiceRegistrationDate(LocalDate serviceRegistrationDate) {
-        this.serviceRegistrationDate = serviceRegistrationDate;
+    public void setServiceRegistrationDateTime(LocalDateTime serviceRegistrationDateTime) {
+        this.serviceRegistrationDateTime = serviceRegistrationDateTime;
     }
 }
