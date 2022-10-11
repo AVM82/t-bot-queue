@@ -16,6 +16,11 @@ public class UserDto {
     public UserDto() {
     }
 
+    public UserDto(Long telegramId, String name) {
+        this.telegramId = telegramId;
+        this.name = name;
+    }
+
     public UserDto(String name, String city) {
         this.name = name;
         this.city = city;
