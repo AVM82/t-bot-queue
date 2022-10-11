@@ -20,18 +20,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Component
-public class SearchUsesNameService implements ICommand {
-    private static final Logger LOGGER = LoggerFactory.getLogger(SearchUsesNameService.class);
+public class SearchServiceBySimilarWordsCommander implements ICommand {
+    private static final Logger LOGGER = LoggerFactory.getLogger(SearchServiceBySimilarWordsCommander.class);
     private final SendBotMessageService sendBotMessageService;
     private final ServiceRepository serviceRepository;
     private final UserService userService;
     private final BundleLanguage bundleLanguage;
 
     @Autowired
-    public SearchUsesNameService(SendBotMessageService sendBotMessageService,
-                                 ServiceRepository serviceRepository,
-                                 UserService userService,
-                                 BundleLanguage bundleLanguage) {
+    public SearchServiceBySimilarWordsCommander(SendBotMessageService sendBotMessageService,
+                                                ServiceRepository serviceRepository,
+                                                UserService userService,
+                                                BundleLanguage bundleLanguage) {
         this.sendBotMessageService = sendBotMessageService;
         this.serviceRepository = serviceRepository;
         this.userService = userService;
@@ -57,27 +57,10 @@ public class SearchUsesNameService implements ICommand {
             LOGGER.info("inner else find list use like");
             user.setPositionMenu(PositionMenu.SEARCH_BY_NAME);
             String likeString = update.getMessage().getText();
-            List<ServiceEntity> byDescriptionLike = serviceRepository.findByDescriptionLike(likeString);
+            List<ServiceEntity> byDescriptionLike = serviceRepository.findByDescriptionContaining(likeString);
             if (!byDescriptionLike.isEmpty()) {
                 LOGGER.info("Found a list of services by description LIKE {} counts: {}", likeString, byDescriptionLike.size());
-                InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
-                List<List<InlineKeyboardButton>> availableServiceButtons = new ArrayList<>();
-
-                byDescriptionLike.forEach(serviceEntity -> {
-                    List<InlineKeyboardButton> button = new ArrayList<>();
-                    button.add(InlineKeyboardButton.builder()
-                            .text(serviceEntity.getName())
-                            .callbackData(String.valueOf(serviceEntity.getId()))
-                            .build());
-                    availableServiceButtons.add(button);
-                });
-                inlineKeyboardMarkup.setKeyboard(availableServiceButtons);
-                SendMessage sendMessage = new SendMessage();
-                sendMessage.setChatId(chatId);
-                sendMessage.setText(bundleLanguage.getValue(chatId, "command.search_service.messages.list_of_services"));
-                sendMessage.setReplyMarkup(inlineKeyboardMarkup);
-                sendBotMessageService.sendMessage(sendMessage);
-                return true;
+                return fillListResulSelection(chatId, byDescriptionLike, bundleLanguage, sendBotMessageService);
             } else {
                 LOGGER.info("No service were found for the string");
                 sendBotMessageService.sendMessage(String.valueOf(chatId),
@@ -85,5 +68,26 @@ public class SearchUsesNameService implements ICommand {
                 return false;
             }
         }
+    }
+
+    static boolean fillListResulSelection(long chatId, List<ServiceEntity> byDescriptionLike, BundleLanguage bundleLanguage, SendBotMessageService sendBotMessageService) {
+        InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
+        List<List<InlineKeyboardButton>> availableServiceButtons = new ArrayList<>();
+
+        byDescriptionLike.forEach(serviceEntity -> {
+            List<InlineKeyboardButton> button = new ArrayList<>();
+            button.add(InlineKeyboardButton.builder()
+                    .text(serviceEntity.getName())
+                    .callbackData(String.valueOf(serviceEntity.getId()))
+                    .build());
+            availableServiceButtons.add(button);
+        });
+        inlineKeyboardMarkup.setKeyboard(availableServiceButtons);
+        SendMessage sendMessage = new SendMessage();
+        sendMessage.setChatId(chatId);
+        sendMessage.setText(bundleLanguage.getValue(chatId, "command.search_service.messages.list_of_services"));
+        sendMessage.setReplyMarkup(inlineKeyboardMarkup);
+        sendBotMessageService.sendMessage(sendMessage);
+        return true;
     }
 }

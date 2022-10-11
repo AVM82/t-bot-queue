@@ -21,6 +21,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static ua.shpp.eqbot.command.SearchServiceBySimilarWordsCommander.fillListResulSelection;
+
 @Component
 public class SearchServiceCommand implements ICommand {
     private static final Logger LOGGER = LoggerFactory.getLogger(SearchServiceCommand.class);
@@ -76,26 +78,6 @@ public class SearchServiceCommand implements ICommand {
 
         LOGGER.info("Found a list of services by city of user registration");
 
-        InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
-        List<List<InlineKeyboardButton>> availableServiceButtons = new ArrayList<>();
-
-        serviceEntityByCityList.forEach(serviceEntity -> {
-            List<InlineKeyboardButton> button = new ArrayList<>();
-            button.add(InlineKeyboardButton.builder()
-                    .text(serviceEntity.getName())
-                    .callbackData(String.valueOf(serviceEntity.getId()))
-                    .build());
-            availableServiceButtons.add(button);
-        });
-
-        inlineKeyboardMarkup.setKeyboard(availableServiceButtons);
-
-        SendMessage sendMessage = new SendMessage();
-        sendMessage.setChatId(id);
-        sendMessage.setText(bundleLanguage.getValue(id, "command.search_service.messages.list_of_services"));
-        sendMessage.setReplyMarkup(inlineKeyboardMarkup);
-        sendBotMessageService.sendMessage(sendMessage);
-
-        return true;
+        return fillListResulSelection(id, serviceEntityByCityList, bundleLanguage, sendBotMessageService);
     }
 }
