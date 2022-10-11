@@ -1,9 +1,10 @@
-package ua.shpp.eqbot.command;
+package ua.shpp.eqbot.command.registrationService;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import ua.shpp.eqbot.cache.ServiceCache;
+import ua.shpp.eqbot.command.ICommand;
 import ua.shpp.eqbot.dto.ServiceDTO;
 import ua.shpp.eqbot.internationalization.BundleLanguage;
 import ua.shpp.eqbot.model.ServiceEntity;
