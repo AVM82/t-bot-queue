@@ -150,8 +150,7 @@ public class EqTelegramBot extends TelegramLongPollingBot {
         } else if (callbackQuery.getData().equals("searchName")) {
             LOGGER.info("search by name");
             userDto.setPositionMenu(SEARCH_BY_NAME);
-            commandContainer.retrieveCommand("/search").execute(update);
-            if (!commandContainer.retrieveCommand("/search").execute(update)) {
+            if (!commandContainer.retrieveCommand(CommandName.SEARCH_SERVICE.getNameCommand()).execute(update)) {
                 userDto.setPositionMenu(MENU_START);
                 commandContainer.retrieveCommand(CommandName.START.getNameCommand()).execute(update);
             }
