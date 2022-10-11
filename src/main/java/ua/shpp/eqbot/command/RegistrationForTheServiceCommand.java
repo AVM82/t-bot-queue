@@ -33,6 +33,7 @@ public class RegistrationForTheServiceCommand implements ICommand {
     }
 
     private void addRequest(Long id) {
+        LOGGER.info("add buttons to the service search");
         InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
         List<List<InlineKeyboardButton>> keyboard = new ArrayList<>();
         keyboard.add(createButton(id, "change_provider_details", "change_provider_details"));

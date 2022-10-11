@@ -6,32 +6,32 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 
 @Entity
-@Table(name = "registrationForTheService")
+@Table(name = "registration_for_the_user")
 public class RegistrationForTheServiceEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @NotNull(message = "{valid.idService.notnull.message}")
-    private Long idService;
+    private Long serviceId;
     @NotNull(message = "{valid.idUser.notnull.message}")
-    private Long idUser;
+    private Long userId;
     private LocalTime serviceRegistrationTime;
     private LocalDate serviceRegistrationDate;
 
-    public Long getIdService() {
-        return idService;
+    public Long getServiceId() {
+        return serviceId;
     }
 
-    public void setIdService(Long idService) {
-        this.idService = idService;
+    public void setServiceId(Long idService) {
+        this.serviceId = idService;
     }
 
-    public Long getIdUser() {
-        return idUser;
+    public Long getUserId() {
+        return userId;
     }
 
-    public void setIdUser(Long idUser) {
-        this.idUser = idUser;
+    public void setUserId(Long idUser) {
+        this.userId = idUser;
     }
 
     public LocalTime getServiceRegistrationTime() {

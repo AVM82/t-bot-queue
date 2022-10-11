@@ -8,5 +8,5 @@ import java.util.List;
 
 @Repository
 public interface RegistrationForTheServiceRepository extends JpaRepository<RegistrationForTheServiceEntity, Long> {
-    List<RegistrationForTheServiceEntity> findAllBy(Long id);
+    //List<RegistrationForTheServiceEntity> findAllBy(Long id);
 }
