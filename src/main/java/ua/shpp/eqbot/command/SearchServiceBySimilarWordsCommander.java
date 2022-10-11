@@ -57,7 +57,7 @@ public class SearchServiceBySimilarWordsCommander implements ICommand {
             LOGGER.info("inner else find list use like");
             user.setPositionMenu(PositionMenu.SEARCH_BY_NAME);
             String likeString = update.getMessage().getText();
-            List<ServiceEntity> byDescriptionLike = serviceRepository.findByDescriptionContaining(likeString);
+            List<ServiceEntity> byDescriptionLike = serviceRepository.findByDescriptionContainingIgnoreCaseOrNameContainingIgnoreCase(likeString, likeString);
             if (!byDescriptionLike.isEmpty()) {
                 LOGGER.info("Found a list of services by description LIKE {} counts: {}", likeString, byDescriptionLike.size());
                 return fillListResulSelection(chatId, byDescriptionLike, bundleLanguage, sendBotMessageService);

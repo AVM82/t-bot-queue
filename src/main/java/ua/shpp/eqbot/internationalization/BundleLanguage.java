@@ -4,20 +4,22 @@ import org.springframework.stereotype.Component;
 import ua.shpp.eqbot.dto.UserDto;
 import ua.shpp.eqbot.service.UserService;
 
+import java.util.List;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
 @Component
 public class BundleLanguage {
     private final UserService userService;
-
+    public final List<String> availableLanguages = List.of("uk", "en");
+    public final String defaultLanguage = "uk";
     public BundleLanguage(UserService userService) {
         this.userService = userService;
     }
 
     public String getValue(long userTelegramId, String value) {
         UserDto user = userService.getDto(userTelegramId);
-        String language = "uk";
+        String language = defaultLanguage;
         if (user != null) {
             language = user.getLanguage();
         }
