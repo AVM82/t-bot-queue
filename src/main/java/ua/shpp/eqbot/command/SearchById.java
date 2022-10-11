@@ -53,11 +53,11 @@ public class SearchById implements ICommand {
             sendBotMessageService.sendMessage(String.valueOf(id), bundleLanguage.getValue(id, "search.searchId.text"));
             return true;
         } else {
-            user.setPositionMenu(PositionMenu.SEARCH_BY_NAME);
             String idService = update.getMessage().getText();
-            ServiceEntity result = serviceRepository.findFirstById(Long.valueOf(idService));
+            ServiceEntity result = idService.matches("\\d+") ? serviceRepository.findFirstById(Long.valueOf(idService)) : null;
             if (result != null) {
                 LOGGER.info("Found service by id");
+                user.setPositionMenu(PositionMenu.SEARCH_BY_NAME);
                 InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
                 List<List<InlineKeyboardButton>> availableServiceButtons = new ArrayList<>();
                 List<InlineKeyboardButton> button = new ArrayList<>();
@@ -76,6 +76,7 @@ public class SearchById implements ICommand {
                 return true;
             } else {
                 LOGGER.info("Not found service by {}", idService);
+                user.setPositionMenu(PositionMenu.MENU_START);
                 sendBotMessageService.sendMessage(String.valueOf(id), bundleLanguage.getValue(id, "search.searchId.notFound"));
                 return false;
             }
