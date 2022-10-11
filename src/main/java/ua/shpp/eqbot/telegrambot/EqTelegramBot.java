@@ -13,8 +13,8 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import ua.shpp.eqbot.command.CommandContainer;
 import ua.shpp.eqbot.command.CommandName;
-import ua.shpp.eqbot.internationalization.BundleLanguage;
 import ua.shpp.eqbot.dto.UserDto;
+import ua.shpp.eqbot.internationalization.BundleLanguage;
 import ua.shpp.eqbot.repository.ProviderRepository;
 import ua.shpp.eqbot.repository.ServiceRepository;
 import ua.shpp.eqbot.service.ImageService;
@@ -30,14 +30,12 @@ public class EqTelegramBot extends TelegramLongPollingBot {
     private static final Logger LOGGER = LoggerFactory.getLogger(EqTelegramBot.class);
     private final CommandContainer commandContainer;
     private final UserService userService;
-    ProviderRepository providerRepository;
 
     @Autowired
     public EqTelegramBot(ServiceRepository serviceRepository,
                          ProviderRepository providerRepository, @Lazy ImageService imageService,
                          BundleLanguage bundleLanguage, UserService userService,
                          ProviderService providerService) {
-        this.providerRepository = providerRepository;
         this.userService = userService;
         this.commandContainer = new CommandContainer(
                 new SendBotMessageServiceImpl(this),
@@ -148,10 +146,16 @@ public class EqTelegramBot extends TelegramLongPollingBot {
                 userDto.setPositionMenu(MENU_START);
                 commandContainer.retrieveCommand(CommandName.START.getNameCommand()).execute(update);
             }
-        } else if (callbackQuery.getData().equals("searchId")) {
+        }
+        else if (callbackQuery.getData().equals("searchId")) {
             LOGGER.info("search by id");
             commandContainer.retrieveCommand(CommandName.SEARCH_BY_ID.getNameCommand()).execute(update);
-        } else if (callbackQuery.getData().equals("return_in_menu")) {
+        }
+        else if (callbackQuery.getData().equals("searchString")) {
+            LOGGER.info("search uses name service");
+            commandContainer.retrieveCommand(CommandName.SEARCH_USES_NAME_SERVICE.getNameCommand()).execute(update);
+        }
+        else if (callbackQuery.getData().equals("return_in_menu")) {
             commandContainer.retrieveCommand(CommandName.START.getNameCommand()).execute(update);
         } else if (callbackQuery.getData().equals("change_provider_details")) {
             LOGGER.info("change provider details");

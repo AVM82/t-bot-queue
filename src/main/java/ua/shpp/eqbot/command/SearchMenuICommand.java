@@ -37,16 +37,22 @@ public class SearchMenuICommand implements ICommand {
         InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
         List<List<InlineKeyboardButton>> keyboard = new ArrayList<>();
         List<InlineKeyboardButton> buttonCreate = new ArrayList<>();
+        List<InlineKeyboardButton> buttonSearch = new ArrayList<>();
+
         buttonCreate.add(InlineKeyboardButton.builder()
-                .text(bundleLanguage.getValue(chatId, "search.searchName"))
+                .text(bundleLanguage.getValue(chatId, "search.searchByCityName"))
                 .callbackData("searchName")
                 .build());
-        List<InlineKeyboardButton> buttonSearch = new ArrayList<>();
         buttonCreate.add(InlineKeyboardButton.builder()
                 .text(bundleLanguage.getValue(chatId, "search.searchId"))
                 .callbackData("searchId")
                 .build());
+        buttonCreate.add(InlineKeyboardButton.builder()
+                .text(bundleLanguage.getValue(chatId, "search.searchString"))
+                .callbackData("searchString")
+                .build());
         keyboard.add(buttonCreate);
+        /*TODO why  buttonSearch here it is empty list ?*/
         keyboard.add(buttonSearch);
         inlineKeyboardMarkup.setKeyboard(keyboard);
         SendMessage sendMessage = new SendMessage();

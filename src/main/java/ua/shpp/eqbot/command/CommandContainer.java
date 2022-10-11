@@ -50,6 +50,8 @@ public class CommandContainer {
                 .put(CommandName.SEARCH_MENU.getNameCommand(), new SearchMenuICommand(sendBotMessageService, bundleLanguage))
                 .put(CommandName.SEARCH_BY_ID.getNameCommand(),
                         new SearchById(sendBotMessageService, serviceRepository, userService, bundleLanguage))
+                .put(CommandName.SEARCH_USES_NAME_SERVICE.getNameCommand(),
+                        new SearchUsesNameService(sendBotMessageService, serviceRepository, userService, bundleLanguage))
                 .build();
         unknownICommand = new UnknownICommand(sendBotMessageService, bundleLanguage);
     }
