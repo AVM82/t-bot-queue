@@ -171,6 +171,8 @@ public class EqTelegramBot extends TelegramLongPollingBot {
             commandContainer.retrieveCommand("/add").execute(update);
         } else if (userDto.getPositionMenu() == SEARCH_BY_NAME) {
             LOGGER.info("The user has successfully selected the service");
+            //TODO тут дата та час запису на сервіс
+
             try {
                 execute(SendMessage.builder()
                         .chatId(callbackQuery.getFrom().getId())
