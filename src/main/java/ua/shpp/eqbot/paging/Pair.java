@@ -28,8 +28,15 @@ public class Pair {
     }
 
     public Pair increase() {
-        this.from += 2;
-        this.to += 2;
+        this.page += 1;
+        return this;
+    }
+
+    public Pair decrease() {
+        this.page -= 1;
+        if (this.page <= 0) {
+            this.page = 0;
+        }
         return this;
     }
 
