@@ -80,10 +80,9 @@ public class SearchServiceBySimilarWordsCommander implements ICommand {
                pairMap.put(chatId, pairMap.get(chatId).increase());
                LOGGER.info("next page from {} to {}", pairMap.get(chatId).getFrom(), pairMap.get(chatId).getTo());
             }
-            //next_paging
 
             List<ServiceEntity> page = paginator.getPage2(from, to);
-            //addButtons(update);
+            
             if (callbackQuery != null && callbackQuery.getData().equals("exit")) {
                 LOGGER.info("exit");
 
