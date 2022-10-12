@@ -1,4 +1,4 @@
-package ua.shpp.eqbot.command.registrationService;
+package ua.shpp.eqbot.command.registrationservice;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

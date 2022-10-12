@@ -1,4 +1,4 @@
-package ua.shpp.eqbot.command;
+package ua.shpp.eqbot.command.registrationfortheservice;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -6,7 +6,10 @@ import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
+import ua.shpp.eqbot.command.ICommand;
 import ua.shpp.eqbot.internationalization.BundleLanguage;
+import ua.shpp.eqbot.model.ServiceEntity;
+import ua.shpp.eqbot.repository.ServiceRepository;
 import ua.shpp.eqbot.service.SendBotMessageService;
 
 import java.util.ArrayList;
@@ -18,15 +21,18 @@ public class RegistrationForTheServiceCommand implements ICommand {
 
     private final SendBotMessageService sendBotMessageService;
 
+    private final ServiceRepository serviceRepository;
     private final BundleLanguage bundleLanguage;
 
-    public RegistrationForTheServiceCommand(SendBotMessageService sendBotMessageService, BundleLanguage bundleLanguage) {
+    public RegistrationForTheServiceCommand(SendBotMessageService sendBotMessageService, ServiceRepository serviceRepository, BundleLanguage bundleLanguage) {
         this.sendBotMessageService = sendBotMessageService;
+        this.serviceRepository = serviceRepository;
         this.bundleLanguage = bundleLanguage;
     }
 
     @Override
     public boolean execute(Update update) {
+        ServiceEntity serviceEntity = serviceRepository.findById(2L).get();
 
 
         return false;

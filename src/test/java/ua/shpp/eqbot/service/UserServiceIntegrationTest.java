@@ -8,7 +8,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.security.web.SecurityFilterChain;
 import org.telegram.telegrambots.starter.TelegramBotInitializer;
 import ua.shpp.eqbot.command.CommandContainer;
-import ua.shpp.eqbot.command.RegistrationServiceICommand;
+import ua.shpp.eqbot.command.registrationservice.RegistrationServiceICommand;
 import ua.shpp.eqbot.config.SecurityConfiguration;
 import ua.shpp.eqbot.dto.UserDto;
 import ua.shpp.eqbot.mapper.UserMapper;
