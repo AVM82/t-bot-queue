@@ -47,14 +47,13 @@ public class SearchServiceBySimilarWordsCommander implements ICommand {
     @Override
     public boolean execute(Update update) {
         LOGGER.info("method execute search using the service name");
-        int from = 0, to = 2;
         long chatId;
         if (update.hasCallbackQuery()) {
             chatId = update.getCallbackQuery().getFrom().getId();
         } else {
             chatId = update.getMessage().getChatId();
         }
-        pairMap.put(chatId, new Pair(0,2));
+
         UserDto user = userService.getDto(chatId);
 
         if (user.getPositionMenu() != PositionMenu.SEARCH_USES_NAME_SERVICE) {
@@ -62,10 +61,13 @@ public class SearchServiceBySimilarWordsCommander implements ICommand {
             sendBotMessageService.sendMessage(String.valueOf(chatId), bundleLanguage.getValue(chatId, "search.searchUsesNameService.text"));
             return true;
         } else {
+            if (!pairMap.containsKey(chatId)) {
+                pairMap.put(chatId, new Pair(0, 2));
+            }
             Paginator paginator = new Paginator(serviceRepository);
             LOGGER.info("inner else find list use like");
             user.setPositionMenu(PositionMenu.SEARCH_USES_NAME_SERVICE);
-            String likeString ="";
+            String likeString = "";
             if (update.getMessage() != null) {
                 likeString = update.getMessage().getText();
             }
@@ -77,21 +79,26 @@ public class SearchServiceBySimilarWordsCommander implements ICommand {
 
             if (callbackQuery != null && callbackQuery.getData().equals("next")) {
                 LOGGER.info("next page  ========== >");
-               pairMap.put(chatId, pairMap.get(chatId).increase());
-               LOGGER.info("next page from {} to {}", pairMap.get(chatId).getFrom(), pairMap.get(chatId).getTo());
+                pairMap.put(chatId, pairMap.get(chatId).increase());
+                LOGGER.info("next page from {} to {}", pairMap.get(chatId).getFrom(), pairMap.get(chatId).getSize());
+            } else if (callbackQuery != null && callbackQuery.getData().equals("back")) {
+                LOGGER.info("previous page  ========== >");
+                pairMap.put(chatId, pairMap.get(chatId).decrease());
+                LOGGER.info("previous page from {} to {}", pairMap.get(chatId).getFrom(), pairMap.get(chatId).getSize());
             }
 
-            List<ServiceEntity> page = paginator.getPage2(from, to);
-            
+            Pair pair = pairMap.get(chatId);
+            List<ServiceEntity> page = paginator.getPage2(pair.getFrom(), pair.getSize());
+
             if (callbackQuery != null && callbackQuery.getData().equals("exit")) {
                 LOGGER.info("exit");
-
+                pairMap.remove(chatId);
+                page.clear();
                 return true;
             }
 
             if (!page.isEmpty()) {
                 LOGGER.info("Found a list of services by description LIKE {} counts: {}", likeString, byDescriptionLike.size());
-
                 return fillListResulSelection(chatId, page, bundleLanguage, sendBotMessageService);
             } else {
                 LOGGER.info("No service were found for the string");
