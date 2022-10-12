@@ -2,6 +2,7 @@ package ua.shpp.eqbot.command;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.commands.SetMyCommands;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.commands.BotCommand;
@@ -12,6 +13,7 @@ import ua.shpp.eqbot.service.SendBotMessageService;
 import java.util.ArrayList;
 import java.util.List;
 
+@Component("MAIN_MENU")
 public class MainMenuICommand implements ICommand {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MainMenuICommand.class);
