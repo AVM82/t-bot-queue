@@ -28,4 +28,6 @@ public interface ServiceRepository extends JpaRepository<ServiceEntity, Long> {
 //    List<ServiceEntity> findAllByDescriptionAndName(String description, String name);
 //
     List<ServiceEntity> findByDescriptionContainingIgnoreCaseOrNameContainingIgnoreCase(String description, String name);
+
+//    List<ServiceEntity> findByDescriptionContainingIgnoreCaseOrNameContainingIgnoreCase(String description, String name, Pageable pageable);
 }

@@ -8,10 +8,10 @@ import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
+import ua.shpp.eqbot.dto.UserDto;
 import ua.shpp.eqbot.internationalization.BundleLanguage;
 import ua.shpp.eqbot.model.ProviderEntity;
 import ua.shpp.eqbot.model.ServiceEntity;
-import ua.shpp.eqbot.dto.UserDto;
 import ua.shpp.eqbot.repository.ProviderRepository;
 import ua.shpp.eqbot.repository.ServiceRepository;
 import ua.shpp.eqbot.service.SendBotMessageService;
@@ -20,8 +20,6 @@ import ua.shpp.eqbot.service.UserService;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
-
-import static ua.shpp.eqbot.command.SearchServiceBySimilarWordsCommander.fillListResulSelection;
 
 @Component
 public class SearchServiceCommand implements ICommand {
@@ -78,6 +76,26 @@ public class SearchServiceCommand implements ICommand {
 
         LOGGER.info("Found a list of services by city of user registration");
 
-        return fillListResulSelection(id, serviceEntityByCityList, bundleLanguage, sendBotMessageService);
+        InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
+        List<List<InlineKeyboardButton>> availableServiceButtons = new ArrayList<>();
+
+        serviceEntityByCityList.forEach(serviceEntity -> {
+            List<InlineKeyboardButton> button = new ArrayList<>();
+            button.add(InlineKeyboardButton.builder()
+                    .text(serviceEntity.getName())
+                    .callbackData(String.valueOf(serviceEntity.getId()))
+                    .build());
+            availableServiceButtons.add(button);
+        });
+
+        inlineKeyboardMarkup.setKeyboard(availableServiceButtons);
+
+        SendMessage sendMessage = new SendMessage();
+        sendMessage.setChatId(id);
+        sendMessage.setText(bundleLanguage.getValue(id, "command.search_service.messages.list_of_services"));
+        sendMessage.setReplyMarkup(inlineKeyboardMarkup);
+        sendBotMessageService.sendMessage(sendMessage);
+
+        return true;
     }
 }

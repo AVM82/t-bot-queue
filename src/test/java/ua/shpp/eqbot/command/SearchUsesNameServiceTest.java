@@ -64,5 +64,4 @@ class SearchUsesNameServiceTest {
         when(userService.getDto(777L)).thenReturn(new UserDto(777L, "dummy"));
         search.execute(update);
     }
-
 }

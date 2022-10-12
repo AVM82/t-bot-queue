@@ -5,12 +5,14 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
+import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 import ua.shpp.eqbot.dto.UserDto;
 import ua.shpp.eqbot.internationalization.BundleLanguage;
 import ua.shpp.eqbot.model.ServiceEntity;
+import ua.shpp.eqbot.paging.Paginator;
 import ua.shpp.eqbot.repository.ServiceRepository;
 import ua.shpp.eqbot.service.SendBotMessageService;
 import ua.shpp.eqbot.service.UserService;
@@ -41,6 +43,7 @@ public class SearchServiceBySimilarWordsCommander implements ICommand {
     @Override
     public boolean execute(Update update) {
         LOGGER.info("method execute search using the service name");
+        int from = 0, to = 2;
         long chatId;
         if (update.hasCallbackQuery()) {
             chatId = update.getCallbackQuery().getFrom().getId();
@@ -54,13 +57,38 @@ public class SearchServiceBySimilarWordsCommander implements ICommand {
             sendBotMessageService.sendMessage(String.valueOf(chatId), bundleLanguage.getValue(chatId, "search.searchUsesNameService.text"));
             return true;
         } else {
+            Paginator paginator = new Paginator(serviceRepository);
             LOGGER.info("inner else find list use like");
-            user.setPositionMenu(PositionMenu.SEARCH_BY_NAME);
-            String likeString = update.getMessage().getText();
+            user.setPositionMenu(PositionMenu.SEARCH_USES_NAME_SERVICE);
+            String likeString ="";
+            if (update.getMessage() != null) {
+                likeString = update.getMessage().getText();
+            }
+
             List<ServiceEntity> byDescriptionLike = serviceRepository.findByDescriptionContainingIgnoreCaseOrNameContainingIgnoreCase(likeString, likeString);
-            if (!byDescriptionLike.isEmpty()) {
+
+            /*TODO extract this  другий раз тут*/
+            CallbackQuery callbackQuery = update.getCallbackQuery();
+
+            if (callbackQuery != null && callbackQuery.getData().equals("next")) {
+                LOGGER.info("next page  ========== >");
+                to += 2;
+                from += 2;
+            }
+            //next_paging
+
+            List<ServiceEntity> page = paginator.getPage2(from, to);
+            //addButtons(update);
+            if (callbackQuery != null && callbackQuery.getData().equals("exit")) {
+                LOGGER.info("exit");
+
+                return true;
+            }
+
+            if (!page.isEmpty()) {
                 LOGGER.info("Found a list of services by description LIKE {} counts: {}", likeString, byDescriptionLike.size());
-                return fillListResulSelection(chatId, byDescriptionLike, bundleLanguage, sendBotMessageService);
+
+                return fillListResulSelection(chatId, page, bundleLanguage, sendBotMessageService);
             } else {
                 LOGGER.info("No service were found for the string");
                 sendBotMessageService.sendMessage(String.valueOf(chatId),
@@ -69,6 +97,7 @@ public class SearchServiceBySimilarWordsCommander implements ICommand {
             }
         }
     }
+
 
     static boolean fillListResulSelection(long chatId, List<ServiceEntity> byDescriptionLike, BundleLanguage bundleLanguage, SendBotMessageService sendBotMessageService) {
         InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
@@ -88,6 +117,7 @@ public class SearchServiceBySimilarWordsCommander implements ICommand {
         sendMessage.setText(bundleLanguage.getValue(chatId, "command.search_service.messages.list_of_services"));
         sendMessage.setReplyMarkup(inlineKeyboardMarkup);
         sendBotMessageService.sendMessage(sendMessage);
-        return true;
+
+        return false;
     }
 }
