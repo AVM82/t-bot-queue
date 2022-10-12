@@ -13,13 +13,16 @@ import ua.shpp.eqbot.dto.UserDto;
 import ua.shpp.eqbot.internationalization.BundleLanguage;
 import ua.shpp.eqbot.model.ServiceEntity;
 import ua.shpp.eqbot.paging.Paginator;
+import ua.shpp.eqbot.paging.Pair;
 import ua.shpp.eqbot.repository.ServiceRepository;
 import ua.shpp.eqbot.service.SendBotMessageService;
 import ua.shpp.eqbot.service.UserService;
 import ua.shpp.eqbot.stage.PositionMenu;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Component
 public class SearchServiceBySimilarWordsCommander implements ICommand {
@@ -28,6 +31,7 @@ public class SearchServiceBySimilarWordsCommander implements ICommand {
     private final ServiceRepository serviceRepository;
     private final UserService userService;
     private final BundleLanguage bundleLanguage;
+    private Map<Long, Pair> pairMap = new HashMap<>();
 
     @Autowired
     public SearchServiceBySimilarWordsCommander(SendBotMessageService sendBotMessageService,
@@ -50,6 +54,7 @@ public class SearchServiceBySimilarWordsCommander implements ICommand {
         } else {
             chatId = update.getMessage().getChatId();
         }
+        pairMap.put(chatId, new Pair(0,2));
         UserDto user = userService.getDto(chatId);
 
         if (user.getPositionMenu() != PositionMenu.SEARCH_USES_NAME_SERVICE) {
@@ -72,8 +77,8 @@ public class SearchServiceBySimilarWordsCommander implements ICommand {
 
             if (callbackQuery != null && callbackQuery.getData().equals("next")) {
                 LOGGER.info("next page  ========== >");
-                to += 2;
-                from += 2;
+               pairMap.put(chatId, pairMap.get(chatId).increase());
+               LOGGER.info("next page from {} to {}", pairMap.get(chatId).getFrom(), pairMap.get(chatId).getTo());
             }
             //next_paging
 
