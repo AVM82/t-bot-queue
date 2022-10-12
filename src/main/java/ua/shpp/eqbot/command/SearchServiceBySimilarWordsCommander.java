@@ -111,6 +111,20 @@ public class SearchServiceBySimilarWordsCommander implements ICommand {
                     .build());
             availableServiceButtons.add(button);
         });
+
+        List<InlineKeyboardButton> button = new ArrayList<>();
+        button.add(InlineKeyboardButton.builder()
+                .text("<<")
+                .callbackData("back")
+                .build());
+        button.add(InlineKeyboardButton.builder()
+                .text("exit")
+                .callbackData("exit").build());
+        button.add(InlineKeyboardButton.builder()
+                .text(">>")
+                .callbackData("next").build());
+        availableServiceButtons.add(button);
+
         inlineKeyboardMarkup.setKeyboard(availableServiceButtons);
         SendMessage sendMessage = new SendMessage();
         sendMessage.setChatId(chatId);
