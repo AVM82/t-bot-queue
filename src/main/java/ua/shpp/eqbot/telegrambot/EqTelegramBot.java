@@ -47,7 +47,8 @@ public class EqTelegramBot extends TelegramLongPollingBot {
                 imageService,
                 bundleLanguage,
                 userService,
-                providerService);
+                providerService
+        );
     }
 
     @Value("${telegram.bot.name}")
@@ -110,9 +111,11 @@ public class EqTelegramBot extends TelegramLongPollingBot {
                     }
                 } else if (user.getPositionMenu() == SEARCH_USES_NAME_SERVICE) {
                     LOGGER.info("enter a few letters that you want to search for");
-                    if (!commandContainer.retrieveCommand(CommandName.SEARCH_USES_NAME_SERVICE.getNameCommand()).execute(update)) {
-                        commandContainer.retrieveCommand(CommandName.SEARCH_MENU.getNameCommand()).execute(update);
-                    }
+                    commandContainer.retrieveCommand(CommandName.SEARCH_USES_NAME_SERVICE.getNameCommand()).execute(update);
+//                    if (!commandContainer.retrieveCommand(CommandName.SEARCH_USES_NAME_SERVICE.getNameCommand()).execute(update)) {
+//                        commandContainer.retrieveCommand(CommandName.SEARCH_USES_NAME_SERVICE.getNameCommand()).execute(update);
+//                    }
+
                 }
             }
         }
@@ -189,6 +192,10 @@ public class EqTelegramBot extends TelegramLongPollingBot {
             user.setPositionMenu(REGISTRATION_PROVIDER);
         } else if (callbackQuery.getData().equals("change_role")) {
             commandContainer.retrieveCommand("/change_role").execute(update);
+        } else if (callbackQuery.getData().equals("next") || callbackQuery.getData().equals("back")) {
+            commandContainer.retrieveCommand(CommandName.SEARCH_USES_NAME_SERVICE.getNameCommand()).execute(update);
+        } else if (callbackQuery.getData().equals("exit")) {
+            commandContainer.retrieveCommand(CommandName.START.getNameCommand()).execute(update);
         } else if (callbackQuery.getData().equals("change_lang")) {
             commandContainer.retrieveCommand("/change_language").execute(update);
             commandContainer.retrieveCommand("/start").execute(update);
