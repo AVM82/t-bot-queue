@@ -139,7 +139,7 @@ public class SearchServiceBySimilarWordsCommander implements ICommand {
         inlineKeyboardMarkup.setKeyboard(availableServiceButtons);
         SendMessage sendMessage = new SendMessage();
         sendMessage.setChatId(chatId);
-        sendMessage.setText(bundleLanguage.getValue(chatId, "command.search_service.messages.list_of_services"));
+        sendMessage.setText(bundleLanguage.getValue(chatId, "search.byCityName.listOfServices"));
         sendMessage.setReplyMarkup(inlineKeyboardMarkup);
         sendBotMessageService.sendMessage(sendMessage);
 
