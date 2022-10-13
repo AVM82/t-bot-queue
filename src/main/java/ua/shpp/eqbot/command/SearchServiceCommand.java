@@ -130,7 +130,7 @@ public class SearchServiceCommand implements ICommand {
 
             SendMessage sendMessage = new SendMessage();
             sendMessage.setChatId(id);
-            sendMessage.setText(bundleLanguage.getValue(id, "search.byCityName.listOfServices"));
+            sendMessage.setText(String.format("%s %s", bundleLanguage.getValue(id, "search.byCityName.listOfServices"), city));
             sendMessage.setReplyMarkup(inlineKeyboardMarkup);
             sendBotMessageService.sendMessage(sendMessage);
 
