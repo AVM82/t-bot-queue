@@ -1,8 +1,7 @@
-//package ua.shpp.eqbot;
+package ua.shpp.eqbot;//package ua.shpp.eqbot;
 //
 //import org.junit.jupiter.api.BeforeEach;
 //import org.junit.jupiter.api.Test;
-//import org.junit.jupiter.api.extension.ExtendWith;
 //import org.mockito.Mockito;
 //import org.mockito.junit.jupiter.MockitoExtension;
 //import org.springframework.beans.factory.annotation.Autowired;
@@ -12,11 +11,10 @@
 //import org.telegram.telegrambots.meta.api.objects.Chat;
 //import org.telegram.telegrambots.meta.api.objects.Message;
 //import org.telegram.telegrambots.meta.api.objects.Update;
-//import ua.shpp.eqbot.model.UserDto;
+//import ua.shpp.eqbot.dto.UserDto;
 //import ua.shpp.eqbot.model.UserEntity;
-//import ua.shpp.eqbot.service.UserService;
-//
-//import java.time.LocalDateTime;
+//import ua.shpp.eqbot.stage.PositionMenu;
+//import ua.shpp.eqbot.stage.PositionRegistration;
 //
 //@WebMvcTest(MockitoExtension.class)
 //class RegistrationUserTest {
@@ -31,13 +29,19 @@
 //
 //    private UserEntity entity;
 //
+//
 //    @BeforeEach
 //    void setDtoAndEntity() {
 //        dto = new UserDto();
-//       /* dto.setTask("task");
-//        dto.setPlace("place");
-//        dto.setStatus(JobStatus.PLANNED);
-//        entity.setId(id);
+//        dto.setName("task");
+//        dto.setCity("place");
+//        dto.setPhone("1212");
+//        dto.setLanguage("FL");
+//        dto.setPositionRegistration(PositionRegistration.DONE);
+//        dto.setPositionMenu(PositionMenu.MENU_START);
+//
+//
+//        entity.setTelegramId(12L);
 //        entity.setTask("task");
 //        entity.setPlaceOfExecution("place");
 //        entity.setExecutionStatus(JobStatus.PLANNED);

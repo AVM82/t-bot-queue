@@ -11,41 +11,48 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Start {@link Command}.
+ * Start {@link ICommand}.
  */
-public class StartCommand implements Command {
+public class SearchMenuICommand implements ICommand {
 
     private final SendBotMessageService sendBotMessageService;
     private final BundleLanguage bundleLanguage;
 
-    public StartCommand(SendBotMessageService sendBotMessageService, BundleLanguage bundleLanguage) {
+    public SearchMenuICommand(SendBotMessageService sendBotMessageService, BundleLanguage bundleLanguage) {
         this.sendBotMessageService = sendBotMessageService;
         this.bundleLanguage = bundleLanguage;
     }
 
     @Override
     public boolean execute(Update update) {
-        if (update.hasCallbackQuery())
-            createStartMenu(update.getCallbackQuery().getFrom().getId());
-        else
-            createStartMenu(update.getMessage().getChatId());
+        if (update.hasCallbackQuery()) {
+            createMenu(update.getCallbackQuery().getFrom().getId());
+        } else {
+            createMenu(update.getMessage().getChatId());
+        }
         return true;
     }
 
-    private void createStartMenu(Long chatId) {
+    private void createMenu(Long chatId) {
         InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
         List<List<InlineKeyboardButton>> keyboard = new ArrayList<>();
         List<InlineKeyboardButton> buttonCreate = new ArrayList<>();
-        buttonCreate.add(InlineKeyboardButton.builder()
-                .text(bundleLanguage.getValue(chatId, "create_service"))
-                .callbackData("create_service")
-                .build());
         List<InlineKeyboardButton> buttonSearch = new ArrayList<>();
+
         buttonCreate.add(InlineKeyboardButton.builder()
-                .text(bundleLanguage.getValue(chatId, "search_service"))
-                .callbackData("search_service")
+                .text(bundleLanguage.getValue(chatId, "search.searchByCityName"))
+                .callbackData("searchName")
+                .build());
+        buttonCreate.add(InlineKeyboardButton.builder()
+                .text(bundleLanguage.getValue(chatId, "search.searchId"))
+                .callbackData("searchId")
+                .build());
+        buttonCreate.add(InlineKeyboardButton.builder()
+                .text(bundleLanguage.getValue(chatId, "search.searchString"))
+                .callbackData("searchString")
                 .build());
         keyboard.add(buttonCreate);
+        /*TODO why  buttonSearch here it is empty list ?*/
         keyboard.add(buttonSearch);
         inlineKeyboardMarkup.setKeyboard(keyboard);
         SendMessage sendMessage = new SendMessage();

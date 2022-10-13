@@ -8,6 +8,7 @@ import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
+import ua.shpp.eqbot.dto.UserDto;
 import ua.shpp.eqbot.internationalization.BundleLanguage;
 import ua.shpp.eqbot.model.ProviderEntity;
 import ua.shpp.eqbot.model.ServiceEntity;
@@ -22,8 +23,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Component
-public class SearchService implements Command {
-    private static final Logger LOGGER = LoggerFactory.getLogger(SearchService.class);
+public class SearchServiceCommand implements ICommand {
+    private static final Logger LOGGER = LoggerFactory.getLogger(SearchServiceCommand.class);
     private final SendBotMessageService sendBotMessageService;
     private final ServiceRepository serviceRepository;
     private final ProviderRepository providerRepository;
@@ -31,11 +32,11 @@ public class SearchService implements Command {
     private final BundleLanguage bundleLanguage;
 
     @Autowired
-    public SearchService(SendBotMessageService sendBotMessageService,
-                         ServiceRepository serviceRepository,
-                         ProviderRepository providerRepository,
-                         UserService userService,
-                         BundleLanguage bundleLanguage) {
+    public SearchServiceCommand(SendBotMessageService sendBotMessageService,
+                                ServiceRepository serviceRepository,
+                                ProviderRepository providerRepository,
+                                UserService userService,
+                                BundleLanguage bundleLanguage) {
         this.sendBotMessageService = sendBotMessageService;
         this.serviceRepository = serviceRepository;
         this.providerRepository = providerRepository;

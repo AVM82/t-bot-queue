@@ -8,14 +8,17 @@ public enum CommandName {
     SETTINGS("/settings"),
     ADD_SERVICE("/add"),
     SEARCH_SERVICE("/search"),
-    CHANGE_ROLE_TO_PROVIDER("Change role to Provider"),
+    SEARCH_MENU("/searchMenu"),
+    SEARCH_BY_ID("/searchId"),
+    SEARCH_USES_NAME_SERVICE("/searchString"),
+    CHANGE_ROLE_TO_PROVIDER("/change_role"),
+    CHANGE_LANGUAGE("/change_language"),
     DELETE_USER("/delete"),
     MAIN_MENU("mainMenu"),
     ADD_PROVIDER("/add provider"),
     CHECK_PROVIDER("/check provider"),
     CHECK_SERVICE("/check service"),
     NO("nocommand");
-
 
     private final String nameCommand;
 

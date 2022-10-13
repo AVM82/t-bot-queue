@@ -12,14 +12,14 @@ import ua.shpp.eqbot.service.SendBotMessageService;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainMenu implements Command {
+public class MainMenuICommand implements ICommand {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(MainMenu.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(MainMenuICommand.class);
     private final SendBotMessageService sendBotMessageService;
     List<BotCommand> listOfCommand = new ArrayList<>();
     private final BundleLanguage bundleLanguage;
 
-    public MainMenu(SendBotMessageService sendBotMessageService, BundleLanguage bundleLanguage) {
+    public MainMenuICommand(SendBotMessageService sendBotMessageService, BundleLanguage bundleLanguage) {
         this.sendBotMessageService = sendBotMessageService;
         this.bundleLanguage = bundleLanguage;
     }

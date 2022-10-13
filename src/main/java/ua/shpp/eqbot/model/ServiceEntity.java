@@ -4,6 +4,7 @@ import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
 import java.util.Arrays;
+import java.util.Objects;
 
 @Entity
 @Table(name = "services")
@@ -26,6 +27,7 @@ public class ServiceEntity {
     public void setAvatar(byte[] avatar) {
         this.avatar = avatar;
     }
+
     private String sundayWorkingHours;
     private String mondayWorkingHours;
     private String tuesdayWorkingHours;
@@ -136,27 +138,40 @@ public class ServiceEntity {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null
+                || getClass() != o.getClass()) {
+            return false;
+        }
 
         ServiceEntity that = (ServiceEntity) o;
 
-        if (id != null ? !id.equals(that.id) : that.id != null) return false;
-        if (telegramId != null ? !telegramId.equals(that.telegramId) : that.telegramId != null) return false;
-        if (name != null ? !name.equals(that.name) : that.name != null) return false;
-        if (description != null ? !description.equals(that.description) : that.description != null) return false;
+        if (!Objects.equals(id, that.id)) {
+            return false;
+        }
+        if (!Objects.equals(telegramId, that.telegramId)) {
+            return false;
+        }
+        if (!Objects.equals(name, that.name)) {
+            return false;
+        }
+        if (!Objects.equals(description, that.description)) {
+            return false;
+        }
         return Arrays.equals(avatar, that.avatar);
     }
 
     @Override
     public String toString() {
-        return "ServiceEntity{" +
-                "id=" + id +
-                ", telegramId=" + telegramId +
-                ", name='" + name + '\'' +
-                ", description='" + description + '\'' +
-                ", avatar=" + Arrays.toString(avatar) +
-                '}';
+        return "ServiceEntity{"
+                + "id=" + id
+                + ", telegramId=" + telegramId
+                + ", name='" + name + '\''
+                + ", description='" + description + '\''
+                + ", avatar=" + Arrays.toString(avatar)
+                + '}';
     }
 
     public Long getId() {

@@ -1,6 +1,7 @@
 package ua.shpp.eqbot.dto;
 
 import ua.shpp.eqbot.stage.PositionRegistrationProvider;
+
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
@@ -21,7 +22,7 @@ public class ProviderDto implements Serializable {
         this.city = city;
     }
 
-    public ProviderDto(){
+    public ProviderDto() {
 
     }
 
@@ -63,12 +64,17 @@ public class ProviderDto implements Serializable {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null
+                || getClass() != o.getClass()) {
+            return false;
+        }
         ProviderDto entity = (ProviderDto) o;
-        return Objects.equals(this.telegramId, entity.telegramId) &&
-                Objects.equals(this.name, entity.name) &&
-                Objects.equals(this.city, entity.city);
+        return Objects.equals(this.telegramId, entity.telegramId)
+                && Objects.equals(this.name, entity.name)
+                && Objects.equals(this.city, entity.city);
     }
 
     @Override
@@ -78,9 +84,9 @@ public class ProviderDto implements Serializable {
 
     @Override
     public String toString() {
-        return getClass().getSimpleName() + "(" +
-                "telegramId = " + telegramId + ", " +
-                "name = " + name + ", " +
-                "city = " + city + ")";
+        return getClass().getSimpleName() + "("
+                + "telegramId = " + telegramId + ", "
+                + "name = " + name + ", "
+                + "city = " + city + ")";
     }
 }

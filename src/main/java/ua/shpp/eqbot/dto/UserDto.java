@@ -16,6 +16,11 @@ public class UserDto {
     public UserDto() {
     }
 
+    public UserDto(Long telegramId, String name) {
+        this.telegramId = telegramId;
+        this.name = name;
+    }
+
     public UserDto(String name, String city) {
         this.name = name;
         this.city = city;
@@ -84,4 +89,17 @@ public class UserDto {
         return this;
     }
 
+    @Override
+    public String toString() {
+        final StringBuilder sb = new StringBuilder("UserDto{");
+        sb.append("telegramId=").append(telegramId);
+        sb.append(", name='").append(name).append('\'');
+        sb.append(", city='").append(city).append('\'');
+        sb.append(", phone='").append(phone).append('\'');
+        sb.append(", language='").append(language).append('\'');
+        sb.append(", positionRegistration=").append(positionRegistration);
+        sb.append(", positionMenu=").append(positionMenu);
+        sb.append('}');
+        return sb.toString();
+    }
 }

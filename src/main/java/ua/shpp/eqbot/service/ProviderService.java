@@ -3,7 +3,6 @@ package ua.shpp.eqbot.service;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
@@ -19,13 +18,11 @@ public class ProviderService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ProviderService.class);
     private final ProviderRepository providerRepository;
-    private final String providerDtoCacheName = "cacheProviderDto";
-    private final CacheManager cacheManager;
+    private static final String PROVIDER_DTO_CACHE_NAME = "cacheProviderDto";
     private final ModelMapper modelMapper = new ModelMapper();
 
-    public ProviderService(ProviderRepository providerRepository, CacheManager cacheManager) {
+    public ProviderService(ProviderRepository providerRepository) {
         this.providerRepository = providerRepository;
-        this.cacheManager = cacheManager;
     }
 
     public ProviderEntity saveEntity(ProviderEntity providerEntity) {
@@ -45,25 +42,26 @@ public class ProviderService {
         saveEntity(entity);
     }
 
-    @CachePut(cacheNames = providerDtoCacheName, key = "#providerDto.telegramId")
+    @CachePut(cacheNames = PROVIDER_DTO_CACHE_NAME, key = "#providerDto.telegramId")
     public ProviderDto saveProviderDto(ProviderDto providerDto) {
         LOGGER.info("save provider dto {}", providerDto);
         return providerDto;
     }
 
-    @Cacheable(cacheNames = providerDtoCacheName, key = "#id")
+    @Cacheable(cacheNames = PROVIDER_DTO_CACHE_NAME, key = "#id")
     public ProviderDto getProviderDto(Long id) {
         LOGGER.info("get provider dto by id {}", id);
         return null;
     }
 
     @Transactional
-    @CacheEvict(cacheNames = providerDtoCacheName, key = "#id")
+    @CacheEvict(cacheNames = PROVIDER_DTO_CACHE_NAME, key = "#id")
     public boolean remove(Long id) {
         LOGGER.info("delete provider dto and All entity");
         ProviderEntity entity = providerRepository.findByTelegramId(id);
-        if (entity != null)
+        if (entity != null) {
             providerRepository.delete(entity);
+        }
         return true;
     }
 
@@ -78,14 +76,18 @@ public class ProviderService {
     }
 
     private ProviderEntity convertToEntity(ProviderDto dto) {
-        if (dto == null) return null;
+        if (dto == null) {
+            return null;
+        }
         ProviderEntity entity = modelMapper.map(dto, ProviderEntity.class);
         LOGGER.info("convert dto to entity");
         return entity;
     }
 
     private ProviderDto convertToDto(ProviderEntity entity) {
-        if (entity == null) return null;
+        if (entity == null) {
+            return null;
+        }
         ProviderDto dto = modelMapper.map(entity, ProviderDto.class);
         LOGGER.info("convert entity to dto");
         return dto;

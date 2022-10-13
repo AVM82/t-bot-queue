@@ -2,8 +2,6 @@ package ua.shpp.eqbot.service;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.cache.Cache;
-import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
@@ -15,83 +13,81 @@ import ua.shpp.eqbot.model.UserEntity;
 import ua.shpp.eqbot.repository.UserRepository;
 import ua.shpp.eqbot.validation.UserValidateService;
 
-import static ua.shpp.eqbot.stage.PositionMenu.MENU_START;
-import static ua.shpp.eqbot.stage.PositionRegistration.DONE;
+import javax.validation.ConstraintViolation;
+import javax.validation.Validator;
+import javax.validation.constraints.NotNull;
+import java.util.Set;
 
 @Service
 public class UserService {
     private static final Logger LOGGER = LoggerFactory.getLogger(UserService.class);
     private final UserRepository userRepository;
-    private final String dtoCacheName = "cacheUserDto";
-    private final CacheManager cacheManager;
+    private static final String DTO_CACHE_NAME = "cacheUserDto";
     private final UserValidateService userValidateService;
+    private final Validator validator;
 
-
-    public UserService(UserRepository userRepository, UserValidateService userValidateService, CacheManager cacheManager) {
+    public UserService(UserRepository userRepository, UserValidateService userValidateService, Validator validator) {
         this.userRepository = userRepository;
         this.userValidateService = userValidateService;
-        this.cacheManager = cacheManager;
+        this.validator = validator;
     }
 
+    @Cacheable(cacheNames = "cacheEntity", key = "#telegramId")
     public UserEntity getEntity(Long telegramId) {
-        LOGGER.info("get userEntity by telergamId {}", telegramId);
+        LOGGER.info("get userEntity by telegramId {}", telegramId);
         UserDto dto = getDto(telegramId);
         return dto != null ? UserMapper.INSTANCE.userDTOToUserEntity(dto) : userRepository.findByTelegramId(telegramId);
     }
 
+    @CachePut(cacheNames = "cacheEntity")
     public UserEntity saveEntity(UserEntity userEntity) {
         LOGGER.info("save userEntity {}", userEntity);
-        saveDto(userEntity); // additional
-        return userRepository.save(userEntity);
-    }
+        Set<ConstraintViolation<UserEntity>> violations = validator.validate(userEntity);
+        if (userRepository.findByTelegramId(userEntity.getTelegramId()) == null
+                && (!violations.isEmpty() || !(userValidateService.checkUserCreation(userEntity.getName(), userEntity.getPhone())))) {
+            StringBuilder stringBuilder = new StringBuilder();
+            for (ConstraintViolation<UserEntity> constraintViolation : violations) {
+                stringBuilder.append(constraintViolation.getMessage());
+            }
+            LOGGER.info("the model was not inserted into the database because it did not pass validation");
+            LOGGER.error("Error occurred: {}, {}", stringBuilder, validator);
 
-    @CachePut(cacheNames = dtoCacheName, key = "#userDto.telegramId")
-    public UserDto saveDto(UserDto userDto) {
-        LOGGER.info("save userDto {}", userDto);
-        return userDto;//****
-    }
-
-    @Cacheable(cacheNames = dtoCacheName, key = "#telegramId")
-    public UserDto getDto(Long telegramId) {
-        LOGGER.info("get userDto by telegramId {}", telegramId);
-        UserDto result = null;
-        UserEntity entity = userRepository.findByTelegramId(telegramId);
-        if (entity != null) {
-            result = UserMapper.INSTANCE.userEntityToUserDTO(entity);
-            result.setPositionMenu(MENU_START);
-            result.setPositionRegistration(DONE);
+            return null;
         }
+        LOGGER.info("model save to DB with id {}", userEntity.getTelegramId());
+        UserEntity result = userRepository.save(userEntity);
+        saveDto(UserMapper.INSTANCE.userEntityToUserDTO(userEntity)); // additional
+        LOGGER.info("success created new userEntity");
         return result;
     }
 
+    @CachePut(cacheNames = DTO_CACHE_NAME, key = "#userDto.telegramId")
+    public UserDto saveDto(UserDto userDto) {
+        LOGGER.info("save userDto {}", userDto);
+        return userDto;
+    }
+
+    @Cacheable(cacheNames = DTO_CACHE_NAME, key = "#telegramId")
+    public UserDto getDto(Long telegramId) {
+        LOGGER.info("get userDto by telegramId {}", telegramId);
+        return null;
+    }
+
     @Transactional
-    @CacheEvict(cacheNames = dtoCacheName, key = "#telegramId")
+    @CacheEvict(cacheNames = {DTO_CACHE_NAME, "cacheEntity"}, key = "#telegramId")
     public boolean remove(Long telegramId) {
         LOGGER.info("delete userDto and All entity");
         UserEntity entity = getEntity(telegramId);
-        if (entity != null)
+        if (entity != null) {
             userRepository.delete(getEntity(telegramId));
+        }
         return true;
     }
 
-    /**
-     * its need modification
-     */
-    private void saveDto(UserEntity userEntity) {
-        Cache cache = cacheManager.getCache(dtoCacheName);
-        if (cache != null) { // first attempt ?
-            Cache.ValueWrapper valueWrapper = cache.get(userEntity.getTelegramId());
-            UserDto userDto;
-            if (valueWrapper == null) {
-                userDto = UserMapper.INSTANCE.userEntityToUserDTO(userEntity);
-            } else {
-                userDto = ((UserDto) valueWrapper.get())
-                        .setName(userEntity.getName())
-                        .setLanguage(userEntity.getLanguage())
-                        .setCity(userEntity.getCity())
-                        .setPhone(userEntity.getPhone());
-            }
-            cache.put(userEntity.getTelegramId(), userDto);
-        }
+    public void updateUserInDB(@NotNull UserDto dto) {
+        LOGGER.info("update user language");
+        UserEntity myUser = userRepository.findByTelegramId(dto.getTelegramId());
+        UserMapper.INSTANCE.updateUserFromDto(dto, myUser);
+        userRepository.save(myUser);
     }
 }
