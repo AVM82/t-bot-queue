@@ -3,6 +3,7 @@ package ua.shpp.eqbot.model;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
+import java.util.Set;
 
 @Entity
 @Table(name = "registration_for_the_user")
@@ -15,6 +16,29 @@ public class RegistrationForTheServiceEntity {
     @NotNull(message = "{valid.idUser.notnull.message}")
     private Long userId;
     private LocalDateTime serviceRegistrationDateTime;
+
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name = "id", nullable = false)
+    private Set<UserEntity> users;
+
+//    @OneToMany(fetch = FetchType.EAGER)
+//    private Set<UserEntity> services;
+
+    public Set<UserEntity> getUsers() {
+        return users;
+    }
+
+    public void setUsers(Set<UserEntity> users) {
+        this.users = users;
+    }
+
+//    public Set<UserEntity> getServices() {
+//        return services;
+//    }
+//
+//    public void setServices(Set<UserEntity> services) {
+//        this.services = services;
+//    }
 
     public Long getServiceId() {
         return serviceId;
