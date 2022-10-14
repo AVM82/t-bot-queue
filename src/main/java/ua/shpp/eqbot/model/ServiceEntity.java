@@ -5,10 +5,14 @@ import org.hibernate.annotations.Type;
 import javax.persistence.*;
 import java.util.Arrays;
 import java.util.Objects;
+import java.util.Set;
 
 @Entity
 @Table(name = "services")
 public class ServiceEntity {
+
+    @OneToMany(mappedBy = "serviceEntity")
+    Set<RegistrationForTheServiceEntity> registrationForTheServiceEntities;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -190,5 +194,13 @@ public class ServiceEntity {
         result = 31 * result + (description != null ? description.hashCode() : 0);
         result = 31 * result + Arrays.hashCode(avatar);
         return result;
+    }
+
+    public Set<RegistrationForTheServiceEntity> getRegistrationForTheServiceEntities() {
+        return registrationForTheServiceEntities;
+    }
+
+    public void setRegistrationForTheServiceEntities(Set<RegistrationForTheServiceEntity> registrationForTheServiceEntities) {
+        this.registrationForTheServiceEntities = registrationForTheServiceEntities;
     }
 }
