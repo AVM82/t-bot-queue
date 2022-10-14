@@ -1,9 +1,7 @@
 package ua.shpp.eqbot.model;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
-import java.util.Set;
 
 @Entity
 @Table(name = "registration_for_the_user")
@@ -11,49 +9,30 @@ public class RegistrationForTheServiceEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @NotNull(message = "{valid.idService.notnull.message}")
-    private Long serviceId;
-    @NotNull(message = "{valid.idUser.notnull.message}")
-    private Long userId;
     private LocalDateTime serviceRegistrationDateTime;
 
-    @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "id", nullable = false)
-    private Set<UserEntity> users;
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private UserEntity userEntity;
 
-//    @OneToMany(fetch = FetchType.EAGER)
-//    private Set<UserEntity> services;
+    @ManyToOne
+    @JoinColumn(name = "service_id")
+    private ServiceEntity serviceEntity;
 
-    public Set<UserEntity> getUsers() {
-        return users;
+    public UserEntity getUserEntity() {
+        return userEntity;
     }
 
-    public void setUsers(Set<UserEntity> users) {
-        this.users = users;
+    public void setUserEntity(UserEntity userEntity) {
+        this.userEntity = userEntity;
     }
 
-//    public Set<UserEntity> getServices() {
-//        return services;
-//    }
-//
-//    public void setServices(Set<UserEntity> services) {
-//        this.services = services;
-//    }
-
-    public Long getServiceId() {
-        return serviceId;
+    public ServiceEntity getServiceEntity() {
+        return serviceEntity;
     }
 
-    public void setServiceId(Long idService) {
-        this.serviceId = idService;
-    }
-
-    public Long getUserId() {
-        return userId;
-    }
-
-    public void setUserId(Long idUser) {
-        this.userId = idUser;
+    public void setServiceEntity(ServiceEntity serviceEntity) {
+        this.serviceEntity = serviceEntity;
     }
 
     public LocalDateTime getServiceRegistrationDateTime() {
