@@ -12,7 +12,6 @@ import ua.shpp.eqbot.dto.UserDto;
 import ua.shpp.eqbot.internationalization.BundleLanguage;
 import ua.shpp.eqbot.model.ProviderEntity;
 import ua.shpp.eqbot.model.ServiceEntity;
-import ua.shpp.eqbot.dto.UserDto;
 import ua.shpp.eqbot.repository.ProviderRepository;
 import ua.shpp.eqbot.repository.ServiceRepository;
 import ua.shpp.eqbot.service.SendBotMessageService;

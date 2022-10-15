@@ -3,12 +3,14 @@ package ua.shpp.eqbot.command;
 import com.google.common.collect.ImmutableMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import ua.shpp.eqbot.command.registrationfortheservice.RegistrationForTheServiceCommand;
 import ua.shpp.eqbot.command.registrationprovider.CheckProviderRegistrationICommand;
 import ua.shpp.eqbot.command.registrationprovider.RegistrationNewProviderICommand;
 import ua.shpp.eqbot.command.registrationservice.CheckServiceRegistrationICommand;
 import ua.shpp.eqbot.command.registrationservice.RegistrationServiceICommand;
 import ua.shpp.eqbot.internationalization.BundleLanguage;
 import ua.shpp.eqbot.repository.ProviderRepository;
+import ua.shpp.eqbot.repository.RegistrationForTheServiceRepository;
 import ua.shpp.eqbot.repository.ServiceRepository;
 import ua.shpp.eqbot.service.ImageService;
 import ua.shpp.eqbot.service.ProviderService;
@@ -28,7 +30,7 @@ public class CommandContainer {
     public CommandContainer(SendBotMessageService sendBotMessageService, ServiceRepository serviceRepository,
                             ProviderRepository providerRepository, ImageService imageService,
                             BundleLanguage bundleLanguage, UserService userService,
-                            ProviderService providerService) {
+                            ProviderService providerService, RegistrationForTheServiceRepository registrationForTheServiceRepository) {
         commandMap = ImmutableMap.<String, ICommand>builder()
                 .put(CommandName.REG.getNameCommand(), new RegistrationNewUserICommand(sendBotMessageService, userService, bundleLanguage))
                 .put(CommandName.START.getNameCommand(), new StartICommand(sendBotMessageService, bundleLanguage))
@@ -56,6 +58,8 @@ public class CommandContainer {
                         new SearchById(sendBotMessageService, serviceRepository, userService, bundleLanguage))
                 .put(CommandName.SEARCH_USES_NAME_SERVICE.getNameCommand(),
                         new SearchServiceBySimilarWordsCommander(sendBotMessageService, serviceRepository, userService, bundleLanguage))
+                .put(CommandName.REGISTRATION_FOR_THE_SERVICE_COMMAND.getNameCommand(),
+                        new RegistrationForTheServiceCommand(sendBotMessageService, registrationForTheServiceRepository, serviceRepository, bundleLanguage, userService))
                 .build();
         unknownICommand = new UnknownICommand(sendBotMessageService, bundleLanguage);
     }

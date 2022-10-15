@@ -1,9 +1,7 @@
 package ua.shpp.eqbot.dto;
 
 import javax.validation.constraints.NotNull;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 
 public class RegistrationForTheServiceDto {
     @NotNull(message = "{valid.idService.notnull.message}")

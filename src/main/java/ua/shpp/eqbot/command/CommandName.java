@@ -18,6 +18,7 @@ public enum CommandName {
     ADD_PROVIDER("/add provider"),
     CHECK_PROVIDER("/check provider"),
     CHECK_SERVICE("/check service"),
+    REGISTRATION_FOR_THE_SERVICE_COMMAND("/RegistrationForTheServiceCommand"),
     NO("nocommand");
 
     private final String nameCommand;
