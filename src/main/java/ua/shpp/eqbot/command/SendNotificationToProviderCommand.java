@@ -24,7 +24,7 @@ public class SendNotificationToProviderCommand implements ICommand {
         SendMessage sendMessage = new SendMessage();
         sendMessage.setChatId(providerChatId);
         String internationalizationAnswer = bundleLanguage.getValue(providerChatId, "send_notification_to_provider");
-        String [] answer = internationalizationAnswer.split("\\.");
+        String[] answer = internationalizationAnswer.split("\\.");
         sendMessage.setText(answer[0] + userName + answer[1] + serviceEntity.getName() + answer[2] + timeOfRegistration);
         sendBotMessageService.sendMessage(sendMessage);
     }
