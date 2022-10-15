@@ -15,12 +15,16 @@ public class SendNotificationToProviderCommand implements ICommand {
         this.sendBotMessageService = sendBotMessageService;
     }
 
-    public void sendNotification(Long serviceId, String timeOfRegistration, String userName) {
+    public void sendNotification(Long serviceId, String timeOfRegistration, String userName, String language) {
         ServiceEntity serviceEntity = serviceRepository.findFirstById(serviceId);
         Long providerChatId = serviceEntity.getTelegramId();
         SendMessage sendMessage = new SendMessage();
         sendMessage.setChatId(providerChatId);
-        sendMessage.setText("New customer " + userName + " registered to your service: " + serviceEntity.getName() + " at time: " + timeOfRegistration);
+        if (language.equals("en")) {
+            sendMessage.setText("New customer " + userName + " registered to your service: " + serviceEntity.getName() + " at time: " + timeOfRegistration);
+        } else {
+            sendMessage.setText("Новий клієнт " + userName + " заруєструвався до вашого сервісу: " + serviceEntity.getName() + " на дату: " + timeOfRegistration);
+        }
         sendBotMessageService.sendMessage(sendMessage);
     }
 
