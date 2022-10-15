@@ -31,7 +31,7 @@ public class SearchServiceBySimilarWordsCommander implements ICommand {
     private final ServiceRepository serviceRepository;
     private final UserService userService;
     private final BundleLanguage bundleLanguage;
-    private Map<Long, Pair> pairMap = new HashMap<>();
+    private final Map<Long, Pair> pairMap = new HashMap<>();
 
     @Autowired
     public SearchServiceBySimilarWordsCommander(SendBotMessageService sendBotMessageService,
@@ -98,21 +98,24 @@ public class SearchServiceBySimilarWordsCommander implements ICommand {
 
             if (!page.isEmpty()) {
                 LOGGER.info("Found a list of services by description LIKE {} counts: {}", likeString, 777);
-                return fillListResulSelection(chatId, page, bundleLanguage, sendBotMessageService);
+                pairMap.get(chatId).setLast(false);
+                return fillListResulSelection(chatId, page);
             } else {
                 LOGGER.info("No service were found for the string");
                 sendBotMessageService.sendMessage(String.valueOf(chatId),
-                        bundleLanguage.getValue(chatId, "search.searchId.notFound"));
-                return false;
+                        bundleLanguage.getValue(chatId, "search.by.like.last.page"));
+                List<ServiceEntity> previousPage = pairMap.get(chatId).getServiceEntities();
+                pairMap.get(chatId).setLast(true);
+                return fillListResulSelection(chatId, previousPage);
             }
         }
     }
 
 
-    static boolean fillListResulSelection(long chatId, List<ServiceEntity> byDescriptionLike,
-                                          BundleLanguage bundleLanguage,
-                                          SendBotMessageService sendBotMessageService) {
-        int size = byDescriptionLike.size();
+    boolean fillListResulSelection(long chatId, List<ServiceEntity> byDescriptionLike) {
+//       if (byDescriptionLike.equals(pairMap.get(chatId).getServiceEntities())) {
+//           return false;
+//       }
         InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
         List<List<InlineKeyboardButton>> availableServiceButtons = new ArrayList<>();
 
@@ -126,16 +129,21 @@ public class SearchServiceBySimilarWordsCommander implements ICommand {
         });
 
         List<InlineKeyboardButton> button = new ArrayList<>();
-        button.add(InlineKeyboardButton.builder()
-                .text("<<")
-                .callbackData("back")
-                .build());
+        if (pairMap.get(chatId).getFrom() != 0) {
+            button.add(InlineKeyboardButton.builder()
+                    .text("<<")
+                    .callbackData("back")
+                    .build());
+        }
         button.add(InlineKeyboardButton.builder()
                 .text("exit")
                 .callbackData("exit").build());
-        button.add(InlineKeyboardButton.builder()
-                .text(">>")
-                .callbackData("next").build());
+        if (!pairMap.get(chatId).isLast()) {
+            button.add(InlineKeyboardButton.builder()
+                    .text(">>")
+                    .callbackData("next")
+                    .build());
+        }
         availableServiceButtons.add(button);
 
         inlineKeyboardMarkup.setKeyboard(availableServiceButtons);
@@ -144,7 +152,7 @@ public class SearchServiceBySimilarWordsCommander implements ICommand {
         sendMessage.setText(bundleLanguage.getValue(chatId, "search.byCityName.listOfServices"));
         sendMessage.setReplyMarkup(inlineKeyboardMarkup);
         sendBotMessageService.sendMessage(sendMessage);
-
-        return false;
+        pairMap.get(chatId).setServiceEntities(byDescriptionLike);
+        return true;
     }
 }
