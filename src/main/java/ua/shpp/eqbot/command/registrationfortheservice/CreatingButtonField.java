@@ -40,7 +40,9 @@ public class CreatingButtonField {
             for (int col = 0; col < quantityPerRow; ++col) {
                 if (count < listData.size()) {
                     creatingButtonsInRow(button, count);
-                } else continue;
+                } else {
+                    continue;
+                }
                 ++count;
             }
             keyboard.add(button);

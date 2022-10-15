@@ -13,10 +13,7 @@ public interface RegistrationForTheServiceRepository extends JpaRepository<Regis
     @Query("select t from RegistrationForTheServiceEntity t where t. serviceId = ?1")
     List<RegistrationForTheServiceEntity> findAllServicesById(Long id);
 
-    @Query("select t from RegistrationForTheServiceEntity t" +
-            " where t. serviceRegistrationDateTime > ?1 " +
-            "and t. serviceRegistrationDateTime < ?2" +
-            " and t. serviceId = ?3")
+    @Query("select t from RegistrationForTheServiceEntity t where t. serviceRegistrationDateTime > ?1 and t. serviceRegistrationDateTime < ?2 and t. serviceId = ?3")
     List<RegistrationForTheServiceEntity> findAllServicesByDateAndServiceId(LocalDateTime date1,
                                                                             LocalDateTime date2, Long serviceId);
 }

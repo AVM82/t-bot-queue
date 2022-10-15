@@ -59,7 +59,8 @@ public class CommandContainer {
                 .put(CommandName.SEARCH_USES_NAME_SERVICE.getNameCommand(),
                         new SearchServiceBySimilarWordsCommander(sendBotMessageService, serviceRepository, userService, bundleLanguage))
                 .put(CommandName.REGISTRATION_FOR_THE_SERVICE_COMMAND.getNameCommand(),
-                        new RegistrationForTheServiceCommand(sendBotMessageService, registrationForTheServiceRepository, serviceRepository, bundleLanguage, userService))
+                        new RegistrationForTheServiceCommand(sendBotMessageService, registrationForTheServiceRepository,
+                                serviceRepository, bundleLanguage, userService))
                 .build();
         unknownICommand = new UnknownICommand(sendBotMessageService, bundleLanguage);
     }

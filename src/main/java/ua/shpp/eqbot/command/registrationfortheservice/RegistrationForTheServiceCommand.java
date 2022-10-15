@@ -41,7 +41,9 @@ public class RegistrationForTheServiceCommand implements ICommand {
     private final ModelMapper modelMapper = new ModelMapper();
 
     public RegistrationForTheServiceCommand(SendBotMessageService sendBotMessageService,
-                                            RegistrationForTheServiceRepository registrationForTheServiceRepository, ServiceRepository serviceRepository, BundleLanguage bundleLanguage, UserService userService) {
+                                            RegistrationForTheServiceRepository registrationForTheServiceRepository,
+                                            ServiceRepository serviceRepository, BundleLanguage bundleLanguage,
+                                            UserService userService) {
         this.sendBotMessageService = sendBotMessageService;
         this.registrationForTheServiceRepository = registrationForTheServiceRepository;
         this.serviceRepository = serviceRepository;
@@ -185,14 +187,16 @@ public class RegistrationForTheServiceCommand implements ICommand {
     private String getTime(int hour, int minute) {
         String hh;
         String mm;
-        if (hour < 10)
+        if (hour < 10) {
             hh = "0" + hour;
-        else
+        } else {
             hh = String.valueOf(hour);
-        if (minute < 10)
+        }
+        if (minute < 10) {
             mm = "0" + minute;
-        else
+        } else {
             mm = String.valueOf(minute);
+        }
         return hh + ":" + mm;
     }
 
