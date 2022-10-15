@@ -7,17 +7,15 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
-import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
 import org.telegram.telegrambots.meta.api.objects.Update;
-import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import ua.shpp.eqbot.command.CommandContainer;
 import ua.shpp.eqbot.command.CommandName;
+
 import ua.shpp.eqbot.command.registrationfortheservice.RegistrationForTheServiceCommand;
 import ua.shpp.eqbot.dto.UserDto;
 import ua.shpp.eqbot.internationalization.BundleLanguage;
 import ua.shpp.eqbot.mapper.UserMapper;
-import ua.shpp.eqbot.model.RegistrationForTheServiceEntity;
 import ua.shpp.eqbot.model.UserEntity;
 import ua.shpp.eqbot.repository.ProviderRepository;
 import ua.shpp.eqbot.repository.RegistrationForTheServiceRepository;
@@ -41,7 +39,8 @@ public class EqTelegramBot extends TelegramLongPollingBot {
     public EqTelegramBot(ServiceRepository serviceRepository,
                          ProviderRepository providerRepository, @Lazy ImageService imageService,
                          BundleLanguage bundleLanguage, UserService userService,
-                         ProviderService providerService, RegistrationForTheServiceRepository registrationForTheServiceRepository) {
+                         ProviderService providerService,
+                         RegistrationForTheServiceRepository registrationForTheServiceRepository) {
         this.userService = userService;
         this.commandContainer = new CommandContainer(
                 new SendBotMessageServiceImpl(this),

@@ -38,7 +38,6 @@ public class RegistrationForTheServiceCommand implements ICommand {
     private final BundleLanguage bundleLanguage;
     private final UserService userService;
     private final int quantityPerRow;
-    private final ModelMapper modelMapper = new ModelMapper();
 
     public RegistrationForTheServiceCommand(SendBotMessageService sendBotMessageService,
                                             RegistrationForTheServiceRepository registrationForTheServiceRepository,
@@ -95,8 +94,9 @@ public class RegistrationForTheServiceCommand implements ICommand {
                 registrationDto.setServiceRegistrationDateTime(date);
                 LocalDateTime dateNextDay = date.plusDays(1);
 
-                listServices = registrationForTheServiceRepository
-                        .findAllServicesByDateAndServiceId(date, dateNextDay, registrationDto.getServiceId());
+                /*listServices = registrationForTheServiceRepository
+                        .findAllServicesByDateAndServiceId(date, dateNextDay, registrationDto.getServiceId());*/
+                listServices = registrationForTheServiceRepository.findAllBetweenDates(date, dateNextDay); //??Work??
                 optional = serviceRepository.findById(registrationDto.getServiceId());
                 if (optional.isPresent()) {
                     ServiceEntity serviceEntity = optional.get();
