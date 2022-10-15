@@ -94,9 +94,9 @@ public class RegistrationForTheServiceCommand implements ICommand {
                 registrationDto.setServiceRegistrationDateTime(date);
                 LocalDateTime dateNextDay = date.plusDays(1);
 
-                /*listServices = registrationForTheServiceRepository
-                        .findAllServicesByDateAndServiceId(date, dateNextDay, registrationDto.getServiceId());*/
-                listServices = registrationForTheServiceRepository.findAllBetweenDates(date, dateNextDay); //??Work??
+                listServices = registrationForTheServiceRepository
+                        .findAllServicesByDateAndServiceId(date, dateNextDay, registrationDto.getServiceId());
+                //listServices = registrationForTheServiceRepository.findAllBetweenDates(date, dateNextDay); //??Work??
                 optional = serviceRepository.findById(registrationDto.getServiceId());
                 if (optional.isPresent()) {
                     ServiceEntity serviceEntity = optional.get();

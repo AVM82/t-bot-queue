@@ -13,6 +13,8 @@ import ua.shpp.eqbot.stage.PositionRegistration;
 import ua.shpp.eqbot.validation.UserValidateService;
 
 import javax.validation.Validator;
+import java.util.ArrayList;
+import java.util.List;
 
 @ExtendWith(MockitoExtension.class)
 class RegistrationUserTest {
@@ -41,6 +43,19 @@ class RegistrationUserTest {
 
     @Test
     void generateUserFromMessageTest() {
-
+        List<String> str = new ArrayList<>();
+        str.add("17:00");
+        str.add("city");
+        str.add("5");
+        str.add("55");
+        str.add("555");
+        str.add("5555");
+        str.add("08.09");
+        str.add("01:25");
+        for (int i = 0; i < str.size(); ++i) {
+            if (str.get(i).matches("\\d+:?.?\\d*")) {
+                System.out.println("true " + str.get(i));
+            } else System.out.println("false " + str.get(i));
+        }
     }
 }
