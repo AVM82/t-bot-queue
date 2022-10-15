@@ -1,14 +1,17 @@
 package ua.shpp.eqbot.paging;
 
 import org.springframework.beans.factory.annotation.Value;
+import ua.shpp.eqbot.model.ServiceEntity;
+
+import java.util.List;
 
 public class Pair {
     private int page;
     /*TODO help why does not take the file from the property*/
     @Value("${paging.size}")
     private int size = 2;
-    private boolean isPresent;
-
+    private boolean isLast;
+    private List<ServiceEntity> serviceEntities;
     public Pair(int from) {
         this.page = from;
     }
@@ -19,6 +22,15 @@ public class Pair {
 
     public Pair setFrom(int from) {
         this.page = from;
+        return this;
+    }
+
+    public List<ServiceEntity> getServiceEntities() {
+        return serviceEntities;
+    }
+
+    public Pair setServiceEntities(List<ServiceEntity> serviceEntities) {
+        this.serviceEntities = serviceEntities;
         return this;
     }
 
@@ -35,12 +47,12 @@ public class Pair {
         return this;
     }
 
-    public boolean isPresent() {
-        return isPresent;
+    public boolean isLast() {
+        return isLast;
     }
 
-    public Pair setPresent(boolean present) {
-        isPresent = present;
+    public Pair setLast(boolean last) {
+        isLast = last;
         return this;
     }
 
