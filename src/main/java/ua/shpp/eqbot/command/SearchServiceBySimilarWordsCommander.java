@@ -93,7 +93,7 @@ public class SearchServiceBySimilarWordsCommander implements ICommand {
             if (callbackQuery != null && callbackQuery.getData().equals("exit")) {
                 LOGGER.info("exit");
                 pairMap.remove(chatId);
-                page.clear();
+                user.setPositionMenu(PositionMenu.MENU_START);
                 return true;
             }
 
