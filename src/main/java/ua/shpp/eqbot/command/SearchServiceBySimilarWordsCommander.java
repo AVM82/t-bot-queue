@@ -71,8 +71,7 @@ public class SearchServiceBySimilarWordsCommander implements ICommand {
             if (update.getMessage() != null) {
                 likeString = update.getMessage().getText();
             }
-//            List<ServiceEntity> byDescriptionLike =
-//                    serviceRepository.findByDescriptionContainingIgnoreCaseOrNameContainingIgnoreCase(likeString, likeString);
+
             /*TODO extract this */
             CallbackQuery callbackQuery = update.getCallbackQuery();
 
@@ -87,7 +86,7 @@ public class SearchServiceBySimilarWordsCommander implements ICommand {
             }
 
             Pair pair = pairMap.get(chatId);
-            List<ServiceEntity> page = paging.getPage(pair.getFrom(), pair.getSize());
+            List<ServiceEntity> page = paging.getPage(pair.getFrom(), pair.getSize(), likeString);
 
             if (callbackQuery != null && callbackQuery.getData().equals("exit")) {
                 LOGGER.info("exit");
@@ -102,10 +101,15 @@ public class SearchServiceBySimilarWordsCommander implements ICommand {
                 return fillListResulSelection(chatId, page);
             } else {
                 LOGGER.info("No service were found for the string");
-                sendBotMessageService.sendMessage(String.valueOf(chatId),
-                        bundleLanguage.getValue(chatId, "search.by.like.last.page"));
                 List<ServiceEntity> previousPage = pairMap.get(chatId).getServiceEntities();
                 pairMap.get(chatId).setLast(true);
+                if (previousPage == null) {
+                    user.setPositionMenu(PositionMenu.MENU_START);
+                    pairMap.remove(chatId);
+                    sendBotMessageService.sendMessage(String.valueOf(chatId),
+                            bundleLanguage.getValue(chatId, "search.by.like.last.page"));
+                    return true;
+                }
                 return fillListResulSelection(chatId, previousPage);
             }
         }

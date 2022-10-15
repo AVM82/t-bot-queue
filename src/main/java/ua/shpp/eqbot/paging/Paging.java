@@ -20,9 +20,11 @@ public class Paging {
     /**
      * I will give what you send me here, that is, from which record to which
      */
-    public List<ServiceEntity> getPage(int from, int to) {
+    public List<ServiceEntity> getPage(int from, int to, String likeString) {
         Pageable firstPageWithTwoElements = PageRequest.of(from, to);
         Page<ServiceEntity> pagingTwoEntity = serviceRepository.findAll(firstPageWithTwoElements);
-        return pagingTwoEntity.getContent();
+        Page<ServiceEntity> byDescriptionLike =
+                serviceRepository.findByDescriptionContainingIgnoreCaseOrNameContainingIgnoreCase(likeString, likeString, firstPageWithTwoElements);
+        return byDescriptionLike.getContent();
     }
 }
