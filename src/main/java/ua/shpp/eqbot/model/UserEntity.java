@@ -1,14 +1,18 @@
 package ua.shpp.eqbot.model;
 
 import javax.persistence.*;
-import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import java.time.LocalDateTime;
 import java.util.Objects;
+import java.util.Set;
 
 @Entity
 @Table(name = "appuser")
 public class UserEntity {
+
+    @OneToMany(mappedBy = "userEntity")
+    Set<RegistrationForTheServiceEntity> registrationForTheServiceEntities;
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -118,5 +122,13 @@ public class UserEntity {
                 + ", phone='" + phone + '\''
                 + ", language='" + language + '\''
                 + ", timeCreated=" + createdTime + '}';
+    }
+
+    public Set<RegistrationForTheServiceEntity> getRegistrationForTheServiceEntities() {
+        return registrationForTheServiceEntities;
+    }
+
+    public void setRegistrationForTheServiceEntities(Set<RegistrationForTheServiceEntity> registrationForTheServiceEntities) {
+        this.registrationForTheServiceEntities = registrationForTheServiceEntities;
     }
 }

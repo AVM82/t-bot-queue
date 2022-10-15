@@ -89,9 +89,9 @@ public class SendBotMessageServiceImpl implements SendBotMessageService {
         keyboard.add(line);
         inlineKeyboardMarkup.setKeyboard(keyboard);
         ReplyKeyboard replyMarkup = sendMessage.getReplyMarkup();
-        if(!(replyMarkup instanceof InlineKeyboardMarkup)){
+        if (!(replyMarkup instanceof InlineKeyboardMarkup)) {
             sendMessage.setReplyMarkup(inlineKeyboardMarkup);
-        }else {
+        } else {
             InlineKeyboardMarkup curMarkup = (InlineKeyboardMarkup) replyMarkup;
             List<List<InlineKeyboardButton>> curKeyboard =  curMarkup.getKeyboard();
             curKeyboard.add(line);

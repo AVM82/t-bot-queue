@@ -1,7 +1,6 @@
 package ua.shpp.eqbot.model;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
 @Entity
@@ -10,26 +9,30 @@ public class RegistrationForTheServiceEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @NotNull(message = "{valid.idService.notnull.message}")
-    private Long serviceId;
-    @NotNull(message = "{valid.idUser.notnull.message}")
-    private Long userId;
     private LocalDateTime serviceRegistrationDateTime;
 
-    public Long getServiceId() {
-        return serviceId;
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private UserEntity userEntity;
+
+    @ManyToOne
+    @JoinColumn(name = "service_id")
+    private ServiceEntity serviceEntity;
+
+    public UserEntity getUserEntity() {
+        return userEntity;
     }
 
-    public void setServiceId(Long idService) {
-        this.serviceId = idService;
+    public void setUserEntity(UserEntity userEntity) {
+        this.userEntity = userEntity;
     }
 
-    public Long getUserId() {
-        return userId;
+    public ServiceEntity getServiceEntity() {
+        return serviceEntity;
     }
 
-    public void setUserId(Long idUser) {
-        this.userId = idUser;
+    public void setServiceEntity(ServiceEntity serviceEntity) {
+        this.serviceEntity = serviceEntity;
     }
 
     public LocalDateTime getServiceRegistrationDateTime() {
