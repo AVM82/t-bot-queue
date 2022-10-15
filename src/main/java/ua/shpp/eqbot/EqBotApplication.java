@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cache.annotation.EnableCaching;
+import org.springframework.scheduling.annotation.EnableScheduling;
 
 @SpringBootApplication
 @OpenAPIDefinition(info = @Info(
@@ -14,6 +15,7 @@ import org.springframework.cache.annotation.EnableCaching;
         version = "${app.version}",
         description = "description"))
 @EnableCaching
+@EnableScheduling
 public class EqBotApplication {
     private static final Logger LOGGER = LoggerFactory.getLogger(EqBotApplication.class);
 

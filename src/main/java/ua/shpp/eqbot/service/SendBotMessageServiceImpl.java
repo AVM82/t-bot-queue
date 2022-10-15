@@ -6,9 +6,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.methods.commands.SetMyCommands;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboard;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import ua.shpp.eqbot.telegrambot.EqTelegramBot;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Implementation of {@link SendBotMessageService} interface.
@@ -16,7 +22,7 @@ import ua.shpp.eqbot.telegrambot.EqTelegramBot;
 @Service
 public class SendBotMessageServiceImpl implements SendBotMessageService {
 
-    Logger log = LoggerFactory.getLogger(SendBotMessageServiceImpl.class);
+    Logger logger = LoggerFactory.getLogger(SendBotMessageServiceImpl.class);
 
     private final EqTelegramBot telegramBot;
 
@@ -33,9 +39,9 @@ public class SendBotMessageServiceImpl implements SendBotMessageService {
         sendMessage.setText(message);
         try {
             telegramBot.execute(sendMessage);
-            log.info("send message {}", message);
+            logger.info("send message {}", message);
         } catch (TelegramApiException e) {
-            log.warn(e.getLocalizedMessage());
+            logger.warn(e.getLocalizedMessage());
         }
     }
 
@@ -44,7 +50,7 @@ public class SendBotMessageServiceImpl implements SendBotMessageService {
         try {
             telegramBot.execute(message);
         } catch (TelegramApiException e) {
-            log.warn(e.getLocalizedMessage());
+            logger.warn(e.getLocalizedMessage());
         }
     }
 
@@ -58,7 +64,7 @@ public class SendBotMessageServiceImpl implements SendBotMessageService {
         try {
             telegramBot.execute(sendMessage);
         } catch (TelegramApiException e) {
-            log.warn(e.getLocalizedMessage());
+            logger.warn(e.getLocalizedMessage());
         }
     }
 
@@ -67,7 +73,32 @@ public class SendBotMessageServiceImpl implements SendBotMessageService {
         try {
             telegramBot.execute(command);
         } catch (TelegramApiException e) {
-            log.warn(e.getLocalizedMessage());
+            logger.warn(e.getLocalizedMessage());
         }
+    }
+
+    @Override
+    public SendMessage sendButtonToUser(SendMessage sendMessage, String telegramId, String text) {
+        InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
+        List<List<InlineKeyboardButton>> keyboard = new ArrayList<>();
+        List<InlineKeyboardButton> line = new ArrayList<>();
+        line.add(InlineKeyboardButton.builder()
+                .text(text)
+                .url("tg://user?id=" + telegramId)
+                .build());
+        keyboard.add(line);
+        inlineKeyboardMarkup.setKeyboard(keyboard);
+        ReplyKeyboard replyMarkup = sendMessage.getReplyMarkup();
+        if (!(replyMarkup instanceof InlineKeyboardMarkup)) {
+            sendMessage.setReplyMarkup(inlineKeyboardMarkup);
+        } else {
+            InlineKeyboardMarkup curMarkup = (InlineKeyboardMarkup) replyMarkup;
+            List<List<InlineKeyboardButton>> curKeyboard =  curMarkup.getKeyboard();
+            curKeyboard.add(line);
+            curMarkup.setKeyboard(curKeyboard);
+            sendMessage.setReplyMarkup(curMarkup);
+        }
+        return sendMessage;
+
     }
 }

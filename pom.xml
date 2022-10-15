@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>ua.shpp</groupId>
     <artifactId>eqbot</artifactId>
-    <version>0.4.0</version>
+    <version>0.4.1</version>
     <name>eqbot</name>
     <description>eqbot</description>
     <parent>
@@ -133,7 +133,6 @@
                 <version>3.2.0</version>
                 <configuration>
                     <configLocation>checkstyle.xml</configLocation>
-                    <encoding>UTF-8</encoding>
                     <consoleOutput>true</consoleOutput>
                     <failsOnError>true</failsOnError>
                     <linkXRef>false</linkXRef>

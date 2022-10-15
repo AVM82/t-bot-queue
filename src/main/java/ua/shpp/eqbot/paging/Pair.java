@@ -1,12 +1,16 @@
 package ua.shpp.eqbot.paging;
 
+import org.springframework.beans.factory.annotation.Value;
+
 public class Pair {
     private int page;
-    private int size;
+    /*TODO help why does not take the file from the property*/
+    @Value("${paging.size}")
+    private int size = 2;
+    private boolean isPresent;
 
-    public Pair(int from, int size) {
+    public Pair(int from) {
         this.page = from;
-        this.size = size;
     }
 
     public int getFrom() {
@@ -15,15 +19,6 @@ public class Pair {
 
     public Pair setFrom(int from) {
         this.page = from;
-        return this;
-    }
-
-    public int getSize() {
-        return size;
-    }
-
-    public Pair setSize(int size) {
-        this.size = size;
         return this;
     }
 
@@ -40,6 +35,15 @@ public class Pair {
         return this;
     }
 
+    public boolean isPresent() {
+        return isPresent;
+    }
+
+    public Pair setPresent(boolean present) {
+        isPresent = present;
+        return this;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -52,11 +56,7 @@ public class Pair {
         if (page != pair.page) {
             return false;
         }
-        if (size != pair.size) {
-            return false;
-        }
-
-        return true;
+        return size == pair.size;
     }
 
     @Override
@@ -64,5 +64,9 @@ public class Pair {
         int result = page;
         result = 31 * result + size;
         return result;
+    }
+
+    public int getSize() {
+        return size;
     }
 }

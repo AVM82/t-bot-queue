@@ -113,6 +113,12 @@ public class EqTelegramBot extends TelegramLongPollingBot {
                     if (!commandContainer.retrieveCommand(CommandName.SEARCH_BY_ID.getNameCommand()).execute(update)) {
                         commandContainer.retrieveCommand(CommandName.SEARCH_MENU.getNameCommand()).execute(update);
                     }
+                } else if (user.getPositionMenu().equals(SEARCH_BY_NAME)) {
+                    LOGGER.info("Entering a city to search for a service");
+                    if (!commandContainer.retrieveCommand(CommandName.SEARCH_SERVICE.getNameCommand()).execute(update)) {
+                        user.setPositionMenu(MENU_START);
+                        commandContainer.retrieveCommand(CommandName.START.getNameCommand()).execute(update);
+                    }
                 } else if (user.getPositionMenu() == SEARCH_USES_NAME_SERVICE) {
                     LOGGER.info("enter a few letters that you want to search for");
                     commandContainer.retrieveCommand(CommandName.SEARCH_USES_NAME_SERVICE.getNameCommand()).execute(update);
@@ -156,11 +162,7 @@ public class EqTelegramBot extends TelegramLongPollingBot {
             commandContainer.retrieveCommand(CommandName.SEARCH_MENU.getNameCommand()).execute(update);
         } else if (callbackQuery.getData().equals("searchName")) {
             LOGGER.info("search by name");
-            userDto.setPositionMenu(SEARCH_BY_NAME);
-            if (!commandContainer.retrieveCommand(CommandName.SEARCH_SERVICE.getNameCommand()).execute(update)) {
-                userDto.setPositionMenu(MENU_START);
-                commandContainer.retrieveCommand(CommandName.START.getNameCommand()).execute(update);
-            }
+            commandContainer.retrieveCommand(CommandName.SEARCH_SERVICE.getNameCommand()).execute(update);
         } else if (callbackQuery.getData().equals("searchId")) {
             LOGGER.info("search by id");
             commandContainer.retrieveCommand(CommandName.SEARCH_BY_ID.getNameCommand()).execute(update);
@@ -193,6 +195,7 @@ public class EqTelegramBot extends TelegramLongPollingBot {
         } else if (callbackQuery.getData().equals("next") || callbackQuery.getData().equals("back")) {
             commandContainer.retrieveCommand(CommandName.SEARCH_USES_NAME_SERVICE.getNameCommand()).execute(update);
         } else if (callbackQuery.getData().equals("exit")) {
+            commandContainer.retrieveCommand(CommandName.SEARCH_USES_NAME_SERVICE.getNameCommand()).execute(update);
             commandContainer.retrieveCommand(CommandName.START.getNameCommand()).execute(update);
         } else if (callbackQuery.getData().equals("change_lang")) {
             commandContainer.retrieveCommand("/change_language").execute(update);
