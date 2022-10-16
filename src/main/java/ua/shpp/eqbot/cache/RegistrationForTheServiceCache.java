@@ -14,13 +14,13 @@ public class RegistrationForTheServiceCache {
     }
 
     public static void add(RegistrationForTheServiceDto registrationForTheServiceDto, Long telegramId) {
-        if (registrationForTheServiceDto.getUserId() != null) {
+        if (findByUserTelegramId(telegramId) == null) {
             SERVICES.put(telegramId, registrationForTheServiceDto);
         }
     }
 
-    public static void remove(RegistrationForTheServiceDto registrationForTheServiceDto) {
-        SERVICES.remove(registrationForTheServiceDto.getUserId());
+    public static void remove(Long telegramId) {
+        SERVICES.remove(telegramId);
     }
 
     public static RegistrationForTheServiceDto findByUserTelegramId(Long id) {

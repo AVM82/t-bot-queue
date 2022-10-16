@@ -71,11 +71,11 @@ public class RegistrationForTheServiceCommand implements ICommand {
                 serviceId = Long.valueOf(update.getCallbackQuery().getData());
                 optional = serviceRepository.findById(serviceId);
                 if (optional.isPresent()) {
-                    registrationDto = new RegistrationForTheServiceDto();
-                    registrationDto.setServiceId(serviceId);
-                    registrationDto.setUserId(userEntity.getId());
-                    RegistrationForTheServiceCache.add(registrationDto, userId);
                     ServiceEntity serviceEntity = optional.get();
+                    registrationDto = new RegistrationForTheServiceDto();
+                    registrationDto.setServiceEntity(serviceEntity);
+                    registrationDto.setUserEntity(userEntity);
+                    RegistrationForTheServiceCache.add(registrationDto, userId);
                     listServices = registrationForTheServiceRepository.findAllServicesById(serviceId);
                     List<String> freeDays = findData(listServices, serviceEntity);
                     if (!freeDays.isEmpty()) {
@@ -93,8 +93,8 @@ public class RegistrationForTheServiceCommand implements ICommand {
                 registrationDto.setServiceRegistrationDateTime(date);
                 LocalDateTime dateNextDay = date.plusDays(1);
                 listServices = registrationForTheServiceRepository
-                        .findAllServicesByDateAndServiceId(date, dateNextDay, registrationDto.getServiceId());
-                optional = serviceRepository.findById(registrationDto.getServiceId());
+                        .findAllServicesByDateAndServiceId(date, dateNextDay, registrationDto.getServiceEntity().getId());
+                optional = serviceRepository.findById(registrationDto.getServiceEntity().getId());
                 if (optional.isPresent()) {
                     ServiceEntity serviceEntity = optional.get();
                     EnumMap<DayOfWeek, String> schedule = getSchedule(serviceEntity);
@@ -119,7 +119,7 @@ public class RegistrationForTheServiceCommand implements ICommand {
                                 + " " + date.toLocalDate() + " " + date.toLocalTime())
                         .chatId(userId)
                         .build());
-                RegistrationForTheServiceCache.remove(registrationDto);
+                RegistrationForTheServiceCache.remove(userId);
                 break;
             default:
                 break;
