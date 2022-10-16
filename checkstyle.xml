@@ -39,7 +39,7 @@
         <!-- See http://checkstyle.sf.net/config_sizes.html -->
         <!--<module name="LineLength"/>-->
         <module name="MethodLength"/>
-        <module name="ParameterNumber"/>
+<!--        <module name="ParameterNumber"/>-->
 
         <!-- Checks for whitespace                               -->
         <!-- See http://checkstyle.sf.net/config_whitespace.html -->
@@ -53,6 +53,11 @@
         <module name="TypecastParenPad"/>
         <module name="WhitespaceAfter"/>
         <module name="WhitespaceAround"/>
+
+        <!--        <module name="ParameterNumber">-->
+        <!--            <property name="max" value="10"/>-->
+        <!--            <property name="tokens" value="METHOD_DEF"/>-->
+        <!--        </module>-->
 
         <!-- Modifier Checks                                    -->
         <!-- See http://checkstyle.sf.net/config_modifiers.html -->
