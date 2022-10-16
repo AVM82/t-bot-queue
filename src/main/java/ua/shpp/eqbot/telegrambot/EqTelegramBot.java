@@ -7,13 +7,10 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
-import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
 import org.telegram.telegrambots.meta.api.objects.Update;
-import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import ua.shpp.eqbot.command.CommandContainer;
 import ua.shpp.eqbot.command.CommandName;
-
 import ua.shpp.eqbot.command.registrationfortheservice.RegistrationForTheServiceCommand;
 import ua.shpp.eqbot.dto.UserDto;
 import ua.shpp.eqbot.internationalization.BundleLanguage;
@@ -182,7 +179,6 @@ public class EqTelegramBot extends TelegramLongPollingBot {
         } else if (userDto.getPositionMenu() == SEARCH_BY_NAME
                 || userDto.getPositionMenu() == REGISTRATION_FOR_THE_SERVICES_DATE
                 || userDto.getPositionMenu() == REGISTRATION_FOR_THE_SERVICES_TIME) {
-//-------------------------------------------
             if (callbackQuery.getData().matches("\\d+:?.?\\d*")) {
                 LOGGER.info("The user has successfully selected the service");
                 RegistrationForTheServiceCommand.setNumberOfDaysInSearchOfService(7);
@@ -194,13 +190,6 @@ public class EqTelegramBot extends TelegramLongPollingBot {
                     userDto.setPositionMenu(MENU_START);
                 }
             }
-            //-----------------------------------
-            /*LOGGER.info("The user has successfully selected the service");
-            RegistrationForTheServiceCommand.setNumberOfDaysInSearchOfService(7);
-            if (commandContainer.retrieveCommand("/RegistrationForTheServiceCommand").execute(update)) {
-                commandContainer.retrieveCommand("/start").execute(update);
-            }*/
-
         } else if (callbackQuery.getData().equals("add_provider")) {
             commandContainer.retrieveCommand("/add provider").execute(update);
             UserDto user = userService.getDto(update.getCallbackQuery().getFrom().getId());
