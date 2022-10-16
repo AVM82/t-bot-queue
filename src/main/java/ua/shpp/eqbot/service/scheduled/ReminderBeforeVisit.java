@@ -32,16 +32,17 @@ public class ReminderBeforeVisit {
         LocalDateTime now = LocalDateTime.now();
         LocalDateTime tomorrow = now.plusDays(1);
         firstQuery = registrationForTheServiceRepository.findAllBetweenDates(now, tomorrow);
-        LOGGER.info("");
-        for (RegistrationForTheServiceEntity entity : firstQuery) {
-            text = "Ви записані на "
-                    + entity.getServiceRegistrationDateTime()
-                    + "на послугу \""
-                    + entity.getServiceEntity().getName() + "\"";
-            sendBotMessageService.sendMessage(String.valueOf(entity.getUserEntity().getTelegramId()), text);
-            LOGGER.info("A reminder has been sent to the user with id {}", entity.getUserEntity().getTelegramId());
+        if (!firstQuery.isEmpty()) {
+            for (RegistrationForTheServiceEntity entity : firstQuery) {
+                text = "Ви записані на "
+                        + entity.getServiceRegistrationDateTime()
+                        + "на послугу \""
+                        + entity.getServiceEntity().getName() + "\"";
+                sendBotMessageService.sendMessage(String.valueOf(entity.getUserEntity().getTelegramId()), text);
+                LOGGER.info("A reminder has been sent to the user with id {}", entity.getUserEntity().getTelegramId());
+            }
+            LOGGER.info("Message sent to {} users.", firstQuery.size());
+            firstQuery = null;
         }
-        LOGGER.info("Message sent to {} users.", firstQuery.size());
-        firstQuery = null;
     }
 }
