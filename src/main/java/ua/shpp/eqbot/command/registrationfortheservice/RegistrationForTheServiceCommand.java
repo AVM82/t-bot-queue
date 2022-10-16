@@ -133,7 +133,7 @@ public class RegistrationForTheServiceCommand implements ICommand {
      *
      * @param listServices  - selection of all records for this service from the registration for the user table
      * @param serviceEntity - data about the service required by the user
-     * @return -
+     * @return - a list of days on which there is free time for registration
      */
     private List<String> findData(List<RegistrationForTheServiceEntity> listServices, ServiceEntity serviceEntity) {
         List<String> freeDays = new ArrayList<>();
@@ -149,14 +149,22 @@ public class RegistrationForTheServiceCommand implements ICommand {
                     numberOfEntriesPerDay++;
                 }
             }
-            if (numberOfEntriesPerDay < numberOfEntriesPerDay(serviceEntity.getTimeBetweenClients(),
-                    schedule.get(date.getDayOfWeek()))) {
+            if (numberOfEntriesPerDay < workTime(serviceEntity.getTimeBetweenClients(),
+                    schedule.get(date.getDayOfWeek())).size()) {
                 freeDays.add(String.valueOf(date.getDayOfMonth()));
             }
         }
         return freeDays;
     }
 
+    /**
+     * search for free hours at the provider for registration
+     *
+     * @param listServices       - list of times on the selected day when the provider is busy
+     * @param schedule           - work schedule for the day
+     * @param timeBetweenClients - the time it takes to receive one client
+     * @return - list of free time at the provider
+     */
     private List<String> findFreeTime(List<RegistrationForTheServiceEntity> listServices,
                                       String schedule, String timeBetweenClients) {
         List<String> workTime = workTime(timeBetweenClients, schedule);
@@ -185,10 +193,14 @@ public class RegistrationForTheServiceCommand implements ICommand {
         return listFreeTime;
     }
 
-    private int numberOfEntriesPerDay(String timeBetweenClients, String schedule) {
-        return workTime(timeBetweenClients, schedule).size();
-    }
 
+    /**
+     * converts numerical values of hours and minutes into time
+     *
+     * @param hour   - hours in numbers
+     * @param minute -minute in numbers
+     * @return - time string
+     */
     private String getTime(int hour, int minute) {
         String hh;
         String mm;
@@ -205,6 +217,13 @@ public class RegistrationForTheServiceCommand implements ICommand {
         return hh + ":" + mm;
     }
 
+    /**
+     * calculates the recording time for registration
+     *
+     * @param timeBetweenClients - the time it takes to receive one client
+     * @param schedule           -work schedule for the day
+     * @return - a list of times for which the client can register
+     */
     private List<String> workTime(String timeBetweenClients, String schedule) {
         List<String> workTime = new ArrayList<>();
         String[] str = schedule.split("-");
@@ -229,6 +248,12 @@ public class RegistrationForTheServiceCommand implements ICommand {
         return workTime;
     }
 
+    /**
+     * fills the schedule for the whole week
+     *
+     * @param serviceEntity - data about the service required by the user
+     * @return - work schedule map for the week
+     */
     private EnumMap<DayOfWeek, String> getSchedule(ServiceEntity serviceEntity) {
         EnumMap<DayOfWeek, String> schedule = new EnumMap<>(DayOfWeek.class);
         schedule.put(DayOfWeek.SUNDAY, serviceEntity.getSundayWorkingHours());
