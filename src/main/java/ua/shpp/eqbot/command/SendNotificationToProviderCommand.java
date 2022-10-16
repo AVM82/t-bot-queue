@@ -18,7 +18,7 @@ public class SendNotificationToProviderCommand implements ICommand {
         this.bundleLanguage = bundleLanguage;
     }
 
-    public void sendNotification(Long serviceId, String timeOfRegistration, String userName) {
+    public void sendNotification(Long serviceId, String timeOfRegistration, String userName, String customerTelegramId) {
         ServiceEntity serviceEntity = serviceRepository.findFirstById(serviceId);
         Long providerChatId = serviceEntity.getTelegramId();
         SendMessage sendMessage = new SendMessage();
@@ -26,6 +26,8 @@ public class SendNotificationToProviderCommand implements ICommand {
         String internationalizationAnswer = bundleLanguage.getValue(providerChatId, "send_notification_to_provider");
         String[] answer = internationalizationAnswer.split("\\.");
         sendMessage.setText(answer[0] + userName + answer[1] + serviceEntity.getName() + answer[2] + timeOfRegistration);
+        String connectMessage = bundleLanguage.getValue(providerChatId, "connect_with_customer");
+        sendMessage = sendBotMessageService.sendButtonToUser(sendMessage, customerTelegramId, connectMessage);
         sendBotMessageService.sendMessage(sendMessage);
     }
 
