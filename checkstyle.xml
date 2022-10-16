@@ -54,11 +54,6 @@
         <module name="WhitespaceAfter"/>
         <module name="WhitespaceAround"/>
 
-        <!--        <module name="ParameterNumber">-->
-        <!--            <property name="max" value="10"/>-->
-        <!--            <property name="tokens" value="METHOD_DEF"/>-->
-        <!--        </module>-->
-
         <!-- Modifier Checks                                    -->
         <!-- See http://checkstyle.sf.net/config_modifiers.html -->
 
