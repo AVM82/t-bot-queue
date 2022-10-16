@@ -1,31 +1,29 @@
 package ua.shpp.eqbot.dto;
 
-import javax.validation.constraints.NotNull;
-import java.time.LocalDate;
+import ua.shpp.eqbot.model.ServiceEntity;
+import ua.shpp.eqbot.model.UserEntity;
+
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 
 public class RegistrationForTheServiceDto {
-    @NotNull(message = "{valid.idService.notnull.message}")
-    private Long serviceId;
-    @NotNull(message = "{valid.idUser.notnull.message}")
-    private Long userId;
+    private UserEntity userEntity;
+    private ServiceEntity serviceEntity;
     private LocalDateTime serviceRegistrationDateTime;
 
-    public Long getServiceId() {
-        return serviceId;
+    public UserEntity getUserEntity() {
+        return userEntity;
     }
 
-    public void setServiceId(Long serviceId) {
-        this.serviceId = serviceId;
+    public void setUserEntity(UserEntity userEntity) {
+        this.userEntity = userEntity;
     }
 
-    public Long getUserId() {
-        return userId;
+    public ServiceEntity getServiceEntity() {
+        return serviceEntity;
     }
 
-    public void setUserId(Long userId) {
-        this.userId = userId;
+    public void setServiceEntity(ServiceEntity serviceEntity) {
+        this.serviceEntity = serviceEntity;
     }
 
     public LocalDateTime getServiceRegistrationDateTime() {

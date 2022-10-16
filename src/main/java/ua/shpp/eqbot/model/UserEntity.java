@@ -32,6 +32,10 @@ public class UserEntity {
         this.phone = phone;
     }
 
+    public Long getId() {
+        return id;
+    }
+
     @PrePersist
     private void setTime() {
         createdTime = LocalDateTime.now();

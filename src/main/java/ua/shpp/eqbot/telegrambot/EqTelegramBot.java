@@ -7,17 +7,17 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
-import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
 import org.telegram.telegrambots.meta.api.objects.Update;
-import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import ua.shpp.eqbot.command.CommandContainer;
 import ua.shpp.eqbot.command.CommandName;
+import ua.shpp.eqbot.command.registrationfortheservice.RegistrationForTheServiceCommand;
 import ua.shpp.eqbot.dto.UserDto;
 import ua.shpp.eqbot.internationalization.BundleLanguage;
 import ua.shpp.eqbot.mapper.UserMapper;
 import ua.shpp.eqbot.model.UserEntity;
 import ua.shpp.eqbot.repository.ProviderRepository;
+import ua.shpp.eqbot.repository.RegistrationForTheServiceRepository;
 import ua.shpp.eqbot.repository.ServiceRepository;
 import ua.shpp.eqbot.service.ImageService;
 import ua.shpp.eqbot.service.ProviderService;
@@ -38,7 +38,8 @@ public class EqTelegramBot extends TelegramLongPollingBot {
     public EqTelegramBot(ServiceRepository serviceRepository,
                          ProviderRepository providerRepository, @Lazy ImageService imageService,
                          BundleLanguage bundleLanguage, UserService userService,
-                         ProviderService providerService) {
+                         ProviderService providerService,
+                         RegistrationForTheServiceRepository registrationForTheServiceRepository) {
         this.userService = userService;
         this.commandContainer = new CommandContainer(
                 new SendBotMessageServiceImpl(this),
@@ -47,7 +48,8 @@ public class EqTelegramBot extends TelegramLongPollingBot {
                 imageService,
                 bundleLanguage,
                 userService,
-                providerService
+                providerService,
+                registrationForTheServiceRepository
         );
     }
 
@@ -174,24 +176,18 @@ public class EqTelegramBot extends TelegramLongPollingBot {
             userService.getDto(update.getCallbackQuery().getFrom().getId())
                     .setPositionMenu(PositionMenu.REGISTRATION_SERVICE);
             commandContainer.retrieveCommand("/add").execute(update);
-        } else if (userDto.getPositionMenu() == SEARCH_BY_NAME) {
-            if (callbackQuery.getData().matches("\\d+")) {
+        } else if (userDto.getPositionMenu() == SEARCH_BY_NAME
+                || userDto.getPositionMenu() == REGISTRATION_FOR_THE_SERVICES_DATE
+                || userDto.getPositionMenu() == REGISTRATION_FOR_THE_SERVICES_TIME) {
+            if (callbackQuery.getData().matches("\\d+:?.?\\d*")) {
                 LOGGER.info("The user has successfully selected the service");
-                //TODO тут дата та час запису на сервіс
-                try {
-                    execute(SendMessage.builder()
-                            .chatId(callbackQuery.getFrom().getId())
-                            .text(callbackQuery.getData())
-                            .build());
-                } catch (TelegramApiException e) {
-                    LOGGER.warn(e.getLocalizedMessage());
+                RegistrationForTheServiceCommand.setNumberOfDaysInSearchOfService(7);
+                if (commandContainer.retrieveCommand("/RegistrationForTheServiceCommand").execute(update)) {
+                    commandContainer.retrieveCommand("/start").execute(update);
                 }
-                userDto.setPositionMenu(MENU_START);
-                commandContainer.retrieveCommand("/start").execute(update);
             } else {
                 if (!commandContainer.retrieveCommand(CommandName.SEARCH_SERVICE.getNameCommand()).execute(update)) {
                     userDto.setPositionMenu(MENU_START);
-                    commandContainer.retrieveCommand("/start").execute(update);
                 }
             }
         } else if (callbackQuery.getData().equals("add_provider")) {

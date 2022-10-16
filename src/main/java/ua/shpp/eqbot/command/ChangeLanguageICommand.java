@@ -7,8 +7,6 @@ import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import ua.shpp.eqbot.dto.UserDto;
 import ua.shpp.eqbot.internationalization.BundleLanguage;
-import ua.shpp.eqbot.mapper.UserMapper;
-import ua.shpp.eqbot.model.UserEntity;
 import ua.shpp.eqbot.service.SendBotMessageService;
 import ua.shpp.eqbot.service.UserService;
 
