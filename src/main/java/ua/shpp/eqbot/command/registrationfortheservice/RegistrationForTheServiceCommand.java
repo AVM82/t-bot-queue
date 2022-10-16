@@ -76,7 +76,11 @@ public class RegistrationForTheServiceCommand implements ICommand {
                     registrationDto.setServiceEntity(serviceEntity);
                     registrationDto.setUserEntity(userEntity);
                     RegistrationForTheServiceCache.add(registrationDto, userId);
-                    listServices = registrationForTheServiceRepository.findAllServicesById(serviceId);
+                    //listServices = registrationForTheServiceRepository.findAllServicesById(serviceId);
+                    date = LocalDateTime.parse(LocalDateTime.now().toLocalDate().toString() + "T00:00:00.0000");
+                    listServices = registrationForTheServiceRepository
+                            .findAllServicesByDateAndServiceId(date, date.plusDays(numberOfDaysInSearchOfService + 1),
+                                    registrationDto.getServiceEntity().getId());
                     List<String> freeDays = findData(listServices, serviceEntity);
                     if (!freeDays.isEmpty()) {
                         new CreatingButtonField(sendBotMessageService, quantityPerRow,
