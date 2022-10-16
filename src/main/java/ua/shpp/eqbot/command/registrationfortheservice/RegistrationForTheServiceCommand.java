@@ -92,10 +92,8 @@ public class RegistrationForTheServiceCommand implements ICommand {
                 date = date.plusDays(Long.parseLong(update.getCallbackQuery().getData()) - date.getDayOfMonth());
                 registrationDto.setServiceRegistrationDateTime(date);
                 LocalDateTime dateNextDay = date.plusDays(1);
-
                 listServices = registrationForTheServiceRepository
                         .findAllServicesByDateAndServiceId(date, dateNextDay, registrationDto.getServiceId());
-                //listServices = registrationForTheServiceRepository.findAllBetweenDates(date, dateNextDay); //??Work??
                 optional = serviceRepository.findById(registrationDto.getServiceId());
                 if (optional.isPresent()) {
                     ServiceEntity serviceEntity = optional.get();
@@ -129,6 +127,14 @@ public class RegistrationForTheServiceCommand implements ICommand {
         return isRegistered;
     }
 
+    /**
+     * search for a free date of registration for the service in the provider's
+     * schedule, the number of days for the search is set by a static variable
+     *
+     * @param listServices  - selection of all records for this service from the registration for the user table
+     * @param serviceEntity - data about the service required by the user
+     * @return -
+     */
     private List<String> findData(List<RegistrationForTheServiceEntity> listServices, ServiceEntity serviceEntity) {
         List<String> freeDays = new ArrayList<>();
         EnumMap<DayOfWeek, String> schedule = getSchedule(serviceEntity);
