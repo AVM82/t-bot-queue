@@ -124,8 +124,12 @@ public class RegistrationForTheServiceCommand implements ICommand {
                                 + " " + date.toLocalDate() + " " + date.toLocalTime())
                         .chatId(userId)
                         .build());
-                SendNotificationToProviderCommand sendNotificationToProviderCommand = new SendNotificationToProviderCommand(serviceRepository,sendBotMessageService,bundleLanguage);
-                sendNotificationToProviderCommand.sendNotification(registrationDto.getServiceEntity().getId(), date.toLocalDate() + " " + date.toLocalTime(), update.getCallbackQuery().getFrom().getUserName(), update.getCallbackQuery().getFrom().getId().toString());
+                SendNotificationToProviderCommand sendNotificationToProviderCommand =
+                        new SendNotificationToProviderCommand(serviceRepository, sendBotMessageService, bundleLanguage);
+                sendNotificationToProviderCommand.sendNotification(registrationDto.getServiceEntity().getId(),
+                        date.toLocalDate() + " " + date.toLocalTime(),
+                        update.getCallbackQuery().getFrom().getUserName(),
+                        update.getCallbackQuery().getFrom().getId().toString());
                 RegistrationForTheServiceCache.remove(userId);
                 break;
             default:
