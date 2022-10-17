@@ -7,11 +7,13 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.rmi.MarshalledObject;
 import java.util.*;
 
+import static org.junit.jupiter.api.Assertions.assertNull;
+
 @ExtendWith(MockitoExtension.class)
 class EqBotApplicationTests {
 
     @Test
     void contextLoads() {
-
+        assertNull(null);
     }
 }

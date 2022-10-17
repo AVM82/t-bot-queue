@@ -120,10 +120,6 @@ public class EqTelegramBot extends TelegramLongPollingBot {
                 } else if (user.getPositionMenu() == SEARCH_USES_NAME_SERVICE) {
                     LOGGER.info("enter a few letters that you want to search for");
                     commandContainer.retrieveCommand(CommandName.SEARCH_USES_NAME_SERVICE.getNameCommand()).execute(update);
-//                    if (!commandContainer.retrieveCommand(CommandName.SEARCH_USES_NAME_SERVICE.getNameCommand()).execute(update)) {
-//                        commandContainer.retrieveCommand(CommandName.SEARCH_USES_NAME_SERVICE.getNameCommand()).execute(update);
-//                    }
-
                 }
             }
         }
@@ -183,7 +179,7 @@ public class EqTelegramBot extends TelegramLongPollingBot {
                 LOGGER.info("The user has successfully selected the service");
                 RegistrationForTheServiceCommand.setNumberOfDaysInSearchOfService(7);
                 if (commandContainer.retrieveCommand("/RegistrationForTheServiceCommand").execute(update)) {
-                    commandContainer.retrieveCommand("/start").execute(update);
+                    commandContainer.retrieveCommand(CommandName.START.getNameCommand()).execute(update);
                 }
             } else {
                 if (!commandContainer.retrieveCommand(CommandName.SEARCH_SERVICE.getNameCommand()).execute(update)) {
@@ -221,6 +217,8 @@ public class EqTelegramBot extends TelegramLongPollingBot {
             userDto.setPositionMenu(MENU_START);
             userDto.setPositionRegistration(PositionRegistration.DONE);
             userService.saveDto(userDto);
+        } else {
+            userDto = new UserDto();
         }
         return userDto;
     }

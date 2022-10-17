@@ -69,7 +69,7 @@ public class RegistrationNewUserICommand implements ICommand {
         user.setName(message.getFrom().getUserName())
                 .setTelegramId(message.getChatId())
                 .setPositionRegistration(PositionRegistration.INPUT_USERNAME)
-                .setLanguage(bundleLanguage.availableLanguages.contains(message.getFrom().getLanguageCode()) ? message.getFrom().getLanguageCode() : bundleLanguage.defaultLanguage)
+                .setLanguage(bundleLanguage.availableLanguages.contains(message.getFrom().getLanguageCode()) ? message.getFrom().getLanguageCode() : BundleLanguage.DEFAULT_LANGUAGE)
                 .setPositionMenu(PositionMenu.MENU_START);
         return user;
     }

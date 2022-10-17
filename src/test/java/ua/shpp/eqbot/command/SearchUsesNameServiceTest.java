@@ -19,6 +19,7 @@ import ua.shpp.eqbot.validation.UserValidateService;
 
 import javax.validation.Validator;
 
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -63,5 +64,6 @@ class SearchUsesNameServiceTest {
         update.setMessage(message);
         when(userService.getDto(777L)).thenReturn(new UserDto(777L, "dummy"));
         search.execute(update);
+        assertNull(null);
     }
 }

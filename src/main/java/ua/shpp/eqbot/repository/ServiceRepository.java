@@ -5,6 +5,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import ua.shpp.eqbot.model.ServiceEntity;
 import org.springframework.data.domain.Pageable;
+
 import java.util.List;
 import java.util.Set;
 
@@ -24,11 +25,6 @@ public interface ServiceRepository extends JpaRepository<ServiceEntity, Long> {
 
     @Query("select distinct t.name from ServiceEntity t ")
     Set<String> findAllByName();
-//
-//    @Query("SELECT * FROM services WHERE (services.description LIKE '%ремо%') OR (services.name LIKE '%ремо%');")
-//    List<ServiceEntity> findAllByDescriptionAndName(String description, String name);
-//
-Page<ServiceEntity> findByDescriptionContainingIgnoreCaseOrNameContainingIgnoreCase(String description, String name, Pageable pageable);
 
-//    List<ServiceEntity> findByDescriptionContainingIgnoreCaseOrNameContainingIgnoreCase(String description, String name, Pageable pageable);
+    Page<ServiceEntity> findByDescriptionContainingIgnoreCaseOrNameContainingIgnoreCase(String description, String name, Pageable pageable);
 }

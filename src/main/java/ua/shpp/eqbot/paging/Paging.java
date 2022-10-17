@@ -22,7 +22,6 @@ public class Paging {
      */
     public List<ServiceEntity> getPage(int from, int to, String likeString) {
         Pageable firstPageWithTwoElements = PageRequest.of(from, to);
-        Page<ServiceEntity> pagingTwoEntity = serviceRepository.findAll(firstPageWithTwoElements);
         Page<ServiceEntity> byDescriptionLike =
                 serviceRepository.findByDescriptionContainingIgnoreCaseOrNameContainingIgnoreCase(likeString, likeString, firstPageWithTwoElements);
         return byDescriptionLike.getContent();

@@ -61,7 +61,7 @@ public class RegistrationForTheServiceCommand implements ICommand {
         Long userId = update.getCallbackQuery().getFrom().getId();
         UserDto userDto = userService.getDto(userId);
         UserEntity userEntity = userService.getEntity(userId);
-        Long serviceId;
+        long serviceId;
         Optional<ServiceEntity> optional;
         List<RegistrationForTheServiceEntity> listServices;
         RegistrationForTheServiceDto registrationDto;
@@ -69,7 +69,7 @@ public class RegistrationForTheServiceCommand implements ICommand {
         switch (userDto.getPositionMenu()) {
             case SEARCH_BY_NAME:
                 LOGGER.info("search for free days to sign up for the service");
-                serviceId = Long.valueOf(update.getCallbackQuery().getData());
+                serviceId = Long.parseLong(update.getCallbackQuery().getData());
                 optional = serviceRepository.findById(serviceId);
                 if (optional.isPresent()) {
                     ServiceEntity serviceEntity = optional.get();
@@ -79,7 +79,7 @@ public class RegistrationForTheServiceCommand implements ICommand {
                     RegistrationForTheServiceCache.add(registrationDto, userId);
                     date = LocalDateTime.parse(LocalDateTime.now().toLocalDate().toString() + "T00:00:00.0000");
                     listServices = registrationForTheServiceRepository
-                            .findAllServicesByDateAndServiceId(date, date.plusDays(numberOfDaysInSearchOfService + 1),
+                            .findAllServicesByDateAndServiceId(date, date.plusDays(numberOfDaysInSearchOfService + 1L),
                                     registrationDto.getServiceEntity().getId());
                     List<String> freeDays = findData(listServices, serviceEntity);
                     if (!freeDays.isEmpty()) {
@@ -242,7 +242,6 @@ public class RegistrationForTheServiceCommand implements ICommand {
         int hour = Integer.parseInt(start[0]);
         int min = Integer.parseInt(start[1]);
         int endHour = Integer.parseInt(end[0]);
-        int endMin = Integer.parseInt(end[1]);
         String[] clientTime = timeBetweenClients.split(":");
         int clientTimeHour = Integer.parseInt(clientTime[0]);
         int clientTimeMin = Integer.parseInt(clientTime[1]);

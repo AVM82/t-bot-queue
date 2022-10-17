@@ -8,7 +8,7 @@ import java.util.List;
 public class Pair {
     private int page;
     /*TODO help why does not take the file from the property*/
-    @Value("${paging.size}")
+    @Value("${paging.size:3}")
     private int size = 2;
     private boolean isLast;
     private List<ServiceEntity> serviceEntities;
