@@ -184,6 +184,7 @@ public class EqTelegramBot extends TelegramLongPollingBot {
             } else {
                 if (!commandContainer.retrieveCommand(CommandName.SEARCH_SERVICE.getNameCommand()).execute(update)) {
                     userDto.setPositionMenu(MENU_START);
+                    commandContainer.retrieveCommand(CommandName.START.getNameCommand()).execute(update);
                 }
             }
         } else if (callbackQuery.getData().equals("add_provider")) {
