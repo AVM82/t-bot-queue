@@ -120,7 +120,7 @@ public class SearchServiceCommand implements ICommand {
             serviceEntityByCityList.forEach(serviceEntity -> {
                 List<InlineKeyboardButton> button = new ArrayList<>();
                 button.add(InlineKeyboardButton.builder()
-                        .text(serviceEntity.getName())
+                        .text(serviceEntity.getName()  + " (ID: " + serviceEntity.getId() + ")")
                         .callbackData(String.valueOf(serviceEntity.getId()))
                         .build());
                 availableServiceButtons.add(button);
