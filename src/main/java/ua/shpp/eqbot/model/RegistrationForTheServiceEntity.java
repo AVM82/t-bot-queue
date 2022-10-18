@@ -19,7 +19,7 @@ public class RegistrationForTheServiceEntity {
     @JoinColumn(name = "service_id")
     private ServiceEntity serviceEntity;
 
-    private LocalDateTime dateReminderSent;
+    private LocalDateTime sentReminderDate;
 
     public UserEntity getUserEntity() {
         return userEntity;
