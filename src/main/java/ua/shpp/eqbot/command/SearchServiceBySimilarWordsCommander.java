@@ -61,9 +61,7 @@ public class SearchServiceBySimilarWordsCommander implements ICommand {
             sendBotMessageService.sendMessage(String.valueOf(chatId), bundleLanguage.getValue(chatId, "search.searchUsesNameService.text"));
             return true;
         } else {
-            if (!pairMap.containsKey(chatId)) {
-                pairMap.put(chatId, new Pair(0));
-            }
+            pairMap.computeIfAbsent(chatId, k -> new Pair(0));
             Paging paging = new Paging(serviceRepository);
             LOGGER.info("inner else find list use like");
             user.setPositionMenu(PositionMenu.SEARCH_USES_NAME_SERVICE);
@@ -72,7 +70,6 @@ public class SearchServiceBySimilarWordsCommander implements ICommand {
                 likeString = update.getMessage().getText();
             }
 
-            /*TODO extract this */
             CallbackQuery callbackQuery = update.getCallbackQuery();
 
             if (callbackQuery != null && callbackQuery.getData().equals("next")) {
@@ -117,9 +114,6 @@ public class SearchServiceBySimilarWordsCommander implements ICommand {
 
 
     boolean fillListResulSelection(long chatId, List<ServiceEntity> byDescriptionLike) {
-//       if (byDescriptionLike.equals(pairMap.get(chatId).getServiceEntities())) {
-//           return false;
-//       }
         InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
         List<List<InlineKeyboardButton>> availableServiceButtons = new ArrayList<>();
 

@@ -19,7 +19,7 @@ public class ChangeRoleToProviderICommand implements ICommand {
 
     private final SendBotMessageService sendBotMessageService;
 
-    ProviderRepository providerRepository;
+    private final ProviderRepository providerRepository;
     private final BundleLanguage bundleLanguage;
 
     public ChangeRoleToProviderICommand(

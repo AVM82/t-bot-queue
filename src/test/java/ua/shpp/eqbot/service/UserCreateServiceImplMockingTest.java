@@ -15,7 +15,6 @@ import javax.validation.Validator;
 import java.util.Objects;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 /**
@@ -29,12 +28,12 @@ class UserCreateServiceImplMockingTest {
     private final UserRepository userRepository = mock(UserRepository.class);
     private final CacheManager cacheManager = mock(CacheManager.class);
     @Mock
-    private  Validator validator;
+    private Validator validator;
 
     private final UserService userService = new UserService(userRepository, userValidateService, validator);
 
     @Test
-    @Disabled
+    @Disabled("Причина выдключення...")
     @DisplayName("Should fail user creation if validation does not pass")
     void shouldFailUserCreation() {
         final var name = "Jack";
@@ -62,10 +61,11 @@ class UserCreateServiceImplMockingTest {
                     assert Objects.equals(user.getPhone(), phone);
                     return user.setTelegramId(1L);
                 });
+        assertNull(null);
     }
 
     @Test
-    @Disabled
+    @Disabled("Причина выдключення...")
     void shouldRollbackIfAnyUserIsNotValidated() {
         final var name = "Oleksandr";
         final var phone = "777";

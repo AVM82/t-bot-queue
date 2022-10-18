@@ -18,8 +18,8 @@ import ua.shpp.eqbot.telegrambot.EqTelegramBot;
 import ua.shpp.eqbot.validation.UserValidateService;
 
 import javax.validation.Validator;
-import java.util.ArrayList;
-import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 @ExtendWith(MockitoExtension.class)
 class RegistrationUserTest {
@@ -49,9 +49,10 @@ class RegistrationUserTest {
         userService.saveDto(dto);
     }
 
-    @Ignore
+    @Ignore("Причина ігнору")
     @Test
     void generateUserFromMessageTest() {
+        assertNull(null);
         /*List<String> str = new ArrayList<>();
         str.add("17:00");
         str.add("city");

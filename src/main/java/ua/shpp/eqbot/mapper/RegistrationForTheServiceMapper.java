@@ -8,5 +8,6 @@ import ua.shpp.eqbot.model.RegistrationForTheServiceEntity;
 @Mapper
 public interface RegistrationForTheServiceMapper {
     RegistrationForTheServiceMapper INSTANCE = Mappers.getMapper(RegistrationForTheServiceMapper.class);
+
     RegistrationForTheServiceEntity registrationForTheServiceDtoToEntity(RegistrationForTheServiceDto dto);
 }

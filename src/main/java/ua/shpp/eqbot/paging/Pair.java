@@ -12,6 +12,7 @@ public class Pair {
     private int size = 2;
     private boolean isLast;
     private List<ServiceEntity> serviceEntities;
+
     public Pair(int from) {
         this.page = from;
     }

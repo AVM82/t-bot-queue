@@ -22,8 +22,8 @@ import java.util.List;
 @PropertySource("classpath:language_uk.properties")
 public class RestProviderController {
 
-    Logger logger = LoggerFactory.getLogger(RestProviderController.class);
-    final RestProviderService service;
+    private final Logger logger = LoggerFactory.getLogger(RestProviderController.class);
+    private final RestProviderService service;
 
     public RestProviderController(RestProviderService service) {
         this.service = service;

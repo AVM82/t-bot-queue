@@ -19,7 +19,7 @@ import java.util.List;
 @RequestMapping("/user")
 public class RestUserController {
 
-    Logger logger = LoggerFactory.getLogger(RestUserController.class);
+    private final Logger logger = LoggerFactory.getLogger(RestUserController.class);
     final RestUserService service;
 
     public RestUserController(RestUserService service) {
