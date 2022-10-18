@@ -19,6 +19,8 @@ public class RegistrationForTheServiceEntity {
     @JoinColumn(name = "service_id")
     private ServiceEntity serviceEntity;
 
+    private LocalDateTime sentReminderDate;
+
     public UserEntity getUserEntity() {
         return userEntity;
     }
@@ -41,5 +43,13 @@ public class RegistrationForTheServiceEntity {
 
     public void setServiceRegistrationDateTime(LocalDateTime serviceRegistrationTime) {
         this.serviceRegistrationDateTime = serviceRegistrationTime;
+    }
+
+    public LocalDateTime getSentReminderDate() {
+        return sentReminderDate;
+    }
+
+    public void setSentReminderDate(LocalDateTime sentReminderDate) {
+        this.sentReminderDate = sentReminderDate;
     }
 }
