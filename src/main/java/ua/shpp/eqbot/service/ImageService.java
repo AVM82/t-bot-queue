@@ -27,7 +27,7 @@ import java.util.List;
 public class ImageService {
 
     final EqTelegramBot bot;
-    private static final Logger logger = LoggerFactory.getLogger(ImageService.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(ImageService.class);
     public static final int IMAGE_MAX_WIDTH = 100;
     public static final int TIMEOUT = 5000;
 
@@ -65,7 +65,7 @@ public class ImageService {
                 .withCredentials(new AWSStaticCredentialsProvider(credentials))
                 .withRegion(awsRegion).build();
         if (!s3client.doesBucketExistV2(s3BucketName)) {
-            logger.warn("Bucket with such name is not exists");
+            LOGGER.warn("Bucket with such name is not exists");
             return null;
         }
         return s3client;
@@ -89,7 +89,7 @@ public class ImageService {
         if (sendImage(s3Object.getObjectContent(), chatId, imageName) == null) {
             return false;
         }
-        logger.info("Getting image from AWS");
+        LOGGER.info("Getting image from AWS");
         return true;
     }
 
@@ -97,7 +97,7 @@ public class ImageService {
         try (InputStream is = photoToStream(getBiggestImageSmallerThan(photos, IMAGE_MAX_WIDTH))) {
             return is.readAllBytes();
         } catch (IOException e) {
-            logger.warn("Can`t convert logo to byte array", e);
+            LOGGER.warn("Can`t convert logo to byte array", e);
             return new byte[0];
         }
     }
@@ -105,16 +105,16 @@ public class ImageService {
     public boolean sendBigImageToAWS(List<PhotoSize> photos, String path) {
         InputStream is = photoToStream(getBiggestImage(photos));
         if (is == null) {
-            logger.warn("Can`t send image to AWS S3 because input stream is null");
+            LOGGER.warn("Can`t send image to AWS S3 because input stream is null");
             return false;
         }
-        logger.info("Sending image to AWS");
+        LOGGER.info("Sending image to AWS");
         return sendImageToAWS(is, path);
     }
 
     public InputStream photoToStream(PhotoSize photo) {
         if (photo == null) {
-            logger.warn("Photo must not be null");
+            LOGGER.warn("Photo must not be null");
             return null;
         }
         GetFile getFile = new GetFile();
@@ -123,34 +123,34 @@ public class ImageService {
         try {
             file = bot.execute(getFile);
         } catch (TelegramApiException e) {
-            logger.warn("Can`t get file from bot", e);
+            LOGGER.warn("Can`t get file from bot", e);
             return null;
         }
         URL url;
         try {
             url = new URL(file.getFileUrl(bot.getBotToken()));
         } catch (MalformedURLException e) {
-            logger.warn("Can't create URL", e);
+            LOGGER.warn("Can't create URL", e);
             return null;
         }
         HttpURLConnection conn;
         try {
             conn = (HttpURLConnection) url.openConnection();
         } catch (IOException e) {
-            logger.warn("Can`t open connection", e);
+            LOGGER.warn("Can`t open connection", e);
             return null;
         }
         try {
             conn.setRequestMethod("GET");
         } catch (ProtocolException e) {
-            logger.warn("Can`t make request", e);
+            LOGGER.warn("Can`t make request", e);
         }
         conn.setConnectTimeout(TIMEOUT);
 
         try {
             return conn.getInputStream();
         } catch (IOException e) {
-            logger.warn("Can`t get input stream", e);
+            LOGGER.warn("Can`t get input stream", e);
             return null;
         }
 
@@ -162,10 +162,10 @@ public class ImageService {
         img.setPhoto(new InputFile(new ByteArrayInputStream(image), imageName));
         try {
             Message message = bot.execute(img);
-            logger.info("Sending image from byte array");
+            LOGGER.info("Sending image from byte array");
             return message;
         } catch (TelegramApiException e) {
-            logger.warn("Can`t send image", e);
+            LOGGER.warn("Can`t send image", e);
             return null;
         }
     }
@@ -177,7 +177,7 @@ public class ImageService {
         try {
             return bot.execute(img);
         } catch (TelegramApiException e) {
-            logger.warn("Can't send image", e);
+            LOGGER.warn("Can't send image", e);
             return null;
         }
     }
