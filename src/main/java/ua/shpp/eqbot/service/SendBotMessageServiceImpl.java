@@ -22,7 +22,7 @@ import java.util.List;
 @Service
 public class SendBotMessageServiceImpl implements SendBotMessageService {
 
-    Logger logger = LoggerFactory.getLogger(SendBotMessageServiceImpl.class);
+    private final Logger logger = LoggerFactory.getLogger(SendBotMessageServiceImpl.class);
 
     private final EqTelegramBot telegramBot;
 
@@ -93,7 +93,7 @@ public class SendBotMessageServiceImpl implements SendBotMessageService {
             sendMessage.setReplyMarkup(inlineKeyboardMarkup);
         } else {
             InlineKeyboardMarkup curMarkup = (InlineKeyboardMarkup) replyMarkup;
-            List<List<InlineKeyboardButton>> curKeyboard =  curMarkup.getKeyboard();
+            List<List<InlineKeyboardButton>> curKeyboard = curMarkup.getKeyboard();
             curKeyboard.add(line);
             curMarkup.setKeyboard(curKeyboard);
             sendMessage.setReplyMarkup(curMarkup);

@@ -16,7 +16,7 @@ public class MainMenuICommand implements ICommand {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MainMenuICommand.class);
     private final SendBotMessageService sendBotMessageService;
-    List<BotCommand> listOfCommand = new ArrayList<>();
+    private final List<BotCommand> listOfCommand = new ArrayList<>();
     private final BundleLanguage bundleLanguage;
 
     public MainMenuICommand(SendBotMessageService sendBotMessageService, BundleLanguage bundleLanguage) {

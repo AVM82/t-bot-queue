@@ -19,7 +19,7 @@ import java.util.List;
 @RequestMapping("/service")
 public class RestServiceController {
 
-    Logger logger = LoggerFactory.getLogger(RestServiceController.class);
+    private final Logger logger = LoggerFactory.getLogger(RestServiceController.class);
     final RestServiceService service;
 
     public RestServiceController(RestServiceService service) {

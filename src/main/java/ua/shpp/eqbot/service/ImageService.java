@@ -27,7 +27,7 @@ import java.util.List;
 public class ImageService {
 
     final EqTelegramBot bot;
-    Logger logger = LoggerFactory.getLogger(ImageService.class);
+    private static final Logger logger = LoggerFactory.getLogger(ImageService.class);
     public static final int IMAGE_MAX_WIDTH = 100;
     public static final int TIMEOUT = 5000;
 

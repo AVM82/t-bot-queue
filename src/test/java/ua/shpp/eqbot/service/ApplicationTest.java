@@ -43,8 +43,6 @@ public class ApplicationTest {
 
     @Test
     public void contextLoads() {
-
-        ProviderEntity dnipro = providerService.getByTelegramIdEntity(12L);
         assertNull(null);
     }
 

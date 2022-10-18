@@ -18,8 +18,6 @@ import ua.shpp.eqbot.telegrambot.EqTelegramBot;
 import ua.shpp.eqbot.validation.UserValidateService;
 
 import javax.validation.Validator;
-import java.util.ArrayList;
-import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertNull;
 

@@ -61,8 +61,11 @@ public class ProviderService {
         ProviderEntity entity = providerRepository.findByTelegramId(id);
         if (entity != null) {
             providerRepository.delete(entity);
+            return true;
+        } else {
+            return false;
         }
-        return true;
+
     }
 
     public ProviderEntity getByTelegramIdEntity(Long telegramId) {

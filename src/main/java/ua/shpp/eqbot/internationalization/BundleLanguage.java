@@ -13,6 +13,7 @@ public class BundleLanguage {
     private final UserService userService;
     public final List<String> availableLanguages = List.of("uk", "en");
     public static final String DEFAULT_LANGUAGE = "uk";
+
     public BundleLanguage(UserService userService) {
         this.userService = userService;
     }
