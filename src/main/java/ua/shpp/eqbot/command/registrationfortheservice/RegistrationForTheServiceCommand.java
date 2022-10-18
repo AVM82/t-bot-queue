@@ -23,6 +23,7 @@ import ua.shpp.eqbot.stage.PositionMenu;
 
 import java.time.DayOfWeek;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.EnumMap;
 import java.util.List;
@@ -66,73 +67,88 @@ public class RegistrationForTheServiceCommand implements ICommand {
         List<RegistrationForTheServiceEntity> listServices;
         RegistrationForTheServiceDto registrationDto;
         LocalDateTime date;
-        switch (userDto.getPositionMenu()) {
-            case SEARCH_BY_NAME:
-                LOGGER.info("search for free days to sign up for the service");
-                serviceId = Long.parseLong(update.getCallbackQuery().getData());
-                optional = serviceRepository.findById(serviceId);
-                if (optional.isPresent()) {
-                    ServiceEntity serviceEntity = optional.get();
-                    registrationDto = new RegistrationForTheServiceDto();
-                    registrationDto.setServiceEntity(serviceEntity);
-                    registrationDto.setUserEntity(userEntity);
-                    RegistrationForTheServiceCache.add(registrationDto, userId);
-                    date = LocalDateTime.parse(LocalDateTime.now().toLocalDate().toString() + "T00:00:00.0000");
-                    listServices = registrationForTheServiceRepository
-                            .findAllServicesByDateAndServiceId(date, date.plusDays(numberOfDaysInSearchOfService + 1L),
-                                    registrationDto.getServiceEntity().getId());
-                    List<String> freeDays = findData(listServices, serviceEntity);
-                    if (!freeDays.isEmpty()) {
-                        new CreatingButtonField(sendBotMessageService, quantityPerRow,
-                                freeDays, bundleLanguage.getValue(userId, "choosing_the_date"), userId);
-                        userDto.setPositionMenu(PositionMenu.REGISTRATION_FOR_THE_SERVICES_DATE);
+        try {
+            switch (userDto.getPositionMenu()) {
+                case SEARCH_BY_NAME:
+                    LOGGER.info("search for free days to sign up for the service");
+                    serviceId = Long.parseLong(update.getCallbackQuery().getData());
+                    optional = serviceRepository.findById(serviceId);
+                    if (optional.isPresent()) {
+                        ServiceEntity serviceEntity = optional.get();
+                        registrationDto = new RegistrationForTheServiceDto();
+                        registrationDto.setServiceEntity(serviceEntity);
+                        registrationDto.setUserEntity(userEntity);
+                        RegistrationForTheServiceCache.add(registrationDto, userId);
+                        date = LocalDateTime.parse(LocalDateTime.now().toLocalDate().toString() + "T00:00:00.0000");
+                        listServices = registrationForTheServiceRepository
+                                .findAllServicesByDateAndServiceId(date, date.plusDays(numberOfDaysInSearchOfService + 1),
+                                        registrationDto.getServiceEntity().getId());
+                        List<String> freeDays = findData(listServices, serviceEntity);
+                        if (!freeDays.isEmpty()) {
+                            new CreatingButtonField(sendBotMessageService, quantityPerRow,
+                                    freeDays, bundleLanguage.getValue(userId, "choosing_the_date")
+                                    + " '" + registrationDto.getServiceEntity().getName() + "'", userId);
+                            userDto.setPositionMenu(PositionMenu.REGISTRATION_FOR_THE_SERVICES_DATE);
+                        }
                     }
-                }
-                break;
-            case REGISTRATION_FOR_THE_SERVICES_DATE:
-                LOGGER.info("search for free times to sign up for the service");
-                registrationDto = RegistrationForTheServiceCache.findByUserTelegramId(userId);
-                date = LocalDateTime.parse(LocalDateTime.now().toLocalDate().toString() + "T00:00:00.0000");
-                date = date.plusDays(Long.parseLong(update.getCallbackQuery().getData()) - date.getDayOfMonth());
-                registrationDto.setServiceRegistrationDateTime(date);
-                LocalDateTime dateNextDay = date.plusDays(1);
-                listServices = registrationForTheServiceRepository
-                        .findAllServicesByDateAndServiceId(date, dateNextDay, registrationDto.getServiceEntity().getId());
-                optional = serviceRepository.findById(registrationDto.getServiceEntity().getId());
-                if (optional.isPresent()) {
-                    ServiceEntity serviceEntity = optional.get();
-                    EnumMap<DayOfWeek, String> schedule = getSchedule(serviceEntity);
-                    List<String> freeTimes = findFreeTime(listServices, schedule.get(date.getDayOfWeek()),
-                            serviceEntity.getTimeBetweenClients());
-                    new CreatingButtonField(sendBotMessageService, quantityPerRow,
-                            freeTimes, bundleLanguage.getValue(userId, "choosing_the_time"), userId);
-                    userDto.setPositionMenu(PositionMenu.REGISTRATION_FOR_THE_SERVICES_TIME);
-                }
-                break;
-            case REGISTRATION_FOR_THE_SERVICES_TIME:
-                registrationDto = RegistrationForTheServiceCache.findByUserTelegramId(userId);
-                date = registrationDto.getServiceRegistrationDateTime();
-                date = LocalDateTime.parse(date.toLocalDate().toString() + "T" + update.getCallbackQuery().getData());
-                registrationDto.setServiceRegistrationDateTime(date);
-                userDto.setPositionMenu(PositionMenu.MENU_START);
-                isRegistered = true;
-                registrationForTheServiceRepository.save(RegistrationForTheServiceMapper.INSTANCE
-                        .registrationForTheServiceDtoToEntity(registrationDto));
-                sendBotMessageService.sendMessage(SendMessage.builder()
-                        .text(bundleLanguage.getValue(userId, "registration_for_the_service_is_over")
-                                + " " + date.toLocalDate() + " " + date.toLocalTime())
-                        .chatId(userId)
-                        .build());
-                SendNotificationToProviderCommand sendNotificationToProviderCommand =
-                        new SendNotificationToProviderCommand(serviceRepository, sendBotMessageService, bundleLanguage);
-                sendNotificationToProviderCommand.sendNotification(registrationDto.getServiceEntity().getId(),
-                        date.toLocalDate() + " " + date.toLocalTime(),
-                        update.getCallbackQuery().getFrom().getUserName(),
-                        update.getCallbackQuery().getFrom().getId().toString());
-                RegistrationForTheServiceCache.remove(userId);
-                break;
-            default:
-                break;
+                    break;
+                case REGISTRATION_FOR_THE_SERVICES_DATE:
+                    LOGGER.info("search for free times to sign up for the service");
+                    registrationDto = RegistrationForTheServiceCache.findByUserTelegramId(userId);
+                    date = LocalDateTime.parse(LocalDateTime.now().toLocalDate().toString() + "T00:00:00.0000");
+                    date = date.plusDays(Long.parseLong(update.getCallbackQuery().getData()) - date.getDayOfMonth());
+                    registrationDto.setServiceRegistrationDateTime(date);
+                    LocalDateTime dateNextDay = date.plusDays(1);
+                    listServices = registrationForTheServiceRepository
+                            .findAllServicesByDateAndServiceId(date, dateNextDay, registrationDto.getServiceEntity().getId());
+                    optional = serviceRepository.findById(registrationDto.getServiceEntity().getId());
+                    if (optional.isPresent()) {
+                        ServiceEntity serviceEntity = optional.get();
+                        EnumMap<DayOfWeek, String> schedule = getSchedule(serviceEntity);
+                        List<String> freeTimes = findFreeTime(listServices, schedule.get(date.getDayOfWeek()),
+                                serviceEntity.getTimeBetweenClients());
+                        new CreatingButtonField(sendBotMessageService, quantityPerRow,
+                                freeTimes, bundleLanguage
+                                .getValue(userId, "choosing_the_time")
+                                + " '" + registrationDto.getServiceEntity().getName() + "'"
+                                + " " + registrationDto.getServiceRegistrationDateTime().toLocalDate(), userId);
+                        userDto.setPositionMenu(PositionMenu.REGISTRATION_FOR_THE_SERVICES_TIME);
+                    }
+                    break;
+                case REGISTRATION_FOR_THE_SERVICES_TIME:
+                    registrationDto = RegistrationForTheServiceCache.findByUserTelegramId(userId);
+                    date = registrationDto.getServiceRegistrationDateTime();
+                    date = LocalDateTime.parse(date.toLocalDate().toString() + "T" + update.getCallbackQuery().getData());
+                    registrationDto.setServiceRegistrationDateTime(date);
+                    userDto.setPositionMenu(PositionMenu.MENU_START);
+                    isRegistered = true;
+                    registrationForTheServiceRepository.save(RegistrationForTheServiceMapper.INSTANCE
+                            .registrationForTheServiceDtoToEntity(registrationDto));
+                    sendBotMessageService.sendMessage(SendMessage.builder()
+                            .text(bundleLanguage.getValue(userId, "registration_for_the_service_is_over")
+                                    + " '" + registrationDto.getServiceEntity().getName() + "'"
+                                    + " " + date.toLocalDate() + " " + date.toLocalTime())
+                            .chatId(userId)
+                            .build());
+                    SendNotificationToProviderCommand sendNotificationToProviderCommand =
+                            new SendNotificationToProviderCommand(serviceRepository, sendBotMessageService, bundleLanguage);
+                    sendNotificationToProviderCommand.sendNotification(registrationDto.getServiceEntity().getId(),
+                            date.toLocalDate() + " " + date.toLocalTime(),
+                            update.getCallbackQuery().getFrom().getUserName(),
+                            update.getCallbackQuery().getFrom().getId().toString());
+                    RegistrationForTheServiceCache.remove(userId);
+                    break;
+                default:
+                    break;
+            }
+        } catch (Exception e) {
+            LOGGER.error("Registration has error. Message = {}", e.getMessage());
+            userDto.setPositionMenu(PositionMenu.MENU_START);
+            sendBotMessageService.sendMessage(SendMessage.builder()
+                    .text(bundleLanguage.getValue(userId, "error_registration"))
+                    .chatId(userId)
+                    .build());
+            isRegistered = true;
         }
         return isRegistered;
     }
@@ -148,7 +164,13 @@ public class RegistrationForTheServiceCommand implements ICommand {
     private List<String> findData(List<RegistrationForTheServiceEntity> listServices, ServiceEntity serviceEntity) {
         List<String> freeDays = new ArrayList<>();
         EnumMap<DayOfWeek, String> schedule = getSchedule(serviceEntity);
+        List<String> workTime = workTime(serviceEntity.getTimeBetweenClients(),
+                schedule.get(LocalDateTime.now().toLocalDate().getDayOfWeek()));
         LocalDateTime nowDay = LocalDateTime.now();
+        if (workTime.isEmpty() || (!workTime.isEmpty() &&
+                LocalTime.parse(workTime.get(workTime.size() - 1)).isBefore(nowDay.toLocalTime()))) {
+            nowDay = nowDay.plusDays(1);
+        }
         LocalDateTime date;
         int numberOfEntriesPerDay; //записів на день
         for (int count = 0; count <= numberOfDaysInSearchOfService; count++) {
