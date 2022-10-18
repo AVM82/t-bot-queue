@@ -61,6 +61,8 @@ public class CommandContainer {
                 .put(CommandName.REGISTRATION_FOR_THE_SERVICE_COMMAND.getNameCommand(),
                         new RegistrationForTheServiceCommand(sendBotMessageService, registrationForTheServiceRepository,
                                 serviceRepository, bundleLanguage, userService))
+                .put(CommandName.SERVICE_INFO.getNameCommand(),
+                        new ServiceInfoCommand(serviceRepository, sendBotMessageService, bundleLanguage))
                 .build();
         unknownICommand = new UnknownICommand(sendBotMessageService, bundleLanguage);
     }

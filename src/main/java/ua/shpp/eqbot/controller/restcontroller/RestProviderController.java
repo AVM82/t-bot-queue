@@ -19,7 +19,7 @@ import java.util.List;
 
 @RestController()
 @RequestMapping("/provider")
-@PropertySource("classpath:language_uk.properties")
+@PropertySource("classpath:language_en.properties")
 public class RestProviderController {
 
     private final Logger logger = LoggerFactory.getLogger(RestProviderController.class);

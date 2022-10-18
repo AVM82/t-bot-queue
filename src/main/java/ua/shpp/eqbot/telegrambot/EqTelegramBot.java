@@ -201,6 +201,8 @@ public class EqTelegramBot extends TelegramLongPollingBot {
         } else if (callbackQuery.getData().equals("change_lang")) {
             commandContainer.retrieveCommand("/change_language").execute(update);
             commandContainer.retrieveCommand("/start").execute(update);
+        } else if (callbackQuery.getData().startsWith("service_info/")) {
+            commandContainer.retrieveCommand("/service info").execute(update);
         } else {
             commandContainer.retrieveCommand("/start").execute(update);
         }
