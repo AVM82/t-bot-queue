@@ -62,7 +62,7 @@ public class CommandContainer {
                         new RegistrationForTheServiceCommand(sendBotMessageService, registrationForTheServiceRepository,
                                 serviceRepository, bundleLanguage, userService))
                 .put(CommandName.SERVICE_INFO.getNameCommand(),
-                        new ServiceInfoCommand(serviceRepository, sendBotMessageService, bundleLanguage))
+                        new ServiceInfoCommand(serviceRepository, sendBotMessageService, bundleLanguage, imageService))
                 .build();
         unknownICommand = new UnknownICommand(sendBotMessageService, bundleLanguage);
     }
