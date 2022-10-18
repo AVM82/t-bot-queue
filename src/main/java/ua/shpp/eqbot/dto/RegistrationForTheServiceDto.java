@@ -35,4 +35,12 @@ public class RegistrationForTheServiceDto {
     public void setServiceRegistrationDateTime(LocalDateTime serviceRegistrationDateTime) {
         this.serviceRegistrationDateTime = serviceRegistrationDateTime;
     }
+
+    @Override
+    public String toString() {
+        return "RegistrationForTheServiceDto{" + "userEntity= " + userEntity +
+                ", serviceEntity= " + serviceEntity + '\'' +
+                ", serviceRegistrationDateTime='" + serviceRegistrationDateTime + '\'' +
+                '}';
+    }
 }

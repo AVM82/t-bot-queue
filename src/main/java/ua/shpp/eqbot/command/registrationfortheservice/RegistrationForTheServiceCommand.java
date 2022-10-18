@@ -79,9 +79,10 @@ public class RegistrationForTheServiceCommand implements ICommand {
                         registrationDto.setServiceEntity(serviceEntity);
                         registrationDto.setUserEntity(userEntity);
                         RegistrationForTheServiceCache.add(registrationDto, userId);
+                        LOGGER.info(registrationDto.toString());
                         date = LocalDateTime.parse(LocalDateTime.now().toLocalDate().toString() + "T00:00:00.0000");
                         listServices = registrationForTheServiceRepository
-                                .findAllServicesByDateAndServiceId(date, date.plusDays(numberOfDaysInSearchOfService + 1),
+                                .findAllServicesByDateAndServiceId(date, date.plusDays(numberOfDaysInSearchOfService + 1L),
                                         registrationDto.getServiceEntity().getId());
                         List<String> freeDays = findData(listServices, serviceEntity);
                         if (!freeDays.isEmpty()) {
@@ -95,6 +96,7 @@ public class RegistrationForTheServiceCommand implements ICommand {
                 case REGISTRATION_FOR_THE_SERVICES_DATE:
                     LOGGER.info("search for free times to sign up for the service");
                     registrationDto = RegistrationForTheServiceCache.findByUserTelegramId(userId);
+                    LOGGER.info(registrationDto.toString());
                     date = LocalDateTime.parse(LocalDateTime.now().toLocalDate().toString() + "T00:00:00.0000");
                     date = date.plusDays(Long.parseLong(update.getCallbackQuery().getData()) - date.getDayOfMonth());
                     registrationDto.setServiceRegistrationDateTime(date);
@@ -117,11 +119,13 @@ public class RegistrationForTheServiceCommand implements ICommand {
                     break;
                 case REGISTRATION_FOR_THE_SERVICES_TIME:
                     registrationDto = RegistrationForTheServiceCache.findByUserTelegramId(userId);
+                    LOGGER.info(registrationDto.toString());
                     date = registrationDto.getServiceRegistrationDateTime();
                     date = LocalDateTime.parse(date.toLocalDate().toString() + "T" + update.getCallbackQuery().getData());
                     registrationDto.setServiceRegistrationDateTime(date);
                     userDto.setPositionMenu(PositionMenu.MENU_START);
                     isRegistered = true;
+                    LOGGER.info(registrationDto.toString());
                     registrationForTheServiceRepository.save(RegistrationForTheServiceMapper.INSTANCE
                             .registrationForTheServiceDtoToEntity(registrationDto));
                     sendBotMessageService.sendMessage(SendMessage.builder()
