@@ -217,8 +217,6 @@ public class EqTelegramBot extends TelegramLongPollingBot {
             userDto.setPositionMenu(MENU_START);
             userDto.setPositionRegistration(PositionRegistration.DONE);
             userService.saveDto(userDto);
-        } else {
-            userDto = new UserDto();
         }
         return userDto;
     }
