@@ -45,11 +45,11 @@ public class RegistrationForTheServiceEntity {
         this.serviceRegistrationDateTime = serviceRegistrationTime;
     }
 
-    public LocalDateTime getDateReminderSent() {
-        return dateReminderSent;
+    public LocalDateTime getSentReminderDate() {
+        return sentReminderDate;
     }
 
-    public void setDateReminderSent(LocalDateTime dateReminderSent) {
-        this.dateReminderSent = dateReminderSent;
+    public void setSentReminderDate(LocalDateTime sentReminderDate) {
+        this.sentReminderDate = sentReminderDate;
     }
 }

@@ -48,7 +48,7 @@ public class ReminderBeforeVisit {
                     + entity.getServiceEntity().getName() + "\"";
             sendBotMessageService.sendMessage(String.valueOf(entity.getUserEntity().getTelegramId()), text);
             LOGGER.info("A reminder has been sent to the user with id {}", entity.getUserEntity().getTelegramId());
-            entity.setDateReminderSent(now);
+            entity.setSentReminderDate(now);
         }
         LOGGER.info("Message sent to {} users.", firstQuery.size());
         registrationForTheServiceRepository.saveAll(firstQuery);
