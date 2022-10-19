@@ -175,7 +175,7 @@ public class EqTelegramBot extends TelegramLongPollingBot {
         } else if (userDto.getPositionMenu() == SEARCH_BY_NAME
                 || userDto.getPositionMenu() == REGISTRATION_FOR_THE_SERVICES_DATE
                 || userDto.getPositionMenu() == REGISTRATION_FOR_THE_SERVICES_TIME) {
-            if (callbackQuery.getData().matches("\\d+:?.?\\d*")) {
+            if (callbackQuery.getData().matches("\\d+:?.?\\d*") || callbackQuery.getData().equals("змінити дату")) {
                 LOGGER.info("The user has successfully selected the service");
                 RegistrationForTheServiceCommand.setNumberOfDaysInSearchOfService(7);
                 if (commandContainer.retrieveCommand("/RegistrationForTheServiceCommand").execute(update)) {
