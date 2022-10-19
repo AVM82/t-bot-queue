@@ -120,7 +120,7 @@ public class SearchServiceBySimilarWordsCommander implements ICommand {
         byDescriptionLike.forEach(serviceEntity -> {
             List<InlineKeyboardButton> button = new ArrayList<>();
             button.add(InlineKeyboardButton.builder()
-                    .text(serviceEntity.getName())
+                    .text(serviceEntity.getName() + " (ID: " + serviceEntity.getId() + ")")
                     .callbackData("service_info/" + serviceEntity.getId())
                     .build());
             availableServiceButtons.add(button);
