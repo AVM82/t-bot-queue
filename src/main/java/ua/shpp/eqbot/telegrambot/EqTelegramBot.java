@@ -172,7 +172,12 @@ public class EqTelegramBot extends TelegramLongPollingBot {
             userService.getDto(update.getCallbackQuery().getFrom().getId())
                     .setPositionMenu(PositionMenu.REGISTRATION_SERVICE);
             commandContainer.retrieveCommand("/add").execute(update);
-        } else if (userDto.getPositionMenu() == SEARCH_BY_NAME
+        }  else if (callbackQuery.getData().startsWith("service_info/")) {
+            commandContainer.retrieveCommand("/service info").execute(update);
+            if(userDto.getPositionMenu() == SEARCH_BY_NAME){
+                userDto.setPositionMenu(MENU_START);
+            }
+        } else if ((userDto.getPositionMenu() == SEARCH_BY_NAME)
                 || userDto.getPositionMenu() == REGISTRATION_FOR_THE_SERVICES_DATE
                 || userDto.getPositionMenu() == REGISTRATION_FOR_THE_SERVICES_TIME) {
             if (callbackQuery.getData().matches("\\d+:?.?\\d*") || callbackQuery.getData().equals("змінити дату")) {
@@ -201,8 +206,6 @@ public class EqTelegramBot extends TelegramLongPollingBot {
         } else if (callbackQuery.getData().equals("change_lang")) {
             commandContainer.retrieveCommand("/change_language").execute(update);
             commandContainer.retrieveCommand("/start").execute(update);
-        } else if (callbackQuery.getData().startsWith("service_info/")) {
-            commandContainer.retrieveCommand("/service info").execute(update);
         } else {
             commandContainer.retrieveCommand("/start").execute(update);
         }

@@ -57,13 +57,12 @@ public class SearchById implements ICommand {
             ServiceEntity result = idService.matches("\\d+") ? serviceRepository.findFirstById(Long.valueOf(idService)) : null;
             if (result != null) {
                 LOGGER.info("Found service by id");
-                user.setPositionMenu(PositionMenu.SEARCH_BY_NAME);
                 InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
                 List<List<InlineKeyboardButton>> availableServiceButtons = new ArrayList<>();
                 List<InlineKeyboardButton> button = new ArrayList<>();
                 button.add(InlineKeyboardButton.builder()
                         .text(result.getName())
-                        .callbackData("service_info" + result.getId())
+                        .callbackData("service_info/" + result.getId())
                         .build());
                 availableServiceButtons.add(button);
                 inlineKeyboardMarkup.setKeyboard(availableServiceButtons);
