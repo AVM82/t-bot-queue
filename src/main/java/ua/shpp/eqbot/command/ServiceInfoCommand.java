@@ -50,16 +50,16 @@ public class ServiceInfoCommand implements ICommand {
     private void sendServiceInfo(ServiceEntity service, Long chatId) {
         String serviceInfo = messageInfo(service, chatId);
         SendPhoto sendPhoto = createMessage(service, chatId, serviceInfo);
-        if (sendPhoto == null){
+        if (sendPhoto == null) {
             SendMessage sendMessage = new SendMessage(chatId.toString(), serviceInfo);
             sendMessage.setReplyMarkup(keyboardForService(service, chatId));
             sendMessage.setParseMode(ParseMode.HTML);
             sendBotMessageService.sendMessage(sendMessage);
-        }else {
+        } else {
             sendPhoto.setReplyMarkup(keyboardForService(service, chatId));
             sendPhoto.setParseMode(ParseMode.HTML);
             sendBotMessageService.sendMessage(sendPhoto);
-       }
+        }
     }
 
     private InlineKeyboardMarkup keyboardForServiceCreator(ServiceEntity service, Long chatId) {

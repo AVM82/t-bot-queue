@@ -63,7 +63,7 @@ public class SearchById implements ICommand {
                 List<InlineKeyboardButton> button = new ArrayList<>();
                 button.add(InlineKeyboardButton.builder()
                         .text(result.getName())
-                        .callbackData("service_info"+result.getId())
+                        .callbackData("service_info" + result.getId())
                         .build());
                 availableServiceButtons.add(button);
                 inlineKeyboardMarkup.setKeyboard(availableServiceButtons);

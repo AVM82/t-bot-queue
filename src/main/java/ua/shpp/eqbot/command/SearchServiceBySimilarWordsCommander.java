@@ -121,7 +121,7 @@ public class SearchServiceBySimilarWordsCommander implements ICommand {
             List<InlineKeyboardButton> button = new ArrayList<>();
             button.add(InlineKeyboardButton.builder()
                     .text(serviceEntity.getName())
-                    .callbackData("service_info/"+serviceEntity.getId())
+                    .callbackData("service_info/" + serviceEntity.getId())
                     .build());
             availableServiceButtons.add(button);
         });

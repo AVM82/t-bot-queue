@@ -93,10 +93,7 @@ public class SendBotMessageServiceImpl implements SendBotMessageService {
         InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
         List<List<InlineKeyboardButton>> keyboard = new ArrayList<>();
         List<InlineKeyboardButton> line = new ArrayList<>();
-        line.add(InlineKeyboardButton.builder()
-                .text(text)
-                .url("tg://user?id=" + telegramId)
-                .build());
+        line.add(InlineKeyboardButton.builder().text(text).url("tg://user?id=" + telegramId).build());
         keyboard.add(line);
         inlineKeyboardMarkup.setKeyboard(keyboard);
         ReplyKeyboard replyMarkup = sendMessage.getReplyMarkup();
