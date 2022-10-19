@@ -63,7 +63,7 @@ public class RegistrationForTheServiceCommand implements ICommand {
         UserEntity userEntity = userService.getEntity(userId);
         String callbackData = update.getCallbackQuery().getData();
         if (update.getCallbackQuery().getData().equals(bundleLanguage.getValue(userId, "change_the_date"))) {
-            userDto.setPositionMenu(PositionMenu.SEARCH_BY_NAME);
+            userDto.setPositionMenu(PositionMenu.REGISTRATION_FOR_THE_SERVICES_START);
         }
         long serviceId;
 
