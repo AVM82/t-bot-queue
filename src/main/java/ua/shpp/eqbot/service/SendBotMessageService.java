@@ -2,6 +2,7 @@ package ua.shpp.eqbot.service;
 
 import org.telegram.telegrambots.meta.api.methods.commands.SetMyCommands;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
+import org.telegram.telegrambots.meta.api.methods.send.SendPhoto;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
 
 /**
@@ -18,6 +19,8 @@ public interface SendBotMessageService {
     void sendMessage(String chatId, String message);
 
     void sendMessage(SendMessage message);
+
+    void sendMessage(SendPhoto message);
 
     void setReplyMarkup(String chatId, ReplyKeyboardMarkup replyKeyboardMarkup);
 

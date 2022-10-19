@@ -89,13 +89,18 @@ public class ImageService {
         if (s3Client == null) {
             return null;
         }
-        S3Object s3Object = s3Client.getObject(new GetObjectRequest(s3BucketName, "images/" + telegramId + "/" + serviceName));
-        SendPhoto sendPhoto = sendImage(s3Object.getObjectContent(), serviceName);
-        logger.info("Getting image from AWS");
+        String filePath = "images/" + telegramId + "/" + serviceName;
+        boolean isExists = s3Client.doesObjectExist(s3BucketName, filePath);
+        SendPhoto sendPhoto = null;
+        if (isExists) {
+            S3Object s3Object = s3Client.getObject(new GetObjectRequest(s3BucketName, filePath));
+            sendPhoto = sendImage(s3Object.getObjectContent(), serviceName);
+            logger.info("Getting image from AWS");
+        }
         return sendPhoto;
     }
 
-    public List<String> listObjectsInS3Folder(String folderPath){
+    public List<String> listObjectsInS3Folder(String folderPath) {
         List<String> list = new ArrayList<>();
         AmazonS3 s3Client = setupAWS();
         if (s3Client == null) {
@@ -105,7 +110,7 @@ public class ImageService {
                 .withBucketName(s3BucketName)
                 .withPrefix(folderPath + "/");
         ObjectListing objects = s3Client.listObjects(listObjectsRequest);
-        for (;;) {
+        for (; ; ) {
             List<S3ObjectSummary> summaries = objects.getObjectSummaries();
             if (summaries.size() < 1) {
                 break;
@@ -200,17 +205,17 @@ public class ImageService {
         return img;
     }
 
-    public List<Message> sendMediaGroup(String chatId, String folderPath){
+    public List<Message> sendMediaGroup(String chatId, String folderPath) {
         SendMediaGroup message = new SendMediaGroup();
         List<InputMedia> photos = new ArrayList<>();
         List<String> photosPath = listObjectsInS3Folder(folderPath);
-        for(String path : photosPath){
+        for (String path : photosPath) {
             photos.add(new InputMediaPhoto(path));
         }
         message.setMedias(photos);
-        try{
+        try {
             return bot.execute(message);
-        } catch (TelegramApiException e){
+        } catch (TelegramApiException e) {
             logger.warn("Can`t send media group", e);
             return null;
         }
