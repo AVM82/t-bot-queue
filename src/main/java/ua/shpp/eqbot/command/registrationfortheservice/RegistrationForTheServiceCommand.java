@@ -61,25 +61,31 @@ public class RegistrationForTheServiceCommand implements ICommand {
         Long userId = update.getCallbackQuery().getFrom().getId();
         UserDto userDto = userService.getDto(userId);
         UserEntity userEntity = userService.getEntity(userId);
+        String callbackData = update.getCallbackQuery().getData();
         if (update.getCallbackQuery().getData().equals(bundleLanguage.getValue(userId, "change_the_date"))) {
             userDto.setPositionMenu(PositionMenu.SEARCH_BY_NAME);
         }
         long serviceId;
+
         Optional<ServiceEntity> optional;
         List<RegistrationForTheServiceEntity> listServices;
         RegistrationForTheServiceDto registrationDto;
         LocalDateTime date;
         try {
             switch (userDto.getPositionMenu()) {
-                case SEARCH_BY_NAME:
+                case REGISTRATION_FOR_THE_SERVICES_START:
                     LOGGER.info("search for free days to sign up for the service");
                     registrationDto = RegistrationForTheServiceCache.findByUserTelegramId(userId);
                     if (registrationDto == null) {
-                        serviceId = Long.parseLong(update.getCallbackQuery().getData());
+                        if(callbackData.startsWith("appoint/")){
+                            serviceId = Long.parseLong(callbackData.split("/")[1]);
+                        }else{
+                            serviceId = Long.parseLong(callbackData);
+                        }
                         registrationDto = createDto(serviceId, userEntity);
                         RegistrationForTheServiceCache.add(registrationDto, userId);
                     }
-                    LOGGER.info("menu position SEARCH_BY_NAME, registrationDto = {}", registrationDto);
+                    LOGGER.info("menu position REGISTRATION_FOR_THE_SERVICES_START, registrationDto = {}", registrationDto);
                     date = LocalDateTime.parse(LocalDateTime.now().toLocalDate().toString() + "T00:00:00.0000");
                     listServices = registrationForTheServiceRepository
                             .findAllServicesByDateAndServiceId(date,
