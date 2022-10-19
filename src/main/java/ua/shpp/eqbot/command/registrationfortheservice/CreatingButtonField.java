@@ -17,16 +17,18 @@ public class CreatingButtonField {
     private final List<String> listData;
     private final String theMainInscription;
     private final Long id;
+    private final String additionalButton;
 
     public CreatingButtonField(SendBotMessageService sendBotMessageService,
                                int quantityPerRow,
                                List<String> listData,
-                               String theMainInscription, Long id) {
+                               String theMainInscription, Long id, String additionalButton) {
         this.sendBotMessageService = sendBotMessageService;
         this.quantityPerRow = quantityPerRow;
         this.listData = listData;
         this.theMainInscription = theMainInscription;
         this.id = id;
+        this.additionalButton = additionalButton;
         addButtons();
     }
 
@@ -45,6 +47,12 @@ public class CreatingButtonField {
                 }
                 ++count;
             }
+            keyboard.add(button);
+        }
+        if (!additionalButton.equals("")) {
+            listData.add(additionalButton);
+            List<InlineKeyboardButton> button = new ArrayList<>();
+            creatingButtonsInRow(button, listData.size() - 1);
             keyboard.add(button);
         }
         inlineKeyboardMarkup.setKeyboard(keyboard);
