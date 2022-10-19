@@ -77,9 +77,9 @@ public class RegistrationForTheServiceCommand implements ICommand {
                     LOGGER.info("search for free days to sign up for the service");
                     registrationDto = RegistrationForTheServiceCache.findByUserTelegramId(userId);
                     if (registrationDto == null) {
-                        if(callbackData.startsWith("appoint/")){
+                        if (callbackData.startsWith("appoint/")) {
                             serviceId = Long.parseLong(callbackData.split("/")[1]);
-                        }else{
+                        } else {
                             serviceId = Long.parseLong(callbackData);
                         }
                         registrationDto = createDto(serviceId, userEntity);

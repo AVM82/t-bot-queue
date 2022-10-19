@@ -86,7 +86,7 @@ public class ServiceInfoCommand implements ICommand {
         List<List<InlineKeyboardButton>> keyboard = new ArrayList<>();
         List<InlineKeyboardButton> line1 = new ArrayList<>();
         String messageAppointment = bundleLanguage.getValue(chatId, "make_an_appointment");
-        line1.add(InlineKeyboardButton.builder().text(messageAppointment).callbackData("appoint/"+service.getId()).build());
+        line1.add(InlineKeyboardButton.builder().text(messageAppointment).callbackData("appoint/" + service.getId()).build());
         keyboard.add(line1);
         List<InlineKeyboardButton> line2 = new ArrayList<>();
         String messageBack = bundleLanguage.getValue(chatId, "return_back");
