@@ -146,7 +146,8 @@ public class EqTelegramBot extends TelegramLongPollingBot {
         CallbackQuery callbackQuery = update.getCallbackQuery();
         UserDto userDto = findDtoIfPossible(update);
         if (update.getCallbackQuery().getData().startsWith("appoint/")) {
-            userDto.setPositionMenu(REGISTRATION_FOR_THE_SERVICES_START);}
+            userDto.setPositionMenu(REGISTRATION_FOR_THE_SERVICES_START);
+        }
         if (callbackQuery.getData().equals("create_service")) {
             LOGGER.info("create_service");
             userDto.setPositionMenu(MENU_CREATE_SERVICE);
@@ -162,7 +163,7 @@ public class EqTelegramBot extends TelegramLongPollingBot {
         } else if (callbackQuery.getData().startsWith("searchId")) {
             LOGGER.info("search by id");
             commandContainer.retrieveCommand(CommandName.SEARCH_BY_ID.getNameCommand()).execute(update);
-        } else if (callbackQuery.getData().equals("searchString")) {
+        } else if (callbackQuery.getData().startsWith("searchString")) {
             LOGGER.info("search uses name service");
             commandContainer.retrieveCommand(CommandName.SEARCH_USES_NAME_SERVICE.getNameCommand()).execute(update);
         } else if (callbackQuery.getData().equals("return_in_menu")) {

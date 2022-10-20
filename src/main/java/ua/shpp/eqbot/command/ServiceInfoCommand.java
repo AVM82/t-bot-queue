@@ -80,10 +80,7 @@ public class ServiceInfoCommand implements ICommand {
         String messageRecord = bundleLanguage.getValue(chatId, "add_record_to_service");
         line2.add(InlineKeyboardButton.builder().text(messageRecord).callbackData("2").build());
         keyboard.add(line2);
-        List<InlineKeyboardButton> line3 = new ArrayList<>();
-        String messageBack = bundleLanguage.getValue(chatId, "return_back");
-        line3.add(InlineKeyboardButton.builder().text(messageBack).callbackData("3").build());
-        keyboard.add(line3);
+        keyboard.add(backButton(chatId));
         inlineKeyboardMarkup.setKeyboard(keyboard);
         return inlineKeyboardMarkup;
     }

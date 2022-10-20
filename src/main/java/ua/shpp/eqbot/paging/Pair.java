@@ -8,8 +8,8 @@ import java.util.List;
 public class Pair {
     private int page;
     /*TODO help why does not take the file from the property*/
-    @Value("${paging.size}")
-    private int size = 2;
+    @Value("${pagingSize}")
+    private int pagingSize = 2;
     private boolean isLast;
     private List<ServiceEntity> serviceEntities;
 
@@ -69,17 +69,17 @@ public class Pair {
         if (page != pair.page) {
             return false;
         }
-        return size == pair.size;
+        return pagingSize == pair.pagingSize;
     }
 
     @Override
     public int hashCode() {
         int result = page;
-        result = 31 * result + size;
+        result = 31 * result + pagingSize;
         return result;
     }
 
-    public int getSize() {
-        return size;
+    public int getPagingSize() {
+        return pagingSize;
     }
 }

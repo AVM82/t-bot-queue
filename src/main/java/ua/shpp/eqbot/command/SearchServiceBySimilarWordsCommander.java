@@ -9,6 +9,7 @@ import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
+import ua.shpp.eqbot.dto.PrevPositionDTO;
 import ua.shpp.eqbot.dto.UserDto;
 import ua.shpp.eqbot.internationalization.BundleLanguage;
 import ua.shpp.eqbot.model.ServiceEntity;
@@ -48,26 +49,36 @@ public class SearchServiceBySimilarWordsCommander implements ICommand {
     public boolean execute(Update update) {
         LOGGER.info("method execute search using the service name");
         long chatId;
+        PrevPositionDTO prevPosition = new PrevPositionDTO();
         if (update.hasCallbackQuery()) {
             chatId = update.getCallbackQuery().getFrom().getId();
         } else {
             chatId = update.getMessage().getChatId();
+            prevPosition.setReceivedData("searchString/" + update.getMessage().getText());
+            prevPosition.setPositionMenu(PositionMenu.SEARCH_USES_NAME_SERVICE);
+            prevPosition.setTelegramId(chatId);
+            userService.putPrevPosition(prevPosition);
         }
-
         UserDto user = userService.getDto(chatId);
-
+        prevPosition = userService.getPrevPosition(chatId);
         if (user.getPositionMenu() != PositionMenu.SEARCH_USES_NAME_SERVICE) {
             user.setPositionMenu(PositionMenu.SEARCH_USES_NAME_SERVICE);
             sendBotMessageService.sendMessage(String.valueOf(chatId), bundleLanguage.getValue(chatId, "search.searchUsesNameService.text"));
             return true;
         } else {
             pairMap.computeIfAbsent(chatId, k -> new Pair(0));
+            if (update.hasCallbackQuery() && update.getCallbackQuery().getData().startsWith("searchString")) {
+                pairMap.put(chatId, new Pair(userService.getPrevPosition(chatId).getPage()));
+            }
             Paging paging = new Paging(serviceRepository);
             LOGGER.info("inner else find list use like");
             user.setPositionMenu(PositionMenu.SEARCH_USES_NAME_SERVICE);
             String likeString = "";
-            if (update.getMessage() != null) {
+            if (update.hasMessage()) {
                 likeString = update.getMessage().getText();
+            }
+            if (update.hasCallbackQuery()) {
+                likeString = userService.getPrevPosition(chatId).getReceivedData().split("/")[1];
             }
 
             CallbackQuery callbackQuery = update.getCallbackQuery();
@@ -75,15 +86,15 @@ public class SearchServiceBySimilarWordsCommander implements ICommand {
             if (callbackQuery != null && callbackQuery.getData().equals("next")) {
                 LOGGER.info("next page  ========== >");
                 pairMap.put(chatId, pairMap.get(chatId).increase());
-                LOGGER.info("next page from {} to {}", pairMap.get(chatId).getFrom(), pairMap.get(chatId).getSize());
+                LOGGER.info("next page from {} to {}", pairMap.get(chatId).getFrom(), pairMap.get(chatId).getPagingSize());
             } else if (callbackQuery != null && callbackQuery.getData().equals("back")) {
                 LOGGER.info("previous page  ========== >");
                 pairMap.put(chatId, pairMap.get(chatId).decrease());
-                LOGGER.info("previous page from {} to {}", pairMap.get(chatId).getFrom(), pairMap.get(chatId).getSize());
+                LOGGER.info("previous page from {} to {}", pairMap.get(chatId).getFrom(), pairMap.get(chatId).getPagingSize());
             }
 
             Pair pair = pairMap.get(chatId);
-            List<ServiceEntity> page = paging.getPage(pair.getFrom(), pair.getSize(), likeString);
+            List<ServiceEntity> page = paging.getPage(pair.getFrom(), pair.getPagingSize(), likeString);
 
             if (callbackQuery != null && callbackQuery.getData().equals("exit")) {
                 LOGGER.info("exit");
@@ -92,6 +103,8 @@ public class SearchServiceBySimilarWordsCommander implements ICommand {
                 return true;
             }
 
+            prevPosition.setPage(pair.getFrom());
+            userService.putPrevPosition(prevPosition);
             if (!page.isEmpty()) {
                 LOGGER.info("Found a list of services by description LIKE {} counts: {}", likeString, 777);
                 pairMap.get(chatId).setLast(false);
@@ -103,8 +116,7 @@ public class SearchServiceBySimilarWordsCommander implements ICommand {
                 if (previousPage == null) {
                     user.setPositionMenu(PositionMenu.MENU_START);
                     pairMap.remove(chatId);
-                    sendBotMessageService.sendMessage(String.valueOf(chatId),
-                            bundleLanguage.getValue(chatId, "search.by.like.last.page"));
+                    sendBotMessageService.sendMessage(String.valueOf(chatId), bundleLanguage.getValue(chatId, "search.by.like.last.page"));
                     return true;
                 }
                 return fillListResulSelection(chatId, previousPage);

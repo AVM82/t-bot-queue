@@ -7,11 +7,29 @@ public class PrevPositionDTO {
     Long telegramId;
     PositionMenu positionMenu;
     String receivedData;
+    int page = -1;
+    int pageSize = -1;
 
     public PrevPositionDTO(Long telegramId, PositionMenu positionMenu, String receivedData) {
         this.telegramId = telegramId;
         this.positionMenu = positionMenu;
         this.receivedData = receivedData;
+    }
+
+    public int getPage() {
+        return page;
+    }
+
+    public void setPage(int page) {
+        this.page = page;
+    }
+
+    public int getPageSize() {
+        return pageSize;
+    }
+
+    public void setPageSize(int pageSize) {
+        this.pageSize = pageSize;
     }
 
     public PrevPositionDTO() {
@@ -48,6 +66,8 @@ public class PrevPositionDTO {
 
         PrevPositionDTO that = (PrevPositionDTO) o;
 
+        if (page != that.page) return false;
+        if (pageSize != that.pageSize) return false;
         if (telegramId != null ? !telegramId.equals(that.telegramId) : that.telegramId != null) return false;
         if (positionMenu != that.positionMenu) return false;
         return receivedData != null ? receivedData.equals(that.receivedData) : that.receivedData == null;
@@ -58,6 +78,8 @@ public class PrevPositionDTO {
         int result = telegramId != null ? telegramId.hashCode() : 0;
         result = 31 * result + (positionMenu != null ? positionMenu.hashCode() : 0);
         result = 31 * result + (receivedData != null ? receivedData.hashCode() : 0);
+        result = 31 * result + page;
+        result = 31 * result + pageSize;
         return result;
     }
 
@@ -67,6 +89,8 @@ public class PrevPositionDTO {
                 "telegramId=" + telegramId +
                 ", positionMenu=" + positionMenu +
                 ", receivedData='" + receivedData + '\'' +
+                ", page=" + page +
+                ", pageSize=" + pageSize +
                 '}';
     }
 }
