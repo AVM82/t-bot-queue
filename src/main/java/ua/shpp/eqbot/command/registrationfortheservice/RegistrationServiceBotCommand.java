@@ -2,11 +2,12 @@ package ua.shpp.eqbot.command.registrationfortheservice;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import ua.shpp.eqbot.cache.RegistrationForTheServiceCache;
-import ua.shpp.eqbot.command.ICommand;
+import ua.shpp.eqbot.command.BotCommand;
 import ua.shpp.eqbot.command.SendNotificationToProviderCommand;
 import ua.shpp.eqbot.dto.RegistrationForTheServiceDto;
 import ua.shpp.eqbot.dto.UserDto;
@@ -28,9 +29,9 @@ import java.time.LocalTime;
 import java.time.chrono.ChronoLocalDate;
 import java.util.*;
 
-@Component
-public class RegistrationForTheServiceCommand implements ICommand {
-    private static final Logger LOGGER = LoggerFactory.getLogger(RegistrationForTheServiceCommand.class);
+@Component("registrationfortheservicecommandBotCommand")
+public class RegistrationServiceBotCommand implements BotCommand {
+    private static final Logger LOGGER = LoggerFactory.getLogger(RegistrationServiceBotCommand.class);
     private static int numberOfDaysInSearchOfService;
     private final SendBotMessageService sendBotMessageService;
     private final RegistrationForTheServiceRepository registrationForTheServiceRepository;
@@ -39,10 +40,11 @@ public class RegistrationForTheServiceCommand implements ICommand {
     private final UserService userService;
     private final int quantityPerRow;
 
-    public RegistrationForTheServiceCommand(SendBotMessageService sendBotMessageService,
-                                            RegistrationForTheServiceRepository registrationForTheServiceRepository,
-                                            ServiceRepository serviceRepository, BundleLanguage bundleLanguage,
-                                            UserService userService) {
+    @Autowired
+    public RegistrationServiceBotCommand(SendBotMessageService sendBotMessageService,
+                                         RegistrationForTheServiceRepository registrationForTheServiceRepository,
+                                         ServiceRepository serviceRepository, BundleLanguage bundleLanguage,
+                                         UserService userService) {
         this.sendBotMessageService = sendBotMessageService;
         this.registrationForTheServiceRepository = registrationForTheServiceRepository;
         this.serviceRepository = serviceRepository;
@@ -52,7 +54,7 @@ public class RegistrationForTheServiceCommand implements ICommand {
     }
 
     public static void setNumberOfDaysInSearchOfService(int numberOfDaysInSearchOfService) {
-        RegistrationForTheServiceCommand.numberOfDaysInSearchOfService = numberOfDaysInSearchOfService;
+        RegistrationServiceBotCommand.numberOfDaysInSearchOfService = numberOfDaysInSearchOfService;
     }
 
     @Override

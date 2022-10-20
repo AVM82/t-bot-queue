@@ -2,6 +2,8 @@ package ua.shpp.eqbot.command;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
@@ -13,16 +15,18 @@ import ua.shpp.eqbot.service.SendBotMessageService;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ChangeRoleToProviderICommand implements ICommand {
+@Component("changeRoleBotCommand")
+public class ChangeRoleToProviderBotCommand implements BotCommand {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(ChangeRoleToProviderICommand.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(ChangeRoleToProviderBotCommand.class);
 
     private final SendBotMessageService sendBotMessageService;
 
     private final ProviderRepository providerRepository;
     private final BundleLanguage bundleLanguage;
 
-    public ChangeRoleToProviderICommand(
+    @Autowired
+    public ChangeRoleToProviderBotCommand(
             SendBotMessageService sendBotMessageService,
             ProviderRepository providerRepository,
             BundleLanguage bundleLanguage) {

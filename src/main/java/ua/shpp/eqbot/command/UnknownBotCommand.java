@@ -1,14 +1,18 @@
 package ua.shpp.eqbot.command;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import ua.shpp.eqbot.internationalization.BundleLanguage;
 import ua.shpp.eqbot.service.SendBotMessageService;
 
-public class UnknownICommand implements ICommand {
+@Component
+public class UnknownBotCommand implements BotCommand {
     private final SendBotMessageService sendBotMessageService;
     private final BundleLanguage bundleLanguage;
 
-    public UnknownICommand(SendBotMessageService sendBotMessageService, BundleLanguage bundleLanguage) {
+    @Autowired
+    public UnknownBotCommand(SendBotMessageService sendBotMessageService, BundleLanguage bundleLanguage) {
         this.sendBotMessageService = sendBotMessageService;
         this.bundleLanguage = bundleLanguage;
     }

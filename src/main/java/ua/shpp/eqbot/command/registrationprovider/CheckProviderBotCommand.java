@@ -2,11 +2,13 @@ package ua.shpp.eqbot.command.registrationprovider;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
-import ua.shpp.eqbot.command.ICommand;
+import ua.shpp.eqbot.command.BotCommand;
 import ua.shpp.eqbot.dto.ProviderDto;
 import ua.shpp.eqbot.internationalization.BundleLanguage;
 import ua.shpp.eqbot.model.ProviderEntity;
@@ -17,14 +19,16 @@ import ua.shpp.eqbot.stage.PositionRegistrationProvider;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CheckProviderRegistrationICommand implements ICommand {
+@Component
+public class CheckProviderBotCommand implements BotCommand {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(CheckProviderRegistrationICommand.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(CheckProviderBotCommand.class);
     private final SendBotMessageService sendBotMessageService;
     private final ProviderService providerService;
     private final BundleLanguage bundleLanguage;
 
-    public CheckProviderRegistrationICommand(
+    @Autowired
+    public CheckProviderBotCommand(
             SendBotMessageService sendBotMessageService,
             ProviderService providerService,
             BundleLanguage bundleLanguage) {
@@ -56,14 +60,14 @@ public class CheckProviderRegistrationICommand implements ICommand {
             }
             sendBotMessageService.sendMessage(SendMessage.builder().chatId(id)
                     .text(bundleLanguage.getValue(id, "no_registration_provider")).build());
-            return new RegistrationNewProviderICommand(sendBotMessageService, providerService, bundleLanguage).execute(update);
+            return new AddProviderBotCommand(sendBotMessageService, providerService, bundleLanguage).execute(update);
         }
         if (providerDto.getPositionRegistrationProvider() == PositionRegistrationProvider.DONE) {
             printListProvider(id);
             addRequest(id);
             return true;
         } else {
-            return new RegistrationNewProviderICommand(sendBotMessageService, providerService, bundleLanguage).execute(update);
+            return new AddProviderBotCommand(sendBotMessageService, providerService, bundleLanguage).execute(update);
         }
     }
 

@@ -7,7 +7,7 @@ import ua.shpp.eqbot.model.ServiceEntity;
 import ua.shpp.eqbot.repository.ServiceRepository;
 import ua.shpp.eqbot.service.SendBotMessageService;
 
-public class SendNotificationToProviderCommand implements ICommand {
+public class SendNotificationToProviderCommand implements BotCommand {
     private final ServiceRepository serviceRepository;
     private final SendBotMessageService sendBotMessageService;
     private final BundleLanguage bundleLanguage;

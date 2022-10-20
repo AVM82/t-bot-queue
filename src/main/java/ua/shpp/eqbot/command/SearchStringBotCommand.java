@@ -25,9 +25,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@Component
-public class SearchServiceBySimilarWordsCommander implements ICommand {
-    private static final Logger LOGGER = LoggerFactory.getLogger(SearchServiceBySimilarWordsCommander.class);
+@Component("searchstringBotCommand")
+public class SearchStringBotCommand implements BotCommand {
+    private static final Logger LOGGER = LoggerFactory.getLogger(SearchStringBotCommand.class);
     private final SendBotMessageService sendBotMessageService;
     private final ServiceRepository serviceRepository;
     private final UserService userService;
@@ -35,10 +35,10 @@ public class SearchServiceBySimilarWordsCommander implements ICommand {
     private final Map<Long, Pair> pairMap = new HashMap<>();
 
     @Autowired
-    public SearchServiceBySimilarWordsCommander(SendBotMessageService sendBotMessageService,
-                                                ServiceRepository serviceRepository,
-                                                UserService userService,
-                                                BundleLanguage bundleLanguage) {
+    public SearchStringBotCommand(SendBotMessageService sendBotMessageService,
+                                  ServiceRepository serviceRepository,
+                                  UserService userService,
+                                  BundleLanguage bundleLanguage) {
         this.sendBotMessageService = sendBotMessageService;
         this.serviceRepository = serviceRepository;
         this.userService = userService;

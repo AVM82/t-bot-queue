@@ -25,9 +25,9 @@ import java.util.stream.Collectors;
 
 import static ua.shpp.eqbot.stage.PositionMenu.SEARCH_BY_CITY_NAME;
 
-@Component
-public class SearchServiceCommand implements ICommand {
-    private static final Logger LOGGER = LoggerFactory.getLogger(SearchServiceCommand.class);
+@Component("searchBotCommand")
+public class SearchServiceBotCommand implements BotCommand {
+    private static final Logger LOGGER = LoggerFactory.getLogger(SearchServiceBotCommand.class);
     private final SendBotMessageService sendBotMessageService;
     private final ServiceRepository serviceRepository;
     private final ProviderRepository providerRepository;
@@ -35,11 +35,11 @@ public class SearchServiceCommand implements ICommand {
     private final BundleLanguage bundleLanguage;
 
     @Autowired
-    public SearchServiceCommand(SendBotMessageService sendBotMessageService,
-                                ServiceRepository serviceRepository,
-                                ProviderRepository providerRepository,
-                                UserService userService,
-                                BundleLanguage bundleLanguage) {
+    public SearchServiceBotCommand(SendBotMessageService sendBotMessageService,
+                                   ServiceRepository serviceRepository,
+                                   ProviderRepository providerRepository,
+                                   UserService userService,
+                                   BundleLanguage bundleLanguage) {
         this.sendBotMessageService = sendBotMessageService;
         this.serviceRepository = serviceRepository;
         this.providerRepository = providerRepository;

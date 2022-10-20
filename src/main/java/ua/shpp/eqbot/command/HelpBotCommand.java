@@ -1,9 +1,12 @@
 package ua.shpp.eqbot.command;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import ua.shpp.eqbot.service.SendBotMessageService;
 
-public class HelpICommand implements ICommand {
+@Component
+public class HelpBotCommand implements BotCommand {
 
     private final SendBotMessageService sendBotMessageService;
 
@@ -16,7 +19,8 @@ public class HelpICommand implements ICommand {
             CommandName.START.getNameCommand(), CommandName.DELETE_USER.getNameCommand(),
             CommandName.STOP.getNameCommand(), CommandName.HELP.getNameCommand());
 
-    public HelpICommand(SendBotMessageService sendBotMessageService) {
+    @Autowired
+    public HelpBotCommand(SendBotMessageService sendBotMessageService) {
         this.sendBotMessageService = sendBotMessageService;
     }
 

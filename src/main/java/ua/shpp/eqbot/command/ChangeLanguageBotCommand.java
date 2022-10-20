@@ -11,14 +11,14 @@ import ua.shpp.eqbot.service.SendBotMessageService;
 import ua.shpp.eqbot.service.UserService;
 
 @Component
-public class ChangeLanguageICommand implements ICommand {
-    private static final Logger LOGGER = LoggerFactory.getLogger(ChangeLanguageICommand.class);
+public class ChangeLanguageBotCommand implements BotCommand {
+    private static final Logger LOGGER = LoggerFactory.getLogger(ChangeLanguageBotCommand.class);
     private final SendBotMessageService sendBotMessageService;
     private final UserService userService;
     private final BundleLanguage bundleLanguage;
 
     @Autowired
-    public ChangeLanguageICommand(SendBotMessageService sendBotMessageService, UserService userService, BundleLanguage bundleLanguage) {
+    public ChangeLanguageBotCommand(SendBotMessageService sendBotMessageService, UserService userService, BundleLanguage bundleLanguage) {
         this.sendBotMessageService = sendBotMessageService;
         this.userService = userService;
         this.bundleLanguage = bundleLanguage;

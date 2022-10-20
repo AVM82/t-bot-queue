@@ -2,6 +2,8 @@ package ua.shpp.eqbot.command;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import ua.shpp.eqbot.cache.ServiceCache;
@@ -16,17 +18,19 @@ import ua.shpp.eqbot.service.UserService;
 
 import java.util.List;
 
-public class DeleteUserICommand implements ICommand {
-    private static final Logger LOGGER = LoggerFactory.getLogger(DeleteUserICommand.class);
+@Component("deleteBotCommand")
+public class DeleteUserBotCommand implements BotCommand {
+    private static final Logger LOGGER = LoggerFactory.getLogger(DeleteUserBotCommand.class);
     private final SendBotMessageService sendBotMessageService;
     private final UserService userService;
     private final BundleLanguage bundleLanguage;
     private final ProviderService providerService;
     private final ServiceRepository serviceRepository;
 
-    public DeleteUserICommand(SendBotMessageService sendBotMessageService, UserService userService,
-                              BundleLanguage bundleLanguage, ProviderService providerService,
-                              ServiceRepository serviceRepository) {
+    @Autowired
+    public DeleteUserBotCommand(SendBotMessageService sendBotMessageService, UserService userService,
+                                BundleLanguage bundleLanguage, ProviderService providerService,
+                                ServiceRepository serviceRepository) {
         this.sendBotMessageService = sendBotMessageService;
         this.userService = userService;
         this.bundleLanguage = bundleLanguage;

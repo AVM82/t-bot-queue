@@ -39,7 +39,7 @@ class SearchUsesNameServiceTest {
     @Mock
     BundleLanguage bundleLanguage;
     @InjectMocks
-    private SearchServiceBySimilarWordsCommander search;
+    private SearchStringBotCommand search;
 
     @BeforeEach
     public void setUp() {
