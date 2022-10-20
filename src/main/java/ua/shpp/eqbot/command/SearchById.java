@@ -8,6 +8,7 @@ import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
+import ua.shpp.eqbot.dto.PrevPositionDTO;
 import ua.shpp.eqbot.dto.UserDto;
 import ua.shpp.eqbot.internationalization.BundleLanguage;
 import ua.shpp.eqbot.model.ServiceEntity;
@@ -45,6 +46,7 @@ public class SearchById implements ICommand {
             id = update.getCallbackQuery().getFrom().getId();
         } else {
             id = update.getMessage().getChatId();
+            userService.putPrevPosition(new PrevPositionDTO(update.getMessage().getChatId(), PositionMenu.SEARCH_BY_ID, "searchId/" + update.getMessage().getText()));
         }
 
         UserDto user = userService.getDto(id);
@@ -53,7 +55,12 @@ public class SearchById implements ICommand {
             sendBotMessageService.sendMessage(String.valueOf(id), bundleLanguage.getValue(id, "search.searchId.text"));
             return true;
         } else {
-            String idService = update.getMessage().getText();
+            String idService;
+            if (update.hasMessage()) {
+                idService = update.getMessage().getText();
+            } else {
+                idService = update.getCallbackQuery().getData().split("/")[1];
+            }
             ServiceEntity result = idService.matches("\\d+") ? serviceRepository.findFirstById(Long.valueOf(idService)) : null;
             if (result != null) {
                 LOGGER.info("Found service by id");

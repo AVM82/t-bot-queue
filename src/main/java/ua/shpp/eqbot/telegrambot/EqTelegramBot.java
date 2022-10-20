@@ -159,7 +159,7 @@ public class EqTelegramBot extends TelegramLongPollingBot {
         } else if (callbackQuery.getData().equals("searchName")) {
             LOGGER.info("search by name");
             commandContainer.retrieveCommand(CommandName.SEARCH_SERVICE.getNameCommand()).execute(update);
-        } else if (callbackQuery.getData().equals("searchId")) {
+        } else if (callbackQuery.getData().startsWith("searchId")) {
             LOGGER.info("search by id");
             commandContainer.retrieveCommand(CommandName.SEARCH_BY_ID.getNameCommand()).execute(update);
         } else if (callbackQuery.getData().equals("searchString")) {

@@ -1,6 +1,7 @@
 package ua.shpp.eqbot.command;
 
 import io.swagger.v3.oas.models.security.SecurityScheme;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.telegram.telegrambots.meta.api.methods.ParseMode;
 import org.telegram.telegrambots.meta.api.methods.PartialBotApiMethod;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
@@ -9,11 +10,14 @@ import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
+import ua.shpp.eqbot.dto.PrevPositionDTO;
+import ua.shpp.eqbot.dto.UserDto;
 import ua.shpp.eqbot.internationalization.BundleLanguage;
 import ua.shpp.eqbot.model.ServiceEntity;
 import ua.shpp.eqbot.repository.ServiceRepository;
 import ua.shpp.eqbot.service.ImageService;
 import ua.shpp.eqbot.service.SendBotMessageService;
+import ua.shpp.eqbot.service.UserService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,12 +27,15 @@ public class ServiceInfoCommand implements ICommand {
     private final SendBotMessageService sendBotMessageService;
     private final BundleLanguage bundleLanguage;
     private final ImageService imageService;
+    @Autowired
+    private final UserService userService;
 
-    public ServiceInfoCommand(ServiceRepository serviceRepository, SendBotMessageService sendBotMessageService, BundleLanguage bundleLanguage, ImageService imageService) {
+    public ServiceInfoCommand(ServiceRepository serviceRepository, SendBotMessageService sendBotMessageService, BundleLanguage bundleLanguage, ImageService imageService, UserService userService) {
         this.serviceRepository = serviceRepository;
         this.sendBotMessageService = sendBotMessageService;
         this.bundleLanguage = bundleLanguage;
         this.imageService = imageService;
+        this.userService = userService;
     }
 
     private void sendServiceInfoToCreator(ServiceEntity service) {
@@ -88,12 +95,24 @@ public class ServiceInfoCommand implements ICommand {
         String messageAppointment = bundleLanguage.getValue(chatId, "make_an_appointment");
         line1.add(InlineKeyboardButton.builder().text(messageAppointment).callbackData("appoint/" + service.getId()).build());
         keyboard.add(line1);
-        List<InlineKeyboardButton> line2 = new ArrayList<>();
-        String messageBack = bundleLanguage.getValue(chatId, "return_back");
-        line2.add(InlineKeyboardButton.builder().text(messageBack).callbackData("3").build());
-        keyboard.add(line2);
+        keyboard.add(backButton(chatId));
         inlineKeyboardMarkup.setKeyboard(keyboard);
         return inlineKeyboardMarkup;
+    }
+
+    private List<InlineKeyboardButton> backButton(Long chatId){
+        List<InlineKeyboardButton> backButtonLine = new ArrayList<>();
+        String messageBack = bundleLanguage.getValue(chatId, "return_back");
+        String callbackData = getCallbackData(chatId);
+        backButtonLine.add(InlineKeyboardButton.builder().text(messageBack).callbackData(callbackData).build());
+        return backButtonLine;
+    }
+
+    private String getCallbackData(Long chatId){
+        PrevPositionDTO prevPositionDTO = userService.getPrevPosition(chatId);
+        UserDto userDto = userService.getDto(chatId);
+        userDto.setPositionMenu(prevPositionDTO.getPositionMenu());
+        return prevPositionDTO.getReceivedData();
     }
 
 
