@@ -97,7 +97,7 @@ public class ServiceInfoCommand implements ICommand {
         return inlineKeyboardMarkup;
     }
 
-    private List<InlineKeyboardButton> backButton(Long chatId){
+    private List<InlineKeyboardButton> backButton(Long chatId) {
         List<InlineKeyboardButton> backButtonLine = new ArrayList<>();
         String messageBack = bundleLanguage.getValue(chatId, "return_back");
         String callbackData = getCallbackData(chatId);
@@ -105,7 +105,7 @@ public class ServiceInfoCommand implements ICommand {
         return backButtonLine;
     }
 
-    private String getCallbackData(Long chatId){
+    private String getCallbackData(Long chatId) {
         PrevPositionDTO prevPositionDTO = userService.getPrevPosition(chatId);
         UserDto userDto = userService.getDto(chatId);
         userDto.setPositionMenu(prevPositionDTO.getPositionMenu());

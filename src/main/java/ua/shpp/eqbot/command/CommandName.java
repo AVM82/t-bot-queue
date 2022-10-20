@@ -7,7 +7,7 @@ public enum CommandName {
     HELP("/help"),
     SETTINGS("/settings"),
     ADD_SERVICE("/add"),
-    SEARCH_SERVICE("/search"),
+    SEARCH_SERVICE_BY_CITY_NAME("/search"),
     SEARCH_MENU("/searchMenu"),
     SEARCH_BY_ID("/searchId"),
     SEARCH_USES_NAME_SERVICE("/searchString"),

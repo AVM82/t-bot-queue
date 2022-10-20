@@ -111,9 +111,9 @@ public class EqTelegramBot extends TelegramLongPollingBot {
                     if (!commandContainer.retrieveCommand(CommandName.SEARCH_BY_ID.getNameCommand()).execute(update)) {
                         commandContainer.retrieveCommand(CommandName.SEARCH_MENU.getNameCommand()).execute(update);
                     }
-                } else if (user.getPositionMenu().equals(SEARCH_BY_NAME)) {
+                } else if (user.getPositionMenu().equals(SEARCH_BY_CITY_NAME)) {
                     LOGGER.info("Entering a city to search for a service");
-                    if (!commandContainer.retrieveCommand(CommandName.SEARCH_SERVICE.getNameCommand()).execute(update)) {
+                    if (!commandContainer.retrieveCommand(CommandName.SEARCH_SERVICE_BY_CITY_NAME.getNameCommand()).execute(update)) {
                         user.setPositionMenu(MENU_START);
                         commandContainer.retrieveCommand(CommandName.START.getNameCommand()).execute(update);
                     }
@@ -157,9 +157,9 @@ public class EqTelegramBot extends TelegramLongPollingBot {
         } else if (callbackQuery.getData().equals("search_service")) {
             LOGGER.info("search_menu");
             commandContainer.retrieveCommand(CommandName.SEARCH_MENU.getNameCommand()).execute(update);
-        } else if (callbackQuery.getData().equals("searchName")) {
+        } else if (callbackQuery.getData().startsWith("searchCity")) {
             LOGGER.info("search by name");
-            commandContainer.retrieveCommand(CommandName.SEARCH_SERVICE.getNameCommand()).execute(update);
+            commandContainer.retrieveCommand(CommandName.SEARCH_SERVICE_BY_CITY_NAME.getNameCommand()).execute(update);
         } else if (callbackQuery.getData().startsWith("searchId")) {
             LOGGER.info("search by id");
             commandContainer.retrieveCommand(CommandName.SEARCH_BY_ID.getNameCommand()).execute(update);
@@ -177,11 +177,8 @@ public class EqTelegramBot extends TelegramLongPollingBot {
             commandContainer.retrieveCommand("/add").execute(update);
         } else if (callbackQuery.getData().startsWith("service_info/")) {
             commandContainer.retrieveCommand("/service info").execute(update);
-            if (userDto.getPositionMenu() == SEARCH_BY_NAME) {
-                userDto.setPositionMenu(MENU_START);
-            }
-        } else if ((userDto.getPositionMenu() == SEARCH_BY_NAME)) {
-            if (!commandContainer.retrieveCommand(CommandName.SEARCH_SERVICE.getNameCommand()).execute(update)) {
+        } else if ((userDto.getPositionMenu() == SEARCH_BY_CITY_NAME)) {
+            if (!commandContainer.retrieveCommand(CommandName.SEARCH_SERVICE_BY_CITY_NAME.getNameCommand()).execute(update)) {
                 userDto.setPositionMenu(MENU_START);
                 commandContainer.retrieveCommand(CommandName.START.getNameCommand()).execute(update);
             }

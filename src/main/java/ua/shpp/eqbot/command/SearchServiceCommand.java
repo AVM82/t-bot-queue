@@ -8,6 +8,7 @@ import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
+import ua.shpp.eqbot.dto.PrevPositionDTO;
 import ua.shpp.eqbot.dto.UserDto;
 import ua.shpp.eqbot.internationalization.BundleLanguage;
 import ua.shpp.eqbot.model.ProviderEntity;
@@ -22,7 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static ua.shpp.eqbot.stage.PositionMenu.SEARCH_BY_NAME;
+import static ua.shpp.eqbot.stage.PositionMenu.SEARCH_BY_CITY_NAME;
 
 @Component
 public class SearchServiceCommand implements ICommand {
@@ -49,17 +50,22 @@ public class SearchServiceCommand implements ICommand {
     @Override
     public boolean execute(Update update) {
         long id;
+        PrevPositionDTO prevPosition = new PrevPositionDTO();
+        prevPosition.setPositionMenu(SEARCH_BY_CITY_NAME);
         if (update.hasCallbackQuery()) {
             id = update.getCallbackQuery().getFrom().getId();
         } else {
             id = update.getMessage().getChatId();
+            prevPosition.setReceivedData("searchCity/" + update.getMessage().getText());
+            prevPosition.setTelegramId(id);
+            userService.putPrevPosition(prevPosition);
         }
 
         UserDto user = userService.getDto(id);
 
-        if (user.getPositionMenu().equals(PositionMenu.MENU_START)) {
+        if (!user.getPositionMenu().equals(SEARCH_BY_CITY_NAME)) {
             LOGGER.info("Choosing a city to search for a service");
-            user.setPositionMenu(SEARCH_BY_NAME);
+            user.setPositionMenu(SEARCH_BY_CITY_NAME);
             InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
             List<List<InlineKeyboardButton>> citySelection = new ArrayList<>();
             List<InlineKeyboardButton> city = new ArrayList<>();
@@ -85,8 +91,13 @@ public class SearchServiceCommand implements ICommand {
                 if (update.getCallbackQuery().getData().equals("another_city")) {
                     sendBotMessageService.sendMessage(String.valueOf(id), bundleLanguage.getValue(id, "search.byCityName.enterTheCity"));
                     return true;
-                } else {
+                } else if (update.getCallbackQuery().getData().equals(user.getCity())) {
                     city = update.getCallbackQuery().getData();
+                    prevPosition.setReceivedData("searchCity/" + city);
+                    prevPosition.setTelegramId(id);
+                    userService.putPrevPosition(prevPosition);
+                } else {
+                    city = userService.getPrevPosition(id).getReceivedData().split("/")[1];
                 }
             } else {
                 city = update.getMessage().getText();

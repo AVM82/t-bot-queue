@@ -34,7 +34,6 @@ public class UserService {
     }
 
 
-
     @Cacheable(cacheNames = "cacheEntity", key = "#telegramId")
     public UserEntity getEntity(Long telegramId) {
         LOGGER.info("get userEntity by telegramId {}", telegramId);
@@ -43,12 +42,12 @@ public class UserService {
     }
 
     @Cacheable(cacheNames = "prevPosition", key = "#telegramId")
-    public PrevPositionDTO getPrevPosition(Long telegramId){
+    public PrevPositionDTO getPrevPosition(Long telegramId) {
         return null;
     }
 
     @CachePut(cacheNames = "prevPosition", key = "#prevPositionDTO.telegramId")
-    public PrevPositionDTO putPrevPosition (PrevPositionDTO prevPositionDTO){
+    public PrevPositionDTO putPrevPosition(PrevPositionDTO prevPositionDTO) {
         return prevPositionDTO;
     }
 

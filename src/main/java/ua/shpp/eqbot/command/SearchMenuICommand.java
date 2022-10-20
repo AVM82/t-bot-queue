@@ -40,7 +40,7 @@ public class SearchMenuICommand implements ICommand {
 
         buttonCreate.add(InlineKeyboardButton.builder()
                 .text(bundleLanguage.getValue(chatId, "search.searchByCityName"))
-                .callbackData("searchName")
+                .callbackData("searchCity")
                 .build());
         buttonCreate.add(InlineKeyboardButton.builder()
                 .text(bundleLanguage.getValue(chatId, "search.searchId"))
