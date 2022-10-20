@@ -1,6 +1,7 @@
 package ua.shpp.eqbot.util;
 
 import org.hamcrest.core.Is;
+import org.junit.Ignore;
 import org.junit.jupiter.api.Test;
 import ua.shpp.eqbot.command.LogBotCommand;
 import ua.shpp.eqbot.command.UnknownBotCommand;
@@ -37,5 +38,10 @@ class CommandUtilsTest {
     @Test
     void buildFirstLowerClassName() {
         assertThat(CommandUtils.buildFirstLowerClassName("/Acb"), Is.is("acbBotCommand"));
+    }
+    @Test
+    @Ignore
+    void whenCommandFirstCharNoSlashThenNoFindCommand() {
+        assertThat(CommandUtils.buildCommandClassName("mainMenu"), Is.is("MainmenuBotCommand"));
     }
 }

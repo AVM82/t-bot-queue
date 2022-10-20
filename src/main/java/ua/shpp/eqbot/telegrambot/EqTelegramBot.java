@@ -90,7 +90,7 @@ public class EqTelegramBot extends TelegramLongPollingBot {
                         getBotCommand(CommandName.START.getNameCommand()).execute(update);
                     }
                 } else if (user.getPositionMenu() == PositionMenu.MENU_START) {
-                    getBotCommand("mainMenu").execute(update);
+                    getBotCommand("/mainMenu").execute(update);
                     getBotCommand(CommandName.START.getNameCommand()).execute(update);
                 } else if (user.getPositionMenu() == SEARCH_BY_ID) {
                     LOGGER.info("input id for search");
