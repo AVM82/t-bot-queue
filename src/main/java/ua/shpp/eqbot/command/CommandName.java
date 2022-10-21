@@ -20,6 +20,7 @@ public enum CommandName {
     CHECK_SERVICE("/check service"),
     REGISTRATION_FOR_THE_SERVICE_COMMAND("/RegistrationForTheServiceCommand"),
     SERVICE_INFO("/service info"),
+    FEEDBACK("/feedback"),
     NO("nocommand");
 
     private final String nameCommand;

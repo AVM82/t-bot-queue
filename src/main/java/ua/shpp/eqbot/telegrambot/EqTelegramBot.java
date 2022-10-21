@@ -110,6 +110,9 @@ public class EqTelegramBot extends TelegramLongPollingBot {
 //                        iCommands.get(CommandName.SEARCH_USES_NAME_SERVICE.getNameCommand()).execute(update);
 //                    }
 
+                } else if (user.getPositionMenu() == FEEDBACK) {
+                    getBotCommand(CommandName.FEEDBACK.getNameCommand()).execute(update);
+                    getBotCommand(CommandName.START.getNameCommand()).execute(update);
                 }
             }
         }
@@ -200,6 +203,9 @@ public class EqTelegramBot extends TelegramLongPollingBot {
         } else if (callbackQuery.getData().equals("change_lang")) {
             getBotCommand("/change_language").execute(update);
             getBotCommand("/start").execute(update);
+        } else if (userDto.getPositionMenu() == FEEDBACK) {
+            getBotCommand(CommandName.FEEDBACK.getNameCommand()).execute(update);
+            getBotCommand(CommandName.START.getNameCommand()).execute(update);
         } else {
             getBotCommand("/start").execute(update);
         }
