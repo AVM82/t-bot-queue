@@ -12,7 +12,6 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 import ua.shpp.eqbot.command.BotCommand;
 import ua.shpp.eqbot.command.CommandName;
 import ua.shpp.eqbot.command.UnknownBotCommand;
-import ua.shpp.eqbot.command.registrationfortheservice.RegistrationServiceBotCommand;
 import ua.shpp.eqbot.dto.UserDto;
 import ua.shpp.eqbot.mapper.UserMapper;
 import ua.shpp.eqbot.model.UserEntity;
@@ -171,20 +170,20 @@ public class EqTelegramBot extends TelegramLongPollingBot {
             userService.getDto(update.getCallbackQuery().getFrom().getId())
                     .setPositionMenu(PositionMenu.REGISTRATION_SERVICE);
             getBotCommand("/add").execute(update);
-        } else if (userDto.getPositionMenu() == SEARCH_BY_NAME
+        } else if (callbackQuery.getData().startsWith("service_info/")) {
+            getBotCommand("/service info").execute(update);
+        } else if ((userDto.getPositionMenu() == SEARCH_BY_CITY_NAME)) {
+            if (!getBotCommand(CommandName.SEARCH_SERVICE_BY_CITY_NAME.getNameCommand()).execute(update)) {
+                userDto.setPositionMenu(MENU_START);
+                getBotCommand(CommandName.START.getNameCommand()).execute(update);
+            }
+        } else if (userDto.getPositionMenu() == REGISTRATION_FOR_THE_SERVICES_START
                 || userDto.getPositionMenu() == REGISTRATION_FOR_THE_SERVICES_DATE
                 || userDto.getPositionMenu() == REGISTRATION_FOR_THE_SERVICES_TIME) {
-            if (callbackQuery.getData().matches("\\d+:?.?\\d*") || callbackQuery.getData().equals("змінити дату")) {
-                LOGGER.info("The user has successfully selected the service");
-                RegistrationServiceBotCommand.setNumberOfDaysInSearchOfService(7);
-                if (getBotCommand("/RegistrationForTheServiceCommand").execute(update)) {
-                    getBotCommand(CommandName.START.getNameCommand()).execute(update);
-                }
-            } else {
-                if (!getBotCommand(CommandName.SEARCH_SERVICE.getNameCommand()).execute(update)) {
-                    userDto.setPositionMenu(MENU_START);
-                    getBotCommand(CommandName.START.getNameCommand()).execute(update);
-                }
+            LOGGER.info("The user has successfully selected the service");
+            RegistrationForTheServiceCommand.setNumberOfDaysInSearchOfService(7);
+            if (getBotCommand("/RegistrationForTheServiceCommand").execute(update)) {
+                getBotCommand(CommandName.START.getNameCommand()).execute(update);
             }
         } else if (callbackQuery.getData().equals("add_provider")) {
             getBotCommand("/add provider").execute(update);
