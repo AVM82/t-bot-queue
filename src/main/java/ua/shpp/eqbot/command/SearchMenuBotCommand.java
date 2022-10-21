@@ -35,7 +35,7 @@ public class SearchMenuBotCommand implements BotCommand {
         } else {
             createMenu(update.getMessage().getChatId());
         }
-        return true;
+        return new BotCommandResultDto().setDone(true);
     }
 
     private void createMenu(Long chatId) {

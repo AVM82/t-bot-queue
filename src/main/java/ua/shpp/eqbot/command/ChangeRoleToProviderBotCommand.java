@@ -38,14 +38,14 @@ public class ChangeRoleToProviderBotCommand implements BotCommand {
 
     @Override
     public BotCommandResultDto execute(Update update) {
-
+        BotCommandResultDto resultDto = new BotCommandResultDto();
         Long id;
         if (update.hasCallbackQuery()) {
             id = update.getCallbackQuery().getFrom().getId();
         } else if (update.hasMessage()) {
             id = update.getMessage().getChatId();
         } else {
-            return false;
+            return resultDto.setDone(false);
         }
 
         if (providerRepository.findByTelegramId(id) != null) {
@@ -67,6 +67,6 @@ public class ChangeRoleToProviderBotCommand implements BotCommand {
             sendMessage.setReplyMarkup(inlineKeyboardMarkup);
             sendBotMessageService.sendMessage(sendMessage);
         }
-        return true;
+        return resultDto.setDone(true);
     }
 }

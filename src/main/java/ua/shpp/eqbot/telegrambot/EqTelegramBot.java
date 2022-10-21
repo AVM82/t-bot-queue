@@ -90,13 +90,13 @@ public class EqTelegramBot extends TelegramLongPollingBot {
             } else {
                 UserDto user = userService.getDto(update.getMessage().getChat().getId());
                 if (user.getPositionMenu() == REGISTRATION_PROVIDER) {
-                    if (getBotCommand("/add provider").execute(update)
-                            && !getBotCommand("/check service").execute(update)) {
+                    if (getBotCommand("/add provider").execute(update).isDone()
+                            && !getBotCommand("/check service").execute(update).isDone()) {
                         user.setPositionMenu(PositionMenu.REGISTRATION_SERVICE);
                     }
                     //change registration service
                 } else if (user.getPositionMenu() == REGISTRATION_SERVICE) {
-                    if (getBotCommand("/add").execute(update)) {
+                    if (getBotCommand("/add").execute(update).isDone()) {
                         user.setPositionMenu(MENU_START);
                         getBotCommand(CommandName.START.getNameCommand()).execute(update);
                     }
@@ -105,12 +105,12 @@ public class EqTelegramBot extends TelegramLongPollingBot {
                     getBotCommand(CommandName.START.getNameCommand()).execute(update);
                 } else if (user.getPositionMenu() == SEARCH_BY_ID) {
                     LOGGER.info("input id for search");
-                    if (!getBotCommand(CommandName.SEARCH_BY_ID.getNameCommand()).execute(update)) {
+                    if (!getBotCommand(CommandName.SEARCH_BY_ID.getNameCommand()).execute(update).isDone()) {
                         getBotCommand(CommandName.SEARCH_MENU.getNameCommand()).execute(update);
                     }
                 } else if (user.getPositionMenu().equals(SEARCH_BY_CITY_NAME)) {
                     LOGGER.info("Entering a city to search for a service");
-                    if (!getBotCommand(CommandName.SEARCH_SERVICE_BY_CITY_NAME.getNameCommand()).execute(update)) {
+                    if (!getBotCommand(CommandName.SEARCH_SERVICE_BY_CITY_NAME.getNameCommand()).execute(update).isDone()) {
                         user.setPositionMenu(MENU_START);
                         getBotCommand(CommandName.START.getNameCommand()).execute(update);
                     }
@@ -134,7 +134,7 @@ public class EqTelegramBot extends TelegramLongPollingBot {
         LOGGER.info("new command here {}", commandIdentifier);
 
         if (commandIdentifier.equals(CommandName.START.getNameCommand())) {
-            if (getBotCommand("/reg").execute(update)) {
+            if (getBotCommand("/reg").execute(update).isDone()) {
                 getBotCommand(CommandName.START.getNameCommand()).execute(update);
             }
         } else {
@@ -158,7 +158,7 @@ public class EqTelegramBot extends TelegramLongPollingBot {
         if (callbackQuery.getData().equals("create_service")) {
             LOGGER.info("create_service");
             userDto.setPositionMenu(MENU_CREATE_SERVICE);
-            if (!getBotCommand("/check provider").execute(update)) {
+            if (!getBotCommand("/check provider").execute(update).isDone()) {
                 userDto.setPositionMenu(REGISTRATION_PROVIDER);
             }
         } else if (callbackQuery.getData().equals("search_service")) {
@@ -185,7 +185,7 @@ public class EqTelegramBot extends TelegramLongPollingBot {
         } else if (callbackQuery.getData().startsWith("service_info/")) {
             getBotCommand("/service info").execute(update);
         } else if ((userDto.getPositionMenu() == SEARCH_BY_CITY_NAME)) {
-            if (!getBotCommand(CommandName.SEARCH_SERVICE_BY_CITY_NAME.getNameCommand()).execute(update)) {
+            if (!getBotCommand(CommandName.SEARCH_SERVICE_BY_CITY_NAME.getNameCommand()).execute(update).isDone()) {
                 userDto.setPositionMenu(MENU_START);
                 getBotCommand(CommandName.START.getNameCommand()).execute(update);
             }
@@ -194,7 +194,7 @@ public class EqTelegramBot extends TelegramLongPollingBot {
                 || userDto.getPositionMenu() == REGISTRATION_FOR_THE_SERVICES_TIME) {
             LOGGER.info("The user has successfully selected the service");
             setNumberOfDaysInSearchOfService(7);
-            if (getBotCommand("/RegistrationForTheServiceCommand").execute(update)) {
+            if (getBotCommand("/RegistrationForTheServiceCommand").execute(update).isDone()) {
                 getBotCommand(CommandName.START.getNameCommand()).execute(update);
             }
         } else if (callbackQuery.getData().equals("add_provider")) {

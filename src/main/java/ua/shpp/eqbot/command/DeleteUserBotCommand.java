@@ -68,6 +68,6 @@ public class DeleteUserBotCommand implements BotCommand {
                 .chatId(update.getMessage().getChatId())
                 .build());
 
-        return true;
+        return new BotCommandResultDto().setDone(true);
     }
 }

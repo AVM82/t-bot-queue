@@ -34,6 +34,6 @@ public class SendNotificationToProviderCommand implements BotCommand {
 
     @Override
     public BotCommandResultDto execute(Update update) {
-        return true;
+        return new BotCommandResultDto().setDone(true);
     }
 }

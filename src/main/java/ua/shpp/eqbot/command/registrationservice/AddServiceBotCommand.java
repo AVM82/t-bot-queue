@@ -46,6 +46,7 @@ public class AddServiceBotCommand implements BotCommand {
 
     @Override
     public BotCommandResultDto execute(Update update) {
+        BotCommandResultDto resultDto = new BotCommandResultDto();
         boolean isRegistration = false;
         Long id;
         if (update.hasCallbackQuery()) {
@@ -53,7 +54,7 @@ public class AddServiceBotCommand implements BotCommand {
         } else if (update.hasMessage()) {
             id = update.getMessage().getChatId();
         } else {
-            return false;
+            return resultDto.setDone(false);
         }
         ServiceDTO serviceDTO = ServiceCache.findBy(id);
         LOGGER.info("i try register new service");
@@ -149,7 +150,7 @@ public class AddServiceBotCommand implements BotCommand {
                 }
             }
         }
-        return isRegistration;
+        return resultDto.setDone(isRegistration);
     }
 
     /**

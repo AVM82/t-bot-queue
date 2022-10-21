@@ -41,12 +41,13 @@ public class CheckProviderBotCommand implements BotCommand {
     @Override
     public BotCommandResultDto execute(Update update) {
         Long id;
+        BotCommandResultDto resultDto = new BotCommandResultDto();
         if (update.hasCallbackQuery()) {
             id = update.getCallbackQuery().getFrom().getId();
         } else if (update.hasMessage()) {
             id = update.getMessage().getChatId();
         } else {
-            return false;
+            return resultDto.setDone(false);
         }
         ProviderDto providerDto = providerService.getProviderDto(id);
         if (providerDto == null) {
@@ -57,7 +58,7 @@ public class CheckProviderBotCommand implements BotCommand {
                 providerService.saveEntityInCache(providerEntity);
                 printListProvider(id);
                 addRequest(id);
-                return true;
+                return resultDto.setDone(true);
             }
             sendBotMessageService.sendMessage(SendMessage.builder().chatId(id)
                     .text(bundleLanguage.getValue(id, "no_registration_provider")).build());
@@ -66,7 +67,7 @@ public class CheckProviderBotCommand implements BotCommand {
         if (providerDto.getPositionRegistrationProvider() == PositionRegistrationProvider.DONE) {
             printListProvider(id);
             addRequest(id);
-            return true;
+            return resultDto.setDone(true);
         } else {
             return new AddProviderBotCommand(sendBotMessageService, providerService, bundleLanguage).execute(update);
         }

@@ -39,13 +39,14 @@ public class CheckServiceBotCommand implements BotCommand {
 
     @Override
     public BotCommandResultDto execute(Update update) {
+        BotCommandResultDto resultDto = new BotCommandResultDto();
         Long id;
         if (update.hasCallbackQuery()) {
             id = update.getCallbackQuery().getFrom().getId();
         } else if (update.hasMessage()) {
             id = update.getMessage().getChatId();
         } else {
-            return false;
+            return resultDto.setDone(false);
         }
         ServiceDTO serviceDTO = ServiceCache.findBy(id);
         if (serviceDTO == null) {
@@ -53,11 +54,10 @@ public class CheckServiceBotCommand implements BotCommand {
             List<ServiceEntity> serviceEntityList = serviceRepository.findAllByTelegramId(id);
             if (!serviceEntityList.isEmpty()) {
                 LOGGER.info("there is provider in the database");
-                return true;
+                return resultDto.setDone(true);
             }
             return new AddServiceBotCommand(sendBotMessageService, serviceRepository, imageService, bundleLanguage).execute(update);
         }
-
-        return false;
+        return resultDto.setDone(false);
     }
 }

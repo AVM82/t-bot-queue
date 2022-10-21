@@ -22,6 +22,6 @@ public class EchoBotCommand implements BotCommand {
             Message message = update.getMessage();
             sendBotMessageService.sendMessage(update.getMessage().getChatId().toString(), message.getText());
         }
-        return true;
+        return new BotCommandResultDto().setDone(true);
     }
 }

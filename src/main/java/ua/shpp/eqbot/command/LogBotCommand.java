@@ -13,6 +13,6 @@ public class LogBotCommand implements BotCommand {
     @Override
     public BotCommandResultDto execute(Update update) {
         LOGGER.info("========= LOGGER CLASS ===============");
-        return true;
+        return new BotCommandResultDto().setDone(true);
     }
 }

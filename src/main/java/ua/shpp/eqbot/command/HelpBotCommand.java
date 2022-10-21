@@ -28,6 +28,6 @@ public class HelpBotCommand implements BotCommand {
     @Override
     public BotCommandResultDto execute(Update update) {
         sendBotMessageService.sendMessage(update.getMessage().getChatId().toString(), HELP_MESSAGE);
-        return true;
+        return new BotCommandResultDto().setDone(true);
     }
 }

@@ -35,7 +35,7 @@ public class StartBotCommand implements BotCommand {
         } else {
             createStartMenu(update.getMessage().getChatId());
         }
-        return true;
+        return new BotCommandResultDto().setDone(true);
     }
 
     private void createStartMenu(Long chatId) {

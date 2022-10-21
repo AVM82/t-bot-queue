@@ -27,6 +27,7 @@ public class ChangeLanguageBotCommand implements BotCommand {
 
     @Override
     public BotCommandResultDto execute(Update update) {
+        BotCommandResultDto resultDto = new BotCommandResultDto();
         long id;
         if (update.hasCallbackQuery()) {
             id = update.getCallbackQuery().getFrom().getId();
@@ -53,6 +54,6 @@ public class ChangeLanguageBotCommand implements BotCommand {
         LOGGER.info("The interface language has been changed");
         sendBotMessageService.sendMessage(String.valueOf(id), bundleLanguage.getValue(id, "change_language_success"));
 
-        return true;
+        return resultDto.setDone(true);
     }
 }

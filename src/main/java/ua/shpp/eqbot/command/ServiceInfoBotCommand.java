@@ -144,6 +144,6 @@ public class ServiceInfoBotCommand implements BotCommand {
         } else {
             sendServiceInfo(service, chatId);
         }
-        return true;
+        return new BotCommandResultDto().setDone(true);
     }
 }

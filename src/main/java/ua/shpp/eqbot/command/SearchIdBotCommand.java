@@ -42,6 +42,7 @@ public class SearchIdBotCommand implements BotCommand {
 
     @Override
     public BotCommandResultDto execute(Update update) {
+        BotCommandResultDto resultDto = new BotCommandResultDto();
         long id;
         if (update.hasCallbackQuery()) {
             id = update.getCallbackQuery().getFrom().getId();
@@ -54,7 +55,7 @@ public class SearchIdBotCommand implements BotCommand {
         if (user.getPositionMenu() != PositionMenu.SEARCH_BY_ID) {
             user.setPositionMenu(PositionMenu.SEARCH_BY_ID);
             sendBotMessageService.sendMessage(String.valueOf(id), bundleLanguage.getValue(id, "search.searchId.text"));
-            return true;
+            return resultDto.setDone(true);
         } else {
             String idService;
             if (update.hasMessage()) {
@@ -80,12 +81,12 @@ public class SearchIdBotCommand implements BotCommand {
                 sendMessage.setChatId(id);
                 sendMessage.setReplyMarkup(inlineKeyboardMarkup);
                 sendBotMessageService.sendMessage(sendMessage);
-                return true;
+                return resultDto.setDone(true);
             } else {
                 LOGGER.info("Not found service by {}", idService);
                 user.setPositionMenu(PositionMenu.MENU_START);
                 sendBotMessageService.sendMessage(String.valueOf(id), bundleLanguage.getValue(id, "search.searchId.notFound"));
-                return false;
+                return resultDto.setDone(false);
             }
         }
     }

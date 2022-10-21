@@ -37,6 +37,6 @@ public class MainMenuBotCommand implements BotCommand {
         listOfCommand.add(new org.telegram.telegrambots.meta.api.objects.commands.BotCommand("/delete", bundleLanguage.getValue(id, "delete")));
         sendBotMessageService.sendMenu(new SetMyCommands(listOfCommand, new BotCommandScopeDefault(), null));
         LOGGER.info("Created main menu successful.");
-        return true;
+        return new BotCommandResultDto().setDone(true);
     }
 }

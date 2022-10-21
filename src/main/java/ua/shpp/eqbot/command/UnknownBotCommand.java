@@ -25,6 +25,6 @@ public class UnknownBotCommand implements BotCommand {
         sendBotMessageService.sendMessage(
                 update.getMessage().getChatId().toString(),
                 bundleLanguage.getValue(update.getMessage().getChatId(), UNKNOWN_MESSAGE));
-        return true;
+        return new BotCommandResultDto().setDone(true);
     }
 }

@@ -27,6 +27,7 @@ public class SettingsBotCommand implements BotCommand {
 
     @Override
     public BotCommandResultDto execute(Update update) {
+        BotCommandResultDto resultDto = new BotCommandResultDto();
         InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
         List<List<InlineKeyboardButton>> keyboard = new ArrayList<>();
         List<InlineKeyboardButton> buttonCreate = new ArrayList<>();
@@ -47,7 +48,6 @@ public class SettingsBotCommand implements BotCommand {
         sendMessage.setChatId(update.getMessage().getChatId());
         sendMessage.setReplyMarkup(inlineKeyboardMarkup);
         sendBotMessageService.sendMessage(sendMessage);
-
-        return true;
+        return resultDto.setDone(true);
     }
 }

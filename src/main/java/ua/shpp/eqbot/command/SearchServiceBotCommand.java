@@ -49,6 +49,7 @@ public class SearchServiceBotCommand implements BotCommand {
 
     @Override
     public BotCommandResultDto execute(Update update) {
+        BotCommandResultDto resultDto = new BotCommandResultDto();
         long id;
         PrevPositionDTO prevPosition = new PrevPositionDTO();
         prevPosition.setPositionMenu(SEARCH_BY_CITY_NAME);
@@ -90,7 +91,7 @@ public class SearchServiceBotCommand implements BotCommand {
             if (update.hasCallbackQuery()) {
                 if (update.getCallbackQuery().getData().equals("another_city")) {
                     sendBotMessageService.sendMessage(String.valueOf(id), bundleLanguage.getValue(id, "search.byCityName.enterTheCity"));
-                    return true;
+                    return resultDto.setDone(true);
                 } else if (update.getCallbackQuery().getData().equals(user.getCity())) {
                     city = update.getCallbackQuery().getData();
                     prevPosition.setReceivedData("searchCity/" + city);
@@ -108,7 +109,7 @@ public class SearchServiceBotCommand implements BotCommand {
                 LOGGER.info("No service providers were found for the user's city of registration");
                 sendBotMessageService.sendMessage(String.valueOf(id),
                         bundleLanguage.getValue(id, "search.byCityName.providerNotFound"));
-                return false;
+                return resultDto.setDone(false);
             }
 
             List<Long> telegramIdProviderByCityList = providerEntityByCityList.stream()
@@ -120,7 +121,7 @@ public class SearchServiceBotCommand implements BotCommand {
                 LOGGER.info("No services were found for the user's city of registration");
                 sendBotMessageService.sendMessage(String.valueOf(id),
                         bundleLanguage.getValue(id, "search.byCityName.serviceNotFound"));
-                return false;
+                return resultDto.setDone(false);
             }
 
             LOGGER.info("Found a list of services by city of user registration");
@@ -146,6 +147,6 @@ public class SearchServiceBotCommand implements BotCommand {
             sendBotMessageService.sendMessage(sendMessage);
 
         }
-        return true;
+        return resultDto.setDone(true);
     }
 }

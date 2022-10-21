@@ -49,6 +49,7 @@ public class SearchStringBotCommand implements BotCommand {
     @Override
     public BotCommandResultDto execute(Update update) {
         LOGGER.info("method execute search using the service name");
+        BotCommandResultDto resultDto = new BotCommandResultDto();
         long chatId;
         PrevPositionDTO prevPosition = new PrevPositionDTO();
         if (update.hasCallbackQuery()) {
@@ -65,7 +66,7 @@ public class SearchStringBotCommand implements BotCommand {
         if (user.getPositionMenu() != PositionMenu.SEARCH_USES_NAME_SERVICE) {
             user.setPositionMenu(PositionMenu.SEARCH_USES_NAME_SERVICE);
             sendBotMessageService.sendMessage(String.valueOf(chatId), bundleLanguage.getValue(chatId, "search.searchUsesNameService.text"));
-            return true;
+            return resultDto.setDone(true);
         } else {
             pairMap.computeIfAbsent(chatId, k -> new Pair(0));
             if (update.hasCallbackQuery() && update.getCallbackQuery().getData().startsWith("searchString")) {
@@ -101,7 +102,7 @@ public class SearchStringBotCommand implements BotCommand {
                 LOGGER.info("exit");
                 pairMap.remove(chatId);
                 user.setPositionMenu(PositionMenu.MENU_START);
-                return true;
+                return resultDto.setDone(true);
             }
 
             prevPosition.setPage(pair.getFrom());
@@ -109,7 +110,7 @@ public class SearchStringBotCommand implements BotCommand {
             if (!page.isEmpty()) {
                 LOGGER.info("Found a list of services by description LIKE {} counts: {}", likeString, 777);
                 pairMap.get(chatId).setLast(false);
-                return fillListResulSelection(chatId, page);
+                return resultDto.setDone(fillListResulSelection(chatId, page));
             } else {
                 LOGGER.info("No service were found for the string");
                 List<ServiceEntity> previousPage = pairMap.get(chatId).getServiceEntities();
@@ -118,9 +119,9 @@ public class SearchStringBotCommand implements BotCommand {
                     user.setPositionMenu(PositionMenu.MENU_START);
                     pairMap.remove(chatId);
                     sendBotMessageService.sendMessage(String.valueOf(chatId), bundleLanguage.getValue(chatId, "search.by.like.last.page"));
-                    return true;
+                    return resultDto.setDone(true);
                 }
-                return fillListResulSelection(chatId, previousPage);
+                return resultDto.setDone(fillListResulSelection(chatId, page));
             }
         }
     }
