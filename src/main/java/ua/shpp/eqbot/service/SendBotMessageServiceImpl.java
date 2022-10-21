@@ -3,6 +3,7 @@ package ua.shpp.eqbot.service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.methods.commands.SetMyCommands;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
@@ -22,6 +23,7 @@ import java.util.List;
  * Implementation of {@link SendBotMessageService} interface.
  */
 @Service
+@Scope("prototype")
 public class SendBotMessageServiceImpl implements SendBotMessageService {
 
     private final Logger logger = LoggerFactory.getLogger(SendBotMessageServiceImpl.class);

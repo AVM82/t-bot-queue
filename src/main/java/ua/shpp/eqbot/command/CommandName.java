@@ -14,7 +14,7 @@ public enum CommandName {
     CHANGE_ROLE_TO_PROVIDER("/change_role"),
     CHANGE_LANGUAGE("/change_language"),
     DELETE_USER("/delete"),
-    MAIN_MENU("mainMenu"),
+    MAIN_MENU("/mainMenu"),
     ADD_PROVIDER("/add provider"),
     CHECK_PROVIDER("/check provider"),
     CHECK_SERVICE("/check service"),

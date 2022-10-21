@@ -10,7 +10,7 @@ import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.PhotoSize;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import ua.shpp.eqbot.cache.ServiceCache;
-import ua.shpp.eqbot.command.ICommand;
+import ua.shpp.eqbot.command.BotCommand;
 import ua.shpp.eqbot.dto.ServiceDTO;
 import ua.shpp.eqbot.internationalization.BundleLanguage;
 import ua.shpp.eqbot.model.ServiceEntity;
@@ -21,10 +21,10 @@ import ua.shpp.eqbot.stage.PositionRegistrationService;
 
 import java.util.List;
 
-@Component
-public class RegistrationServiceICommand implements ICommand {
+@Component("addBotCommand")
+public class AddServiceBotCommand implements BotCommand {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(RegistrationServiceICommand.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(AddServiceBotCommand.class);
     private final SendBotMessageService sendBotMessageService;
     private final ServiceRepository serviceRepository;
     private final ImageService imageService;
@@ -35,8 +35,8 @@ public class RegistrationServiceICommand implements ICommand {
     private static final String FORMAT = "format";
 
     @Autowired
-    public RegistrationServiceICommand(SendBotMessageService sendBotMessageService, ServiceRepository serviceRepository,
-                                       ImageService imageService, BundleLanguage bundleLanguage) {
+    public AddServiceBotCommand(SendBotMessageService sendBotMessageService, ServiceRepository serviceRepository,
+                                ImageService imageService, BundleLanguage bundleLanguage) {
         this.sendBotMessageService = sendBotMessageService;
         this.serviceRepository = serviceRepository;
         this.imageService = imageService;

@@ -17,15 +17,15 @@ import ua.shpp.eqbot.service.UserService;
 import ua.shpp.eqbot.stage.PositionMenu;
 import ua.shpp.eqbot.stage.PositionRegistration;
 
-@Component
-public class RegistrationNewUserICommand implements ICommand {
-    private static final Logger LOGGER = LoggerFactory.getLogger(RegistrationNewUserICommand.class);
+@Component("regBotCommand")
+public class RegistrationNewUserBotCommand implements BotCommand {
+    private static final Logger LOGGER = LoggerFactory.getLogger(RegistrationNewUserBotCommand.class);
     private final SendBotMessageService sendBotMessageService;
     private final UserService userService;
     private final BundleLanguage bundleLanguage;
 
     @Autowired
-    public RegistrationNewUserICommand(SendBotMessageService sendBotMessageService, UserService userService, BundleLanguage bundleLanguage) {
+    public RegistrationNewUserBotCommand(SendBotMessageService sendBotMessageService, UserService userService, BundleLanguage bundleLanguage) {
         this.sendBotMessageService = sendBotMessageService;
         this.userService = userService;
         this.bundleLanguage = bundleLanguage;

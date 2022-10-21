@@ -20,19 +20,19 @@ import ua.shpp.eqbot.stage.PositionMenu;
 import java.util.ArrayList;
 import java.util.List;
 
-@Component
-public class SearchById implements ICommand {
-    private static final Logger LOGGER = LoggerFactory.getLogger(SearchById.class);
+@Component("searchidBotCommand")
+public class SearchIdBotCommand implements BotCommand {
+    private static final Logger LOGGER = LoggerFactory.getLogger(SearchIdBotCommand.class);
     private final SendBotMessageService sendBotMessageService;
     private final ServiceRepository serviceRepository;
     private final UserService userService;
     private final BundleLanguage bundleLanguage;
 
     @Autowired
-    public SearchById(SendBotMessageService sendBotMessageService,
-                      ServiceRepository serviceRepository,
-                      UserService userService,
-                      BundleLanguage bundleLanguage) {
+    public SearchIdBotCommand(SendBotMessageService sendBotMessageService,
+                              ServiceRepository serviceRepository,
+                              UserService userService,
+                              BundleLanguage bundleLanguage) {
         this.sendBotMessageService = sendBotMessageService;
         this.serviceRepository = serviceRepository;
         this.userService = userService;

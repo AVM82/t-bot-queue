@@ -2,24 +2,28 @@ package ua.shpp.eqbot.command.registrationprovider;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
-import ua.shpp.eqbot.command.ICommand;
+import ua.shpp.eqbot.command.BotCommand;
 import ua.shpp.eqbot.dto.ProviderDto;
 import ua.shpp.eqbot.internationalization.BundleLanguage;
 import ua.shpp.eqbot.service.ProviderService;
 import ua.shpp.eqbot.service.SendBotMessageService;
 import ua.shpp.eqbot.stage.PositionRegistrationProvider;
 
-public class RegistrationNewProviderICommand implements ICommand {
-    private static final Logger LOGGER = LoggerFactory.getLogger(RegistrationNewProviderICommand.class);
+@Component
+public class AddProviderBotCommand implements BotCommand {
+    private static final Logger LOGGER = LoggerFactory.getLogger(AddProviderBotCommand.class);
     private final SendBotMessageService sendBotMessageService;
     private final ProviderService providerService;
     private final BundleLanguage bundleLanguage;
 
-    public RegistrationNewProviderICommand(SendBotMessageService sendBotMessageService,
-                                           ProviderService providerService,
-                                           BundleLanguage bundleLanguage) {
+    @Autowired
+    public AddProviderBotCommand(SendBotMessageService sendBotMessageService,
+                                 ProviderService providerService,
+                                 BundleLanguage bundleLanguage) {
         this.sendBotMessageService = sendBotMessageService;
         this.providerService = providerService;
         this.bundleLanguage = bundleLanguage;

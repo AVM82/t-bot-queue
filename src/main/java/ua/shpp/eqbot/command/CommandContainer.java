@@ -1,73 +1,24 @@
 package ua.shpp.eqbot.command;
 
-import com.google.common.collect.ImmutableMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ua.shpp.eqbot.command.registrationfortheservice.RegistrationForTheServiceCommand;
-import ua.shpp.eqbot.command.registrationprovider.CheckProviderRegistrationICommand;
-import ua.shpp.eqbot.command.registrationprovider.RegistrationNewProviderICommand;
-import ua.shpp.eqbot.command.registrationservice.CheckServiceRegistrationICommand;
-import ua.shpp.eqbot.command.registrationservice.RegistrationServiceICommand;
-import ua.shpp.eqbot.internationalization.BundleLanguage;
-import ua.shpp.eqbot.repository.ProviderRepository;
-import ua.shpp.eqbot.repository.RegistrationForTheServiceRepository;
-import ua.shpp.eqbot.repository.ServiceRepository;
-import ua.shpp.eqbot.service.ImageService;
-import ua.shpp.eqbot.service.ProviderService;
-import ua.shpp.eqbot.service.SendBotMessageService;
-import ua.shpp.eqbot.service.UserService;
+
+import java.util.Map;
 
 /**
- * Container of the {@link ICommand}s, which are using for handling telegram commands.
+ * Container of the {@link BotCommand}s, which are using for handling telegram commands.
  */
 @Service
 public class CommandContainer {
 
-    private final ImmutableMap<String, ICommand> commandMap;
-    private final ICommand unknownICommand;
+    private final Map<String, BotCommand> commandMap;
 
     @Autowired
-    public CommandContainer(SendBotMessageService sendBotMessageService, ServiceRepository serviceRepository,
-                            ProviderRepository providerRepository, ImageService imageService,
-                            BundleLanguage bundleLanguage, UserService userService,
-                            ProviderService providerService, RegistrationForTheServiceRepository registrationForTheServiceRepository) {
-        commandMap = ImmutableMap.<String, ICommand>builder()
-                .put(CommandName.REG.getNameCommand(), new RegistrationNewUserICommand(sendBotMessageService, userService, bundleLanguage))
-                .put(CommandName.START.getNameCommand(), new StartICommand(sendBotMessageService, bundleLanguage))
-                .put(CommandName.HELP.getNameCommand(), new HelpICommand(sendBotMessageService))
-                .put(CommandName.NO.getNameCommand(), new NoCommand(sendBotMessageService))
-                .put(CommandName.SETTINGS.getNameCommand(), new SettingsICommand(sendBotMessageService, bundleLanguage))
-                .put(CommandName.CHANGE_ROLE_TO_PROVIDER.getNameCommand(),
-                        new ChangeRoleToProviderICommand(sendBotMessageService, providerRepository, bundleLanguage))
-                .put(CommandName.ADD_SERVICE.getNameCommand(),
-                        new RegistrationServiceICommand(sendBotMessageService, serviceRepository, imageService, bundleLanguage))
-                .put(CommandName.SEARCH_SERVICE_BY_CITY_NAME.getNameCommand(),
-                        new SearchServiceCommand(sendBotMessageService, serviceRepository, providerRepository, userService, bundleLanguage))
-                .put(CommandName.DELETE_USER.getNameCommand(), new DeleteUserICommand(sendBotMessageService,
-                        userService, bundleLanguage, providerService, serviceRepository))
-                .put(CommandName.MAIN_MENU.getNameCommand(), new MainMenuICommand(sendBotMessageService, bundleLanguage))
-                .put(CommandName.CHECK_PROVIDER.getNameCommand(),
-                        new CheckProviderRegistrationICommand(sendBotMessageService, providerService, bundleLanguage))
-                .put(CommandName.ADD_PROVIDER.getNameCommand(),
-                        new RegistrationNewProviderICommand(sendBotMessageService, providerService, bundleLanguage))
-                .put(CommandName.CHECK_SERVICE.getNameCommand(),
-                        new CheckServiceRegistrationICommand(sendBotMessageService, bundleLanguage, serviceRepository, imageService))
-                .put(CommandName.CHANGE_LANGUAGE.getNameCommand(), new ChangeLanguageICommand(sendBotMessageService, userService, bundleLanguage))
-                .put(CommandName.SEARCH_MENU.getNameCommand(), new SearchMenuICommand(sendBotMessageService, bundleLanguage))
-                .put(CommandName.SEARCH_BY_ID.getNameCommand(),
-                        new SearchById(sendBotMessageService, serviceRepository, userService, bundleLanguage))
-                .put(CommandName.SEARCH_USES_NAME_SERVICE.getNameCommand(),
-                        new SearchServiceBySimilarWordsCommander(sendBotMessageService, serviceRepository, userService, bundleLanguage))
-                .put(CommandName.REGISTRATION_FOR_THE_SERVICE_COMMAND.getNameCommand(),
-                        new RegistrationForTheServiceCommand(sendBotMessageService, registrationForTheServiceRepository,
-                                serviceRepository, bundleLanguage, userService))
-                .put(CommandName.SERVICE_INFO.getNameCommand(),
-                        new ServiceInfoCommand(serviceRepository, sendBotMessageService, bundleLanguage, imageService, userService))
-                .build();
-        unknownICommand = new UnknownICommand(sendBotMessageService, bundleLanguage);
+    public CommandContainer(Map<String, BotCommand> iCommands) {
+        commandMap = iCommands;
     }
 
-    public ICommand retrieveCommand(String commandIdentifier) {
-        return commandMap.getOrDefault(commandIdentifier, unknownICommand);
+    public BotCommand retrieveCommand(String commandIdentifier) {
+        return commandMap.getOrDefault(commandIdentifier, null);
     }
 }
