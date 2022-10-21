@@ -62,7 +62,8 @@ public class CheckProviderBotCommand implements BotCommand {
                     .text(bundleLanguage.getValue(id, "no_registration_provider")).build());
             return new AddProviderBotCommand(sendBotMessageService, providerService, bundleLanguage).execute(update);
         }
-        if (providerDto.getPositionRegistrationProvider() == PositionRegistrationProvider.DONE) {
+        if (providerDto.getPositionRegistrationProvider() == PositionRegistrationProvider.DONE
+        || providerDto.getCity() != null) {
             printListProvider(id);
             addRequest(id);
             return true;
