@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.Update;
+import ua.shpp.eqbot.dto.BotCommandResultDto;
 import ua.shpp.eqbot.dto.UserDto;
 import ua.shpp.eqbot.internationalization.BundleLanguage;
 import ua.shpp.eqbot.service.SendBotMessageService;
@@ -25,7 +26,7 @@ public class ChangeLanguageBotCommand implements BotCommand {
     }
 
     @Override
-    public boolean execute(Update update) {
+    public BotCommandResultDto execute(Update update) {
         long id;
         if (update.hasCallbackQuery()) {
             id = update.getCallbackQuery().getFrom().getId();
@@ -37,7 +38,7 @@ public class ChangeLanguageBotCommand implements BotCommand {
 
         if (userDto == null) {
             LOGGER.info("User not found");
-            return false;
+            return new BotCommandResultDto().setDone(false);
         }
 
         if (!userDto.getLanguage().equals("en")) {

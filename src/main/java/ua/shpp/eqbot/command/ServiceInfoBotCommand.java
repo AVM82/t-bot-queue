@@ -8,6 +8,7 @@ import org.telegram.telegrambots.meta.api.methods.send.SendPhoto;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
+import ua.shpp.eqbot.dto.BotCommandResultDto;
 import ua.shpp.eqbot.dto.PrevPositionDTO;
 import ua.shpp.eqbot.dto.UserDto;
 import ua.shpp.eqbot.internationalization.BundleLanguage;
@@ -134,7 +135,7 @@ public class ServiceInfoBotCommand implements BotCommand {
     }
 
     @Override
-    public boolean execute(Update update) {
+    public BotCommandResultDto execute(Update update) {
         String serviceId = update.getCallbackQuery().getData().split("/")[1];
         ServiceEntity service = serviceRepository.findFirstById(Long.parseLong(serviceId));
         Long chatId = update.getCallbackQuery().getMessage().getChatId();

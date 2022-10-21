@@ -2,6 +2,7 @@ package ua.shpp.eqbot.command;
 
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
+import ua.shpp.eqbot.dto.BotCommandResultDto;
 import ua.shpp.eqbot.internationalization.BundleLanguage;
 import ua.shpp.eqbot.model.ServiceEntity;
 import ua.shpp.eqbot.repository.ServiceRepository;
@@ -32,7 +33,7 @@ public class SendNotificationToProviderCommand implements BotCommand {
     }
 
     @Override
-    public boolean execute(Update update) {
+    public BotCommandResultDto execute(Update update) {
         return true;
     }
 }

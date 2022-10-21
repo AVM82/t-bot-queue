@@ -7,8 +7,10 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
+import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
 import org.telegram.telegrambots.meta.api.objects.Update;
+import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import ua.shpp.eqbot.command.BotCommand;
 import ua.shpp.eqbot.command.CommandName;
 import ua.shpp.eqbot.command.UnknownBotCommand;
@@ -56,6 +58,15 @@ public class EqTelegramBot extends TelegramLongPollingBot {
         }
     }
 
+    private void send(SendMessage message) {
+        try {
+            execute(message);
+            LOGGER.info("send message {}", message);
+        } catch (TelegramApiException e) {
+            LOGGER.warn(e.getLocalizedMessage());
+        }
+    }
+
 
     @Override
     public String getBotUsername() {
@@ -73,7 +84,7 @@ public class EqTelegramBot extends TelegramLongPollingBot {
                     update.getMessage().getChat().getFirstName(),
                     update.getMessage().getChat().getLastName(),
                     update.getMessage().getChat().getId());
-            if (!getBotCommand("/reg").execute(update)) {
+            if (!getBotCommand("/reg").execute(update).isDone()) {
                 LOGGER.info("Registration user");
                 //change registration provider
             } else {

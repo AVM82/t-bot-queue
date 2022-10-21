@@ -3,6 +3,7 @@ package ua.shpp.eqbot.command;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.Update;
+import ua.shpp.eqbot.dto.BotCommandResultDto;
 import ua.shpp.eqbot.internationalization.BundleLanguage;
 import ua.shpp.eqbot.service.SendBotMessageService;
 
@@ -20,7 +21,7 @@ public class UnknownBotCommand implements BotCommand {
     public static final String UNKNOWN_MESSAGE = "not_understand";
 
     @Override
-    public boolean execute(Update update) {
+    public BotCommandResultDto execute(Update update) {
         sendBotMessageService.sendMessage(
                 update.getMessage().getChatId().toString(),
                 bundleLanguage.getValue(update.getMessage().getChatId(), UNKNOWN_MESSAGE));

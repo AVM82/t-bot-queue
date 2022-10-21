@@ -7,8 +7,8 @@ import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
+import ua.shpp.eqbot.dto.BotCommandResultDto;
 import ua.shpp.eqbot.dto.UserDto;
-import ua.shpp.eqbot.stage.icon.Icon;
 import ua.shpp.eqbot.internationalization.BundleLanguage;
 import ua.shpp.eqbot.mapper.UserMapper;
 import ua.shpp.eqbot.model.UserEntity;
@@ -16,6 +16,7 @@ import ua.shpp.eqbot.service.SendBotMessageService;
 import ua.shpp.eqbot.service.UserService;
 import ua.shpp.eqbot.stage.PositionMenu;
 import ua.shpp.eqbot.stage.PositionRegistration;
+import ua.shpp.eqbot.stage.icon.Icon;
 
 @Component("regBotCommand")
 public class RegistrationNewUserBotCommand implements BotCommand {
@@ -38,7 +39,8 @@ public class RegistrationNewUserBotCommand implements BotCommand {
      * @return - true if registration passed
      */
     @Override
-    public boolean execute(Update update) {
+    public BotCommandResultDto execute(Update update) {
+        BotCommandResultDto resultDto = new BotCommandResultDto();
         UserDto userDto = userService.getDto(update.getMessage().getChatId());
         if (userDto == null) {
             LOGGER.info("user absent into cash user");
@@ -48,14 +50,14 @@ public class RegistrationNewUserBotCommand implements BotCommand {
                 userService.saveDto(UserMapper.INSTANCE.userEntityToUserDTO(userEntity))
                         .setPositionRegistration(PositionRegistration.DONE)
                         .setPositionMenu(PositionMenu.MENU_START);
-                return true;
+                return resultDto.setDone(true);
             }
-            return registration(update.getMessage(), null);
+            return resultDto.setDone(registration(update.getMessage(), null));
         } else if (userDto.getPositionRegistration() == PositionRegistration.DONE) {
-            return true;
+            return resultDto.setDone(true);
         } else {
             LOGGER.info("new user go to registration method");
-            return registration(update.getMessage(), userDto);
+            return resultDto.setDone(registration(update.getMessage(), userDto));
         }
     }
 

@@ -9,6 +9,7 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 import ua.shpp.eqbot.cache.RegistrationForTheServiceCache;
 import ua.shpp.eqbot.command.BotCommand;
 import ua.shpp.eqbot.command.SendNotificationToProviderCommand;
+import ua.shpp.eqbot.dto.BotCommandResultDto;
 import ua.shpp.eqbot.dto.RegistrationForTheServiceDto;
 import ua.shpp.eqbot.dto.UserDto;
 import ua.shpp.eqbot.internationalization.BundleLanguage;
@@ -58,7 +59,7 @@ public class RegistrationServiceBotCommand implements BotCommand {
     }
 
     @Override
-    public boolean execute(Update update) {
+    public BotCommandResultDto execute(Update update) {
         boolean isRegistered = false;
         Long userId = update.getCallbackQuery().getFrom().getId();
         UserDto userDto = userService.getDto(userId);
@@ -166,7 +167,7 @@ public class RegistrationServiceBotCommand implements BotCommand {
             isRegistered = true;
             RegistrationForTheServiceCache.remove(userId);
         }
-        return isRegistered;
+        return new BotCommandResultDto().setDone(isRegistered);
     }
 
     private RegistrationForTheServiceDto createDto(Long serviceId, UserEntity userEntity) {

@@ -7,6 +7,7 @@ import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.commands.SetMyCommands;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.commands.scope.BotCommandScopeDefault;
+import ua.shpp.eqbot.dto.BotCommandResultDto;
 import ua.shpp.eqbot.internationalization.BundleLanguage;
 import ua.shpp.eqbot.service.SendBotMessageService;
 
@@ -28,7 +29,7 @@ public class MainMenuBotCommand implements BotCommand {
     }
 
     @Override
-    public boolean execute(Update update) {
+    public BotCommandResultDto execute(Update update) {
         Long id = update.getMessage().getChatId();
         listOfCommand.add(new org.telegram.telegrambots.meta.api.objects.commands.BotCommand("/start", bundleLanguage.getValue(id, "start")));
         listOfCommand.add(new org.telegram.telegrambots.meta.api.objects.commands.BotCommand("/help", bundleLanguage.getValue(id, "help")));
