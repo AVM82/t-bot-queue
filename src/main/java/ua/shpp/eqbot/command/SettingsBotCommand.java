@@ -50,14 +50,11 @@ public class SettingsBotCommand implements BotCommand {
                 .build());
         keyboard.add(buttonLang);
         List<InlineKeyboardButton> buttonShare = new ArrayList<>();
-        String sharingMessage = "\n%seSecretar, %s%s%s \n\n%s%s%s         https://t.me/%s         %s%s%s";
-        sharingMessage = String.format(sharingMessage, Icon.WOMAN_OFFICE_WORKER.get(),
+        String sharingMessage = "\n%s%s, %s  %s \n\n         https://t.me/%s         ";
+        sharingMessage = String.format(sharingMessage, Icon.PENCIL.get(), botUsername,
                                                         bundleLanguage.getValue(update.getMessage().getChatId(), "share_message_first_part"),
-                                                        Icon.CLIPBOARD.get(), bundleLanguage.getValue(update.getMessage().getChatId(), "share_message_second_part"),
-                                                        Icon.ARROW_RIGHT.get(), Icon.ARROW_RIGHT.get(),
-                                                        Icon.ARROW_RIGHT.get(), botUsername,
-                                                        Icon.ARROW_LEFT.get(), Icon.ARROW_LEFT.get(),
-                                                        Icon.ARROW_LEFT.get());
+                                                        bundleLanguage.getValue(update.getMessage().getChatId(), "share_message_second_part"),
+                                                         botUsername);
         buttonShare.add(InlineKeyboardButton.builder()
                 .text(Icon.MAN_RAISING_HAND.get() + "    " + bundleLanguage.getValue(update.getMessage().getChatId(), "share_bot")
                         + "    " + Icon.INCOMING_ENVELOPE.get())
