@@ -50,7 +50,7 @@ public class SettingsBotCommand implements BotCommand {
                 .build());
         keyboard.add(buttonLang);
         List<InlineKeyboardButton> buttonShare = new ArrayList<>();
-        String sharingMessage = "\n%sESecretar, %s%s%s \n\n%s%s%s            https://t.me/%s              %s%s%s";
+        String sharingMessage = "\n%seSecretar, %s%s%s \n\n%s%s%s            https://t.me/%s              %s%s%s";
         sharingMessage = String.format(sharingMessage, Icon.WOMAN_OFFICE_WORKER.get(),
                                                         bundleLanguage.getValue(update.getMessage().getChatId(), "share_message_first_part"),
                                                         Icon.CLIPBOARD.get(), bundleLanguage.getValue(update.getMessage().getChatId(), "share_message_second_part"),
