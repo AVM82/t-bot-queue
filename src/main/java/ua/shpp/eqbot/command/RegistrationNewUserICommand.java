@@ -8,6 +8,7 @@ import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import ua.shpp.eqbot.dto.UserDto;
+import ua.shpp.eqbot.stage.icon.Icon;
 import ua.shpp.eqbot.internationalization.BundleLanguage;
 import ua.shpp.eqbot.mapper.UserMapper;
 import ua.shpp.eqbot.model.UserEntity;
@@ -95,7 +96,8 @@ public class RegistrationNewUserICommand implements ICommand {
             LOGGER.info("new user start registration");
             userService.saveDto(generateUserFromMessage(message));
             sendBotMessageService.sendMessage(createQuery(message.getChatId(),
-                    bundleLanguage.getValue(message.getChatId(), "input_name")));
+                    Icon.EXCLAMATION.get() + bundleLanguage.getValue(message.getChatId(), "input_name")
+                            + Icon.ARROW_DOWN.get()));
         } else {
             LOGGER.info("i want to next stage registration {}", userDto);
             switch (userDto.getPositionRegistration()) {
@@ -105,7 +107,7 @@ public class RegistrationNewUserICommand implements ICommand {
                         userDto.setName(message.getText());
                         userDto.setPositionRegistration(PositionRegistration.INPUT_CITY);
                         sendBotMessageService.sendMessage(createQuery(message.getChatId(),
-                                bundleLanguage.getValue(message.getChatId(), "input_city")));
+                                bundleLanguage.getValue(message.getChatId(), "input_city") + Icon.POINT_DOWN.get()));
                     }
                     break;
                 case INPUT_CITY:
@@ -114,7 +116,8 @@ public class RegistrationNewUserICommand implements ICommand {
                         userDto.setCity(message.getText());
                         userDto.setPositionRegistration(PositionRegistration.INPUT_PHONE);
                         sendBotMessageService.sendMessage(createQuery(message.getChatId(),
-                                bundleLanguage.getValue(message.getChatId(), "input_phone_number")));
+                                bundleLanguage.getValue(message.getChatId(), "input_phone_number")
+                                        + Icon.RED_TRIANGLE.get()));
                     }
                     break;
                 case INPUT_PHONE:
