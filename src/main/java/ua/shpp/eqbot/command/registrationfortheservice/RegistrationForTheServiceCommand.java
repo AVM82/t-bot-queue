@@ -129,7 +129,7 @@ public class RegistrationForTheServiceCommand implements ICommand {
                     isRegistered = true;
                     RegistrationForTheServiceEntity entity = RegistrationForTheServiceMapper.INSTANCE
                             .registrationForTheServiceDtoToEntity(registrationDto);
-                    LOGGER.info("menu position REGISTRATION_FOR_THE_SERVICES_TIME, registrationEntity = {}", entity);//for debug
+                    LOGGER.info("menu position REGISTRATION_FOR_THE_SERVICES_TIME, registrationEntity = {}", entity); //for debug
                     registrationForTheServiceRepository.save(entity);
                     sendBotMessageService.sendMessage(SendMessage.builder()
                             .text(bundleLanguage.getValue(userId, "registration_for_the_service_is_over")
@@ -186,8 +186,8 @@ public class RegistrationForTheServiceCommand implements ICommand {
         List<String> workTime = workTime(serviceEntity.getTimeBetweenClients(),
                 schedule.get(LocalDateTime.now().toLocalDate().getDayOfWeek()));
         LocalDateTime nowDay = LocalDateTime.now();
-        if (workTime.isEmpty() || (!workTime.isEmpty() &&
-                LocalTime.parse(workTime.get(workTime.size() - 1)).isBefore(nowDay.toLocalTime()))) {
+        if (workTime.isEmpty() || (!workTime.isEmpty()
+                && LocalTime.parse(workTime.get(workTime.size() - 1)).isBefore(nowDay.toLocalTime()))) {
             nowDay = nowDay.plusDays(1);
         }
         LocalDateTime date;

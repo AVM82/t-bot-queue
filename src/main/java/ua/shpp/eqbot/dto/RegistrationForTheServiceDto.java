@@ -38,9 +38,9 @@ public class RegistrationForTheServiceDto {
 
     @Override
     public String toString() {
-        return "RegistrationForTheServiceDto{" + "userEntity= " + userEntity +
-                ", serviceEntity= " + serviceEntity + '\'' +
-                ", serviceRegistrationDateTime='" + serviceRegistrationDateTime + '\'' +
-                '}';
+        return "RegistrationForTheServiceDto{" + "userEntity= " + userEntity
+                + ", serviceEntity= " + serviceEntity + '\''
+                + ", serviceRegistrationDateTime='" + serviceRegistrationDateTime + '\''
+                + '}';
     }
 }

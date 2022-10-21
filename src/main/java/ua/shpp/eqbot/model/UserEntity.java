@@ -10,9 +10,8 @@ import java.util.Set;
 @Table(name = "appuser")
 public class UserEntity {
 
-    @OneToMany(mappedBy = "userEntity")
+    @OneToMany(cascade = CascadeType.REMOVE, mappedBy = "userEntity")
     Set<RegistrationForTheServiceEntity> registrationForTheServiceEntities;
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

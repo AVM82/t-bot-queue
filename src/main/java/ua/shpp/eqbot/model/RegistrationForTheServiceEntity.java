@@ -55,10 +55,10 @@ public class RegistrationForTheServiceEntity {
 
     @Override
     public String toString() {
-        return "RegistrationForTheServiceEntity{" + "userEntity= " + userEntity +
-                ", serviceEntity= " + serviceEntity + '\'' +
-                ", serviceRegistrationDateTime='" + serviceRegistrationDateTime + '\'' +
-                ", sentReminderDate='" + sentReminderDate + '\'' +
-                '}';
+        return "RegistrationForTheServiceEntity{" + "userEntity= " + userEntity
+                + ", serviceEntity= " + serviceEntity + '\''
+                + ", serviceRegistrationDateTime='" + serviceRegistrationDateTime + '\''
+                + ", sentReminderDate='" + sentReminderDate + '\''
+                + '}';
     }
 }

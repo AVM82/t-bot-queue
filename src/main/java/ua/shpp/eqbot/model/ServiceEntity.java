@@ -11,7 +11,7 @@ import java.util.Set;
 @Table(name = "services")
 public class ServiceEntity {
 
-    @OneToMany(mappedBy = "serviceEntity")
+    @OneToMany(cascade = CascadeType.REMOVE, mappedBy = "serviceEntity")
     Set<RegistrationForTheServiceEntity> registrationForTheServiceEntities;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
