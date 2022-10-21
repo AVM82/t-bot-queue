@@ -10,6 +10,10 @@ public enum Icon {
     POINT_DOWN(":point_down:"),
     RED_TRIANGLE(":small_red_triangle_down:"),
     EXCLAMATION(":exclamation:"),
+    CRY(":cry:"),
+    FLUSHED(":flushed:"),
+    HEART_EYES(":heart_eyes:"),
+    HEARTPULSE(":heartpulse:"),
     NOT(":x:");
 
     private final String value;
