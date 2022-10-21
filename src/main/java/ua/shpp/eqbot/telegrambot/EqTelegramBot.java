@@ -156,13 +156,13 @@ public class EqTelegramBot extends TelegramLongPollingBot {
         } else if (callbackQuery.getData().equals("search_service")) {
             LOGGER.info("search_menu");
             getBotCommand(CommandName.SEARCH_MENU.getNameCommand()).execute(update);
-        } else if (callbackQuery.getData().equals("searchName")) {
+        } else if (callbackQuery.getData().startsWith("searchCity")) {
             LOGGER.info("search by name");
             getBotCommand(CommandName.SEARCH_SERVICE_BY_CITY_NAME.getNameCommand()).execute(update);
-        } else if (callbackQuery.getData().equals("searchId")) {
+        } else if (callbackQuery.getData().startsWith("searchId")) {
             LOGGER.info("search by id");
             getBotCommand(CommandName.SEARCH_BY_ID.getNameCommand()).execute(update);
-        } else if (callbackQuery.getData().equals("searchString")) {
+        } else if (callbackQuery.getData().startsWith("searchString")) {
             LOGGER.info("search uses name service");
             getBotCommand(CommandName.SEARCH_USES_NAME_SERVICE.getNameCommand()).execute(update);
         } else if (callbackQuery.getData().equals("return_in_menu")) {
@@ -176,7 +176,7 @@ public class EqTelegramBot extends TelegramLongPollingBot {
             getBotCommand("/add").execute(update);
         } else if (callbackQuery.getData().startsWith("service_info/")) {
             getBotCommand("/service info").execute(update);
-        } else if ((userDto.getPositionMenu() == SEARCH_BY_CITY_NAME)) {
+        }  else if ((userDto.getPositionMenu() == SEARCH_BY_CITY_NAME)) {
             if (!getBotCommand(CommandName.SEARCH_SERVICE_BY_CITY_NAME.getNameCommand()).execute(update)) {
                 userDto.setPositionMenu(MENU_START);
                 getBotCommand(CommandName.START.getNameCommand()).execute(update);
