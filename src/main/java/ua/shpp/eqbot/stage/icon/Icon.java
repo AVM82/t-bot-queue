@@ -14,7 +14,13 @@ public enum Icon {
     FLUSHED(":flushed:"),
     HEART_EYES(":heart_eyes:"),
     HEARTPULSE(":heartpulse:"),
+    MAN_RAISING_HAND(":raising_hand:"),
+    INCOMING_ENVELOPE(":incoming_envelope:"),
+    PENCIL(":memo:"),
+    ARROW_LEFT(":arrow_left:"),
+    ARROW_RIGHT(":arrow_right:"),
     NOT(":x:");
+
 
     private final String value;
 
