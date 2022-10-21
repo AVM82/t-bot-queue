@@ -22,6 +22,7 @@ import ua.shpp.eqbot.util.CommandUtils;
 
 import java.util.Map;
 
+import static ua.shpp.eqbot.command.registrationfortheservice.RegistrationServiceBotCommand.setNumberOfDaysInSearchOfService;
 import static ua.shpp.eqbot.stage.PositionMenu.*;
 
 @Component
@@ -98,7 +99,7 @@ public class EqTelegramBot extends TelegramLongPollingBot {
                     }
                 } else if (user.getPositionMenu().equals(SEARCH_BY_CITY_NAME)) {
                     LOGGER.info("Entering a city to search for a service");
-                    if (!getBotCommand(CommandName.SEARCH_SERVICE.getNameCommand()).execute(update)) {
+                    if (!getBotCommand(CommandName.SEARCH_SERVICE_BY_CITY_NAME.getNameCommand()).execute(update)) {
                         user.setPositionMenu(MENU_START);
                         getBotCommand(CommandName.START.getNameCommand()).execute(update);
                     }
@@ -154,7 +155,7 @@ public class EqTelegramBot extends TelegramLongPollingBot {
             getBotCommand(CommandName.SEARCH_MENU.getNameCommand()).execute(update);
         } else if (callbackQuery.getData().equals("searchName")) {
             LOGGER.info("search by name");
-            getBotCommand(CommandName.SEARCH_SERVICE.getNameCommand()).execute(update);
+            getBotCommand(CommandName.SEARCH_SERVICE_BY_CITY_NAME.getNameCommand()).execute(update);
         } else if (callbackQuery.getData().equals("searchId")) {
             LOGGER.info("search by id");
             getBotCommand(CommandName.SEARCH_BY_ID.getNameCommand()).execute(update);
@@ -181,7 +182,7 @@ public class EqTelegramBot extends TelegramLongPollingBot {
                 || userDto.getPositionMenu() == REGISTRATION_FOR_THE_SERVICES_DATE
                 || userDto.getPositionMenu() == REGISTRATION_FOR_THE_SERVICES_TIME) {
             LOGGER.info("The user has successfully selected the service");
-            RegistrationForTheServiceCommand.setNumberOfDaysInSearchOfService(7);
+            setNumberOfDaysInSearchOfService(7);
             if (getBotCommand("/RegistrationForTheServiceCommand").execute(update)) {
                 getBotCommand(CommandName.START.getNameCommand()).execute(update);
             }

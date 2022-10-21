@@ -1,12 +1,10 @@
 package ua.shpp.eqbot.command;
 
-import io.swagger.v3.oas.models.security.SecurityScheme;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.ParseMode;
-import org.telegram.telegrambots.meta.api.methods.PartialBotApiMethod;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.methods.send.SendPhoto;
-import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
@@ -22,15 +20,16 @@ import ua.shpp.eqbot.service.UserService;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ServiceInfoCommand implements ICommand {
+@Component
+public class ServiceInfoBotCommand implements BotCommand {
     private final ServiceRepository serviceRepository;
     private final SendBotMessageService sendBotMessageService;
     private final BundleLanguage bundleLanguage;
     private final ImageService imageService;
-    @Autowired
     private final UserService userService;
 
-    public ServiceInfoCommand(ServiceRepository serviceRepository, SendBotMessageService sendBotMessageService, BundleLanguage bundleLanguage, ImageService imageService, UserService userService) {
+    @Autowired
+    public ServiceInfoBotCommand(ServiceRepository serviceRepository, SendBotMessageService sendBotMessageService, BundleLanguage bundleLanguage, ImageService imageService, UserService userService) {
         this.serviceRepository = serviceRepository;
         this.sendBotMessageService = sendBotMessageService;
         this.bundleLanguage = bundleLanguage;
