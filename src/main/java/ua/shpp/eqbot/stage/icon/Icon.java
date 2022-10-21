@@ -10,7 +10,14 @@ public enum Icon {
     POINT_DOWN(":point_down:"),
     RED_TRIANGLE(":small_red_triangle_down:"),
     EXCLAMATION(":exclamation:"),
+    MAN_RAISING_HAND(":raising_hand:"),
+    INCOMING_ENVELOPE(":incoming_envelope:"),
+    WOMAN_OFFICE_WORKER(":briefcase:"),
+    CLIPBOARD(":clipboard:"),
+    ARROW_LEFT(":arrow_left:"),
+    ARROW_RIGHT(":arrow_right:"),
     NOT(":x:");
+
 
     private final String value;
 
