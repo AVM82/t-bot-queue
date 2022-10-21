@@ -111,9 +111,9 @@ public class EqTelegramBot extends TelegramLongPollingBot {
                     if (!commandContainer.retrieveCommand(CommandName.SEARCH_BY_ID.getNameCommand()).execute(update)) {
                         commandContainer.retrieveCommand(CommandName.SEARCH_MENU.getNameCommand()).execute(update);
                     }
-                } else if (user.getPositionMenu().equals(SEARCH_BY_NAME)) {
+                } else if (user.getPositionMenu().equals(SEARCH_BY_CITY_NAME)) {
                     LOGGER.info("Entering a city to search for a service");
-                    if (!commandContainer.retrieveCommand(CommandName.SEARCH_SERVICE.getNameCommand()).execute(update)) {
+                    if (!commandContainer.retrieveCommand(CommandName.SEARCH_SERVICE_BY_CITY_NAME.getNameCommand()).execute(update)) {
                         user.setPositionMenu(MENU_START);
                         commandContainer.retrieveCommand(CommandName.START.getNameCommand()).execute(update);
                     }
@@ -145,6 +145,9 @@ public class EqTelegramBot extends TelegramLongPollingBot {
         LOGGER.info("callbackQueryHandler start work");
         CallbackQuery callbackQuery = update.getCallbackQuery();
         UserDto userDto = findDtoIfPossible(update);
+        if (update.getCallbackQuery().getData().startsWith("appoint/")) {
+            userDto.setPositionMenu(REGISTRATION_FOR_THE_SERVICES_START);
+        }
         if (callbackQuery.getData().equals("create_service")) {
             LOGGER.info("create_service");
             userDto.setPositionMenu(MENU_CREATE_SERVICE);
@@ -154,13 +157,13 @@ public class EqTelegramBot extends TelegramLongPollingBot {
         } else if (callbackQuery.getData().equals("search_service")) {
             LOGGER.info("search_menu");
             commandContainer.retrieveCommand(CommandName.SEARCH_MENU.getNameCommand()).execute(update);
-        } else if (callbackQuery.getData().equals("searchName")) {
+        } else if (callbackQuery.getData().startsWith("searchCity")) {
             LOGGER.info("search by name");
-            commandContainer.retrieveCommand(CommandName.SEARCH_SERVICE.getNameCommand()).execute(update);
-        } else if (callbackQuery.getData().equals("searchId")) {
+            commandContainer.retrieveCommand(CommandName.SEARCH_SERVICE_BY_CITY_NAME.getNameCommand()).execute(update);
+        } else if (callbackQuery.getData().startsWith("searchId")) {
             LOGGER.info("search by id");
             commandContainer.retrieveCommand(CommandName.SEARCH_BY_ID.getNameCommand()).execute(update);
-        } else if (callbackQuery.getData().equals("searchString")) {
+        } else if (callbackQuery.getData().startsWith("searchString")) {
             LOGGER.info("search uses name service");
             commandContainer.retrieveCommand(CommandName.SEARCH_USES_NAME_SERVICE.getNameCommand()).execute(update);
         } else if (callbackQuery.getData().equals("return_in_menu")) {
@@ -172,20 +175,20 @@ public class EqTelegramBot extends TelegramLongPollingBot {
             userService.getDto(update.getCallbackQuery().getFrom().getId())
                     .setPositionMenu(PositionMenu.REGISTRATION_SERVICE);
             commandContainer.retrieveCommand("/add").execute(update);
-        } else if (userDto.getPositionMenu() == SEARCH_BY_NAME
+        } else if (callbackQuery.getData().startsWith("service_info/")) {
+            commandContainer.retrieveCommand("/service info").execute(update);
+        } else if ((userDto.getPositionMenu() == SEARCH_BY_CITY_NAME)) {
+            if (!commandContainer.retrieveCommand(CommandName.SEARCH_SERVICE_BY_CITY_NAME.getNameCommand()).execute(update)) {
+                userDto.setPositionMenu(MENU_START);
+                commandContainer.retrieveCommand(CommandName.START.getNameCommand()).execute(update);
+            }
+        } else if (userDto.getPositionMenu() == REGISTRATION_FOR_THE_SERVICES_START
                 || userDto.getPositionMenu() == REGISTRATION_FOR_THE_SERVICES_DATE
                 || userDto.getPositionMenu() == REGISTRATION_FOR_THE_SERVICES_TIME) {
-            if (callbackQuery.getData().matches("\\d+:?.?\\d*") || callbackQuery.getData().equals("змінити дату")) {
-                LOGGER.info("The user has successfully selected the service");
-                RegistrationForTheServiceCommand.setNumberOfDaysInSearchOfService(7);
-                if (commandContainer.retrieveCommand("/RegistrationForTheServiceCommand").execute(update)) {
-                    commandContainer.retrieveCommand(CommandName.START.getNameCommand()).execute(update);
-                }
-            } else {
-                if (!commandContainer.retrieveCommand(CommandName.SEARCH_SERVICE.getNameCommand()).execute(update)) {
-                    userDto.setPositionMenu(MENU_START);
-                    commandContainer.retrieveCommand(CommandName.START.getNameCommand()).execute(update);
-                }
+            LOGGER.info("The user has successfully selected the service");
+            RegistrationForTheServiceCommand.setNumberOfDaysInSearchOfService(7);
+            if (commandContainer.retrieveCommand("/RegistrationForTheServiceCommand").execute(update)) {
+                commandContainer.retrieveCommand(CommandName.START.getNameCommand()).execute(update);
             }
         } else if (callbackQuery.getData().equals("add_provider")) {
             commandContainer.retrieveCommand("/add provider").execute(update);

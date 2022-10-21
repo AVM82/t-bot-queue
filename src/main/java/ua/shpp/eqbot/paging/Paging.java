@@ -18,10 +18,10 @@ public class Paging {
     }
 
     /**
-     * I will give what you send me here, that is, from which record to which
+     * I will give what you send me here, that is, from which record size which
      */
-    public List<ServiceEntity> getPage(int from, int to, String likeString) {
-        Pageable firstPageWithTwoElements = PageRequest.of(from, to);
+    public List<ServiceEntity> getPage(int from, int size, String likeString) {
+        Pageable firstPageWithTwoElements = PageRequest.of(from, size);
         Page<ServiceEntity> byDescriptionLike =
                 serviceRepository.findByDescriptionContainingIgnoreCaseOrNameContainingIgnoreCase(likeString, likeString, firstPageWithTwoElements);
         return byDescriptionLike.getContent();

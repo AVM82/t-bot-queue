@@ -41,7 +41,7 @@ public class CommandContainer {
                         new ChangeRoleToProviderICommand(sendBotMessageService, providerRepository, bundleLanguage))
                 .put(CommandName.ADD_SERVICE.getNameCommand(),
                         new RegistrationServiceICommand(sendBotMessageService, serviceRepository, imageService, bundleLanguage))
-                .put(CommandName.SEARCH_SERVICE.getNameCommand(),
+                .put(CommandName.SEARCH_SERVICE_BY_CITY_NAME.getNameCommand(),
                         new SearchServiceCommand(sendBotMessageService, serviceRepository, providerRepository, userService, bundleLanguage))
                 .put(CommandName.DELETE_USER.getNameCommand(), new DeleteUserICommand(sendBotMessageService,
                         userService, bundleLanguage, providerService, serviceRepository))
@@ -61,6 +61,8 @@ public class CommandContainer {
                 .put(CommandName.REGISTRATION_FOR_THE_SERVICE_COMMAND.getNameCommand(),
                         new RegistrationForTheServiceCommand(sendBotMessageService, registrationForTheServiceRepository,
                                 serviceRepository, bundleLanguage, userService))
+                .put(CommandName.SERVICE_INFO.getNameCommand(),
+                        new ServiceInfoCommand(serviceRepository, sendBotMessageService, bundleLanguage, imageService, userService))
                 .build();
         unknownICommand = new UnknownICommand(sendBotMessageService, bundleLanguage);
     }

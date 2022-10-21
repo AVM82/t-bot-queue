@@ -7,6 +7,7 @@ import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ua.shpp.eqbot.dto.PrevPositionDTO;
 import ua.shpp.eqbot.dto.UserDto;
 import ua.shpp.eqbot.mapper.UserMapper;
 import ua.shpp.eqbot.model.UserEntity;
@@ -32,11 +33,22 @@ public class UserService {
         this.validator = validator;
     }
 
+
     @Cacheable(cacheNames = "cacheEntity", key = "#telegramId")
     public UserEntity getEntity(Long telegramId) {
         LOGGER.info("get userEntity by telegramId {}", telegramId);
         UserDto dto = getDto(telegramId);
         return dto != null ? UserMapper.INSTANCE.userDTOToUserEntity(dto) : userRepository.findByTelegramId(telegramId);
+    }
+
+    @Cacheable(cacheNames = "prevPosition", key = "#telegramId")
+    public PrevPositionDTO getPrevPosition(Long telegramId) {
+        return null;
+    }
+
+    @CachePut(cacheNames = "prevPosition", key = "#prevPositionDTO.telegramId")
+    public PrevPositionDTO putPrevPosition(PrevPositionDTO prevPositionDTO) {
+        return prevPositionDTO;
     }
 
     @CachePut(cacheNames = "cacheEntity")

@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.methods.commands.SetMyCommands;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
+import org.telegram.telegrambots.meta.api.methods.send.SendPhoto;
+import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboard;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
@@ -55,6 +57,15 @@ public class SendBotMessageServiceImpl implements SendBotMessageService {
     }
 
     @Override
+    public void sendMessage(SendPhoto message) {
+        try {
+            telegramBot.execute(message);
+        } catch (TelegramApiException e) {
+            logger.warn(e.getLocalizedMessage());
+        }
+    }
+
+    @Override
     public void setReplyMarkup(String chatId, ReplyKeyboardMarkup replyKeyboardMarkup) {
         SendMessage sendMessage = new SendMessage();
         sendMessage.setChatId(chatId);
@@ -82,10 +93,7 @@ public class SendBotMessageServiceImpl implements SendBotMessageService {
         InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
         List<List<InlineKeyboardButton>> keyboard = new ArrayList<>();
         List<InlineKeyboardButton> line = new ArrayList<>();
-        line.add(InlineKeyboardButton.builder()
-                .text(text)
-                .url("tg://user?id=" + telegramId)
-                .build());
+        line.add(InlineKeyboardButton.builder().text(text).url("tg://user?id=" + telegramId).build());
         keyboard.add(line);
         inlineKeyboardMarkup.setKeyboard(keyboard);
         ReplyKeyboard replyMarkup = sendMessage.getReplyMarkup();
