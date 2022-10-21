@@ -32,13 +32,14 @@ public class AddProviderBotCommand implements BotCommand {
 
     @Override
     public BotCommandResultDto execute(Update update) {
+        BotCommandResultDto resultDto = new BotCommandResultDto();
         Long id;
         if (update.hasCallbackQuery()) {
             id = update.getCallbackQuery().getFrom().getId();
         } else if (update.hasMessage()) {
             id = update.getMessage().getChatId();
         } else {
-            return false;
+            return resultDto.setDone(false);
         }
         ProviderDto providerDto = providerService.getProviderDto(id);
         LOGGER.info("i try register new provider");
@@ -81,7 +82,7 @@ public class AddProviderBotCommand implements BotCommand {
                     break;
             }
         }
-        return isRegistration;
+        return resultDto.setDone(isRegistration);
     }
 
     private ProviderDto generateProviderFromMessage(Long id) {
