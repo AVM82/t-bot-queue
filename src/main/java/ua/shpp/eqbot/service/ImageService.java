@@ -116,7 +116,7 @@ public class ImageService {
                 .withBucketName(s3BucketName)
                 .withPrefix(folderPath + "/");
         ObjectListing objects = s3Client.listObjects(listObjectsRequest);
-        for (; ; ) {
+        for (;;) {
             List<S3ObjectSummary> summaries = objects.getObjectSummaries();
             if (summaries.size() < 1) {
                 break;
