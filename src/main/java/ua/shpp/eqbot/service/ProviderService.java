@@ -48,10 +48,13 @@ public class ProviderService {
         return providerDto;
     }
 
-    @Cacheable(cacheNames = PROVIDER_DTO_CACHE_NAME, key = "#id")
-    public ProviderDto getProviderDto(Long id) {
-        LOGGER.info("get provider dto by id {}", id);
-        return null;
+
+    @Cacheable(cacheNames = PROVIDER_DTO_CACHE_NAME, key = "#telegramId")
+    public ProviderDto getProviderDto(Long telegramId) {
+        LOGGER.info("get provider dto by telegramId {}", telegramId);
+        ProviderEntity providerEntity = getByTelegramIdEntity(telegramId);
+
+        return convertToDto(providerEntity);
     }
 
     @Transactional
