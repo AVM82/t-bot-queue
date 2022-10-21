@@ -1,6 +1,9 @@
 package ua.shpp.eqbot.dto;
 
+import org.apache.commons.lang3.builder.ToStringBuilder;
 import ua.shpp.eqbot.stage.PositionMenu;
+
+import java.util.Objects;
 
 public class PrevPositionDTO {
 
@@ -61,16 +64,28 @@ public class PrevPositionDTO {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
 
         PrevPositionDTO that = (PrevPositionDTO) o;
 
-        if (page != that.page) return false;
-        if (pageSize != that.pageSize) return false;
-        if (telegramId != null ? !telegramId.equals(that.telegramId) : that.telegramId != null) return false;
-        if (positionMenu != that.positionMenu) return false;
-        return receivedData != null ? receivedData.equals(that.receivedData) : that.receivedData == null;
+        if (page != that.page) {
+            return false;
+        }
+        if (pageSize != that.pageSize) {
+            return false;
+        }
+        if (!Objects.equals(telegramId, that.telegramId)) {
+            return false;
+        }
+        if (positionMenu != that.positionMenu) {
+            return false;
+        }
+        return Objects.equals(receivedData, that.receivedData);
     }
 
     @Override
@@ -85,12 +100,12 @@ public class PrevPositionDTO {
 
     @Override
     public String toString() {
-        return "PrevPositionDTO{" +
-                "telegramId=" + telegramId +
-                ", positionMenu=" + positionMenu +
-                ", receivedData='" + receivedData + '\'' +
-                ", page=" + page +
-                ", pageSize=" + pageSize +
-                '}';
+        return new ToStringBuilder(this)
+                .append("telegramId", telegramId)
+                .append("positionMenu", positionMenu)
+                .append("receivedData", receivedData)
+                .append("page", page)
+                .append("pageSize", pageSize)
+                .toString();
     }
 }
