@@ -21,6 +21,7 @@ public enum CommandName {
     REGISTRATION_FOR_THE_SERVICE_COMMAND("/RegistrationForTheServiceCommand"),
     SERVICE_INFO("/service info"),
     FEEDBACK("/feedback"),
+    RECORD_YOUR_USER("/RecordYourUser"),
     NO("nocommand");
 
     private final String nameCommand;

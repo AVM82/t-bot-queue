@@ -17,7 +17,6 @@ import ua.shpp.eqbot.repository.ProviderRepository;
 import ua.shpp.eqbot.repository.ServiceRepository;
 import ua.shpp.eqbot.service.SendBotMessageService;
 import ua.shpp.eqbot.service.UserService;
-import ua.shpp.eqbot.stage.PositionMenu;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -103,49 +102,53 @@ public class SearchServiceBotCommand implements BotCommand {
                 city = update.getMessage().getText();
             }
 
-            List<ProviderEntity> providerEntityByCityList = providerRepository.findAllByProviderCity(city);
-            if (providerEntityByCityList.isEmpty()) {
-                LOGGER.info("No service providers were found for the user's city of registration");
-                sendBotMessageService.sendMessage(String.valueOf(id),
-                        bundleLanguage.getValue(id, "search.byCityName.providerNotFound"));
-                return false;
-            }
-
-            List<Long> telegramIdProviderByCityList = providerEntityByCityList.stream()
-                    .map(ProviderEntity::getTelegramId)
-                    .collect(Collectors.toList());
-
-            List<ServiceEntity> serviceEntityByCityList = serviceRepository.findAllByTelegramIdIn(telegramIdProviderByCityList);
-            if (serviceEntityByCityList.isEmpty()) {
-                LOGGER.info("No services were found for the user's city of registration");
-                sendBotMessageService.sendMessage(String.valueOf(id),
-                        bundleLanguage.getValue(id, "search.byCityName.serviceNotFound"));
-                return false;
-            }
-
-            LOGGER.info("Found a list of services by city of user registration");
-
-            InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
-            List<List<InlineKeyboardButton>> availableServiceButtons = new ArrayList<>();
-
-            serviceEntityByCityList.forEach(serviceEntity -> {
-                List<InlineKeyboardButton> button = new ArrayList<>();
-                button.add(InlineKeyboardButton.builder()
-                        .text(serviceEntity.getName() + " (ID: " + serviceEntity.getId() + ")")
-                        .callbackData("service_info/" + serviceEntity.getId())
-                        .build());
-                availableServiceButtons.add(button);
-            });
-
-            inlineKeyboardMarkup.setKeyboard(availableServiceButtons);
-
-            SendMessage sendMessage = new SendMessage();
-            sendMessage.setChatId(id);
-            sendMessage.setText(String.format("%s %s", bundleLanguage.getValue(id, "search.byCityName.listOfServices"), city));
-            sendMessage.setReplyMarkup(inlineKeyboardMarkup);
-            sendBotMessageService.sendMessage(sendMessage);
-
+            return generateInlineKeyboard(id, city);
         }
+        return true;
+    }
+
+    private boolean generateInlineKeyboard(long id, String city) {
+        List<ProviderEntity> providerEntityByCityList = providerRepository.findAllByProviderCity(city);
+        if (providerEntityByCityList.isEmpty()) {
+            LOGGER.info("No service providers were found for the user's city of registration");
+            sendBotMessageService.sendMessage(String.valueOf(id),
+                    bundleLanguage.getValue(id, "search.byCityName.providerNotFound"));
+            return false;
+        }
+
+        List<Long> telegramIdProviderByCityList = providerEntityByCityList.stream()
+                .map(ProviderEntity::getTelegramId)
+                .collect(Collectors.toList());
+
+        List<ServiceEntity> serviceEntityByCityList = serviceRepository.findAllByTelegramIdIn(telegramIdProviderByCityList);
+        if (serviceEntityByCityList.isEmpty()) {
+            LOGGER.info("No services were found for the user's city of registration");
+            sendBotMessageService.sendMessage(String.valueOf(id),
+                    bundleLanguage.getValue(id, "search.byCityName.serviceNotFound"));
+            return false;
+        }
+
+        LOGGER.info("Found a list of services by city of user registration");
+
+        InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
+        List<List<InlineKeyboardButton>> availableServiceButtons = new ArrayList<>();
+
+        serviceEntityByCityList.forEach(serviceEntity -> {
+            List<InlineKeyboardButton> button = new ArrayList<>();
+            button.add(InlineKeyboardButton.builder()
+                    .text(serviceEntity.getName() + " (ID: " + serviceEntity.getId() + ")")
+                    .callbackData("service_info/" + serviceEntity.getId())
+                    .build());
+            availableServiceButtons.add(button);
+        });
+
+        inlineKeyboardMarkup.setKeyboard(availableServiceButtons);
+
+        SendMessage sendMessage = new SendMessage();
+        sendMessage.setChatId(id);
+        sendMessage.setText(String.format("%s %s", bundleLanguage.getValue(id, "search.byCityName.listOfServices"), city));
+        sendMessage.setReplyMarkup(inlineKeyboardMarkup);
+        sendBotMessageService.sendMessage(sendMessage);
         return true;
     }
 }

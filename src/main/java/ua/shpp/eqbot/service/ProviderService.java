@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import ua.shpp.eqbot.dto.ProviderDto;
 import ua.shpp.eqbot.model.ProviderEntity;
 import ua.shpp.eqbot.repository.ProviderRepository;
+import ua.shpp.eqbot.stage.PositionRegistrationProvider;
 
 
 @Service
@@ -33,6 +34,7 @@ public class ProviderService {
     public void saveEntityInCache(ProviderEntity entity) {
         LOGGER.info("save provider entity in cache {}", entity);
         ProviderDto dto = convertToDto(entity);
+        dto.setPositionRegistrationProvider(PositionRegistrationProvider.DONE);
         saveProviderDto(dto);
     }
 
@@ -53,8 +55,11 @@ public class ProviderService {
     public ProviderDto getProviderDto(Long telegramId) {
         LOGGER.info("get provider dto by telegramId {}", telegramId);
         ProviderEntity providerEntity = getByTelegramIdEntity(telegramId);
-
-        return convertToDto(providerEntity);
+        ProviderDto providerDto = convertToDto(providerEntity);
+        if (providerDto != null) {
+            providerDto.setPositionRegistrationProvider(PositionRegistrationProvider.DONE);
+        }
+        return providerDto;
     }
 
     @Transactional

@@ -52,23 +52,23 @@ public class StartBotCommand implements BotCommand {
     private void createStartMenu(Long chatId) {
         InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
         List<List<InlineKeyboardButton>> keyboard = new ArrayList<>();
-        List<InlineKeyboardButton> buttonCreate = new ArrayList<>();
-        buttonCreate.add(InlineKeyboardButton.builder()
-                .text(bundleLanguage.getValue(chatId, "create_service"))
-                .callbackData("create_service")
-                .build());
-        List<InlineKeyboardButton> buttonSearch = new ArrayList<>();
-        buttonCreate.add(InlineKeyboardButton.builder()
-                .text(bundleLanguage.getValue(chatId, "search_service"))
-                .callbackData("search_service")
-                .build());
-        keyboard.add(buttonCreate);
-        keyboard.add(buttonSearch);
+        List<InlineKeyboardButton> button = new ArrayList<>();
+        createButton(chatId, "create_service", "create_service", button);
+        createButton(chatId, "search_service", "search_service", button);
+        keyboard.add(button);
         inlineKeyboardMarkup.setKeyboard(keyboard);
         SendMessage sendMessage = new SendMessage();
         sendMessage.setText(bundleLanguage.getValue(chatId, "choose_menu_option"));
         sendMessage.setChatId(chatId);
         sendMessage.setReplyMarkup(inlineKeyboardMarkup);
         sendBotMessageService.sendMessage(sendMessage);
+    }
+
+    private void createButton(Long id, String nameButton,
+                              String dataButton, List<InlineKeyboardButton> button) {
+        button.add(InlineKeyboardButton.builder()
+                .text(bundleLanguage.getValue(id, nameButton))
+                .callbackData(dataButton)
+                .build());
     }
 }
