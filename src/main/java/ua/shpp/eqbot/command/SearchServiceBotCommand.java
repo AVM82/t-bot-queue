@@ -20,6 +20,7 @@ import ua.shpp.eqbot.model.ServiceEntity;
 import ua.shpp.eqbot.repository.ProviderRepository;
 import ua.shpp.eqbot.repository.ServiceRepository;
 import ua.shpp.eqbot.service.SendBotMessageService;
+import ua.shpp.eqbot.service.SendBotMessageServiceImpl;
 import ua.shpp.eqbot.service.UserService;
 
 import java.util.ArrayList;
@@ -145,7 +146,7 @@ public class SearchServiceBotCommand implements BotCommand {
                 .map(ProviderEntity::getTelegramId)
                 .collect(Collectors.toList());
 
-        Pageable pageable = PageRequest.of(prevPosition.getPage(), PrevPositionDTO.PAGE_SIZE);
+        Pageable pageable = PageRequest.of(prevPosition.getPage(), SendBotMessageServiceImpl.PAGE_SIZE);
         Page<ServiceEntity> serviceEntityByCityList = serviceRepository.findAllByTelegramIdIn(telegramIdProviderByCityList, pageable);
         if (serviceEntityByCityList.isEmpty()) {
             LOGGER.info("No services were found for the user's city of registration");

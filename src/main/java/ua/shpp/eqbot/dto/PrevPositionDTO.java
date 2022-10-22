@@ -7,7 +7,6 @@ import java.util.Objects;
 
 public class PrevPositionDTO {
 
-    public final static int PAGE_SIZE = 2;
 
     Long telegramId;
     PositionMenu positionMenu;

@@ -17,7 +17,7 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKe
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import ua.shpp.eqbot.dto.PrevPositionDTO;
 import ua.shpp.eqbot.model.ServiceEntity;
-import ua.shpp.eqbot.paging.Paging;
+
 import ua.shpp.eqbot.telegrambot.EqTelegramBot;
 
 import javax.validation.Valid;
@@ -28,10 +28,9 @@ import java.util.List;
  * Implementation of {@link SendBotMessageService} interface.
  */
 @Service
-@Scope("prototype")
 public class SendBotMessageServiceImpl implements SendBotMessageService {
-    @Value("${pagingSize:5")
-    private static int pageSize;
+
+    public static final int PAGE_SIZE = 5;
 
     private final Logger logger = LoggerFactory.getLogger(SendBotMessageServiceImpl.class);
 
@@ -118,29 +117,29 @@ public class SendBotMessageServiceImpl implements SendBotMessageService {
         return sendMessage;
     }
 
-    public List<List<InlineKeyboardButton>> createPageableKeyboard(Page<ServiceEntity> paging, PrevPositionDTO prevPositionDTO){
+    public List<List<InlineKeyboardButton>> createPageableKeyboard(Page<ServiceEntity> paging, PrevPositionDTO prevPositionDTO) {
         int totPages = paging.getTotalPages();
         List<ServiceEntity> listServices = paging.toList();
         List<List<InlineKeyboardButton>> keyboard = new ArrayList<>();
-        listServices.forEach(service ->{
+        listServices.forEach(service -> {
             List<InlineKeyboardButton> serviceInfo = new ArrayList<>();
             serviceInfo.add(InlineKeyboardButton.builder()
-                    .text(service.getName()+ " (ID: " + service.getId() + ")")
-                    .callbackData("service_info/"+service.getId())
+                    .text(service.getName() + " (ID: " + service.getId() + ")")
+                    .callbackData("service_info/" + service.getId())
                     .build());
             keyboard.add(serviceInfo);
         });
         List<InlineKeyboardButton> navigationLine = new ArrayList<>();
         int curPage = prevPositionDTO.getPage();
-        if(prevPositionDTO.getPage()>0){
+        if (prevPositionDTO.getPage() > 0) {
             navigationLine.add(InlineKeyboardButton.builder()
                     .text("<<").callbackData("back").build());
         }
         navigationLine.add(InlineKeyboardButton.builder()
                 .text("exit").callbackData("exit").build());
-        if(curPage+1<totPages){
-                navigationLine.add(InlineKeyboardButton.builder()
-                        .text(">>").callbackData("next").build());
+        if (curPage + 1 < totPages) {
+            navigationLine.add(InlineKeyboardButton.builder()
+                    .text(">>").callbackData("next").build());
 
         }
         keyboard.add(navigationLine);
