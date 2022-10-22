@@ -24,7 +24,7 @@ public final class CommandUtils {
     public static String buildCommandClassName(String botCommand) {
         String substring = StringUtils.trimToEmpty(StringUtils.substring(botCommand, 1))
                 .toLowerCase()
-                .replaceAll("_", " ");
+                .replace("_", " ");
         if (StringUtils.isBlank(substring) || !StringUtils.isAlphaSpace(substring)) {
             return "Unknown" + BOT_COMMAND;
         }

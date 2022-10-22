@@ -43,11 +43,11 @@ public class ServiceInfoBotCommand implements BotCommand {
         SendPhoto sendPhoto = createMessage(service, telegramId, serviceInfo);
         if (sendPhoto == null) {
             SendMessage sendMessage = new SendMessage(telegramId.toString(), serviceInfo);
-            sendMessage.setReplyMarkup(keyboardForServiceCreator(service, telegramId));
+            sendMessage.setReplyMarkup(keyboardForServiceCreator(telegramId));
             sendMessage.setParseMode(ParseMode.HTML);
             sendBotMessageService.sendMessage(sendMessage);
         } else {
-            sendPhoto.setReplyMarkup(keyboardForServiceCreator(service, telegramId));
+            sendPhoto.setReplyMarkup(keyboardForServiceCreator(telegramId));
             sendPhoto.setParseMode(ParseMode.HTML);
             sendBotMessageService.sendMessage(sendPhoto);
         }
@@ -68,7 +68,7 @@ public class ServiceInfoBotCommand implements BotCommand {
         }
     }
 
-    private InlineKeyboardMarkup keyboardForServiceCreator(ServiceEntity service, Long chatId) {
+    private InlineKeyboardMarkup keyboardForServiceCreator(Long chatId) {
         InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
         List<List<InlineKeyboardButton>> keyboard = new ArrayList<>();
         List<InlineKeyboardButton> line1 = new ArrayList<>();

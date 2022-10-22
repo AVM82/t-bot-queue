@@ -66,61 +66,65 @@ public class SearchStringBotCommand implements BotCommand {
             sendBotMessageService.sendMessage(String.valueOf(chatId), bundleLanguage.getValue(chatId, "search.searchUsesNameService.text"));
             return true;
         } else {
-            pairMap.computeIfAbsent(chatId, k -> new Pair(0));
-            if (update.hasCallbackQuery() && update.getCallbackQuery().getData().startsWith("searchString")) {
-                pairMap.put(chatId, new Pair(userService.getPrevPosition(chatId).getPage()));
-            }
-            Paging paging = new Paging(serviceRepository);
-            LOGGER.info("inner else find list use like");
-            user.setPositionMenu(PositionMenu.SEARCH_USES_NAME_SERVICE);
-            String likeString = "";
-            if (update.hasMessage()) {
-                likeString = update.getMessage().getText();
-            }
-            if (update.hasCallbackQuery()) {
-                likeString = userService.getPrevPosition(chatId).getReceivedData().split("/")[1];
-            }
+            return workWithPair(chatId, update, user, prevPosition);
+        }
+    }
 
-            CallbackQuery callbackQuery = update.getCallbackQuery();
+    boolean workWithPair(long chatId, Update update, UserDto user, PrevPositionDTO prevPosition) {
+        pairMap.computeIfAbsent(chatId, k -> new Pair(0));
+        if (update.hasCallbackQuery() && update.getCallbackQuery().getData().startsWith("searchString")) {
+            pairMap.put(chatId, new Pair(userService.getPrevPosition(chatId).getPage()));
+        }
+        Paging paging = new Paging(serviceRepository);
+        LOGGER.info("inner else find list use like");
+        user.setPositionMenu(PositionMenu.SEARCH_USES_NAME_SERVICE);
+        String likeString = "";
+        if (update.hasMessage()) {
+            likeString = update.getMessage().getText();
+        }
+        if (update.hasCallbackQuery()) {
+            likeString = userService.getPrevPosition(chatId).getReceivedData().split("/")[1];
+        }
 
-            if (callbackQuery != null && callbackQuery.getData().equals("next")) {
-                LOGGER.info("next page  ========== >");
-                pairMap.put(chatId, pairMap.get(chatId).increase());
-                LOGGER.info("next page from {} to {}", pairMap.get(chatId).getFrom(), pairMap.get(chatId).getPagingSize());
-            } else if (callbackQuery != null && callbackQuery.getData().equals("back")) {
-                LOGGER.info("previous page  ========== >");
-                pairMap.put(chatId, pairMap.get(chatId).decrease());
-                LOGGER.info("previous page from {} to {}", pairMap.get(chatId).getFrom(), pairMap.get(chatId).getPagingSize());
-            }
+        CallbackQuery callbackQuery = update.getCallbackQuery();
 
-            Pair pair = pairMap.get(chatId);
-            List<ServiceEntity> page = paging.getPage(pair.getFrom(), pair.getPagingSize(), likeString);
+        if (callbackQuery != null && callbackQuery.getData().equals("next")) {
+            LOGGER.info("next page  ========== >");
+            pairMap.put(chatId, pairMap.get(chatId).increase());
+            LOGGER.info("next page from {} to {}", pairMap.get(chatId).getFrom(), pairMap.get(chatId).getPagingSize());
+        } else if (callbackQuery != null && callbackQuery.getData().equals("back")) {
+            LOGGER.info("previous page  ========== >");
+            pairMap.put(chatId, pairMap.get(chatId).decrease());
+            LOGGER.info("previous page from {} to {}", pairMap.get(chatId).getFrom(), pairMap.get(chatId).getPagingSize());
+        }
 
-            if (callbackQuery != null && callbackQuery.getData().equals("exit")) {
-                LOGGER.info("exit");
-                pairMap.remove(chatId);
+        Pair pair = pairMap.get(chatId);
+        List<ServiceEntity> page = paging.getPage(pair.getFrom(), pair.getPagingSize(), likeString);
+
+        if (callbackQuery != null && callbackQuery.getData().equals("exit")) {
+            LOGGER.info("exit");
+            pairMap.remove(chatId);
+            user.setPositionMenu(PositionMenu.MENU_START);
+            return true;
+        }
+
+        prevPosition.setPage(pair.getFrom());
+        userService.putPrevPosition(prevPosition);
+        if (!page.isEmpty()) {
+            LOGGER.info("Found a list of services by description LIKE {} counts: {}", likeString, 777);
+            pairMap.get(chatId).setLast(false);
+            return fillListResulSelection(chatId, page);
+        } else {
+            LOGGER.info("No service were found for the string");
+            List<ServiceEntity> previousPage = pairMap.get(chatId).getServiceEntities();
+            pairMap.get(chatId).setLast(true);
+            if (previousPage == null) {
                 user.setPositionMenu(PositionMenu.MENU_START);
+                pairMap.remove(chatId);
+                sendBotMessageService.sendMessage(String.valueOf(chatId), bundleLanguage.getValue(chatId, "search.by.like.last.page"));
                 return true;
             }
-
-            prevPosition.setPage(pair.getFrom());
-            userService.putPrevPosition(prevPosition);
-            if (!page.isEmpty()) {
-                LOGGER.info("Found a list of services by description LIKE {} counts: {}", likeString, 777);
-                pairMap.get(chatId).setLast(false);
-                return fillListResulSelection(chatId, page);
-            } else {
-                LOGGER.info("No service were found for the string");
-                List<ServiceEntity> previousPage = pairMap.get(chatId).getServiceEntities();
-                pairMap.get(chatId).setLast(true);
-                if (previousPage == null) {
-                    user.setPositionMenu(PositionMenu.MENU_START);
-                    pairMap.remove(chatId);
-                    sendBotMessageService.sendMessage(String.valueOf(chatId), bundleLanguage.getValue(chatId, "search.by.like.last.page"));
-                    return true;
-                }
-                return fillListResulSelection(chatId, previousPage);
-            }
+            return fillListResulSelection(chatId, previousPage);
         }
     }
 
