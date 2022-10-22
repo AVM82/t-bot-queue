@@ -34,4 +34,16 @@ public class UserMapperTest {
         assertThat(userDto.getName()).isEqualTo("Oleksandr");
         assertThat(userDto.getPhone()).isEqualTo("777");
     }
+
+    @org.junit.jupiter.api.Test
+    void userEntityToUserDTO() {
+    }
+
+    @org.junit.jupiter.api.Test
+    void userDTOToUserEntity() {
+    }
+
+    @org.junit.jupiter.api.Test
+    void updateUserFromDto() {
+    }
 }

@@ -82,7 +82,7 @@ public class UserService {
     @Cacheable(cacheNames = DTO_CACHE_NAME, key = "#telegramId")
     public UserDto getDto(Long telegramId) {
         LOGGER.info("get userDto by telegramId {}", telegramId);
-        return null;
+        return UserMapper.INSTANCE.userEntityToUserDTO(userRepository.findById(telegramId).get());
     }
 
     @Transactional
