@@ -16,6 +16,7 @@ import java.util.List;
  */
 public interface SendBotMessageService {
 
+
     /**
      * Send message via telegram bot.
      *

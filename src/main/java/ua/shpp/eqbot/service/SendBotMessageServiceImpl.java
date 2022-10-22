@@ -3,6 +3,7 @@ package ua.shpp.eqbot.service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Scope;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
@@ -19,6 +20,7 @@ import ua.shpp.eqbot.model.ServiceEntity;
 import ua.shpp.eqbot.paging.Paging;
 import ua.shpp.eqbot.telegrambot.EqTelegramBot;
 
+import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,6 +30,8 @@ import java.util.List;
 @Service
 @Scope("prototype")
 public class SendBotMessageServiceImpl implements SendBotMessageService {
+    @Value("${pagingSize:5")
+    private static int pageSize;
 
     private final Logger logger = LoggerFactory.getLogger(SendBotMessageServiceImpl.class);
 
@@ -133,7 +137,7 @@ public class SendBotMessageServiceImpl implements SendBotMessageService {
                     .text("<<").callbackData("back").build());
         }
         navigationLine.add(InlineKeyboardButton.builder()
-                .text("exit").callbackData("e").build());
+                .text("exit").callbackData("exit").build());
         if(curPage+1<totPages){
                 navigationLine.add(InlineKeyboardButton.builder()
                         .text(">>").callbackData("next").build());
