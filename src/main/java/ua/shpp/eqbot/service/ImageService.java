@@ -118,7 +118,7 @@ public class ImageService {
         ObjectListing objects = s3Client.listObjects(listObjectsRequest);
         for (;;) {
             List<S3ObjectSummary> summaries = objects.getObjectSummaries();
-            if (summaries.size() < 1) {
+            if (summaries.isEmpty()) {
                 break;
             }
 
@@ -211,7 +211,7 @@ public class ImageService {
         return img;
     }
 
-    public List<Message> sendMediaGroup(String chatId, String folderPath) {
+    public List<Message> sendMediaGroup(String folderPath) {
         SendMediaGroup message = new SendMediaGroup();
         List<InputMedia> photos = new ArrayList<>();
         List<String> photosPath = listObjectsInS3Folder(folderPath);
@@ -223,7 +223,7 @@ public class ImageService {
             return bot.execute(message);
         } catch (TelegramApiException e) {
             LOGGER.warn("Can`t send media group", e);
-            return null;
+            return new ArrayList<>();
         }
     }
 }

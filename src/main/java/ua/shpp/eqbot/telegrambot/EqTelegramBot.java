@@ -45,7 +45,6 @@ public class EqTelegramBot extends TelegramLongPollingBot {
     private String botToken;
 
     @Override
-    /*TODO command return answer*/
     public void onUpdateReceived(Update update) {
         if (update.hasCallbackQuery()) {
             callbackQueryHandler(update);
@@ -106,10 +105,6 @@ public class EqTelegramBot extends TelegramLongPollingBot {
                 } else if (user.getPositionMenu() == SEARCH_USES_NAME_SERVICE) {
                     LOGGER.info("enter a few letters that you want to search for");
                     getBotCommand(CommandName.SEARCH_USES_NAME_SERVICE.getNameCommand()).execute(update);
-//                    if (!iCommands.get(CommandName.SEARCH_USES_NAME_SERVICE.getNameCommand()).execute(update)) {
-//                        iCommands.get(CommandName.SEARCH_USES_NAME_SERVICE.getNameCommand()).execute(update);
-//                    }
-
                 } else if (user.getPositionMenu() == FEEDBACK) {
                     getBotCommand(CommandName.FEEDBACK.getNameCommand()).execute(update);
                     getBotCommand(CommandName.START.getNameCommand()).execute(update);
@@ -144,70 +139,74 @@ public class EqTelegramBot extends TelegramLongPollingBot {
         LOGGER.info("callbackQueryHandler start work");
         CallbackQuery callbackQuery = update.getCallbackQuery();
         UserDto userDto = findDtoIfPossible(update);
-        if (update.getCallbackQuery().getData().startsWith("appoint/")) {
-            userDto.setPositionMenu(REGISTRATION_FOR_THE_SERVICES_START);
-        }
-        if (callbackQuery.getData().equals("create_service")) {
-            LOGGER.info("create_service");
-            userDto.setPositionMenu(MENU_CREATE_SERVICE);
-            if (!getBotCommand("/check provider").execute(update)) {
-                userDto.setPositionMenu(REGISTRATION_PROVIDER);
-            }
-        } else if (callbackQuery.getData().equals("search_service")) {
-            LOGGER.info("search_menu");
-            getBotCommand(CommandName.SEARCH_MENU.getNameCommand()).execute(update);
-        } else if (callbackQuery.getData().startsWith("searchCity")) {
-            LOGGER.info("search by name");
-            getBotCommand(CommandName.SEARCH_SERVICE_BY_CITY_NAME.getNameCommand()).execute(update);
-        } else if (callbackQuery.getData().startsWith("searchId")) {
-            LOGGER.info("search by id");
-            getBotCommand(CommandName.SEARCH_BY_ID.getNameCommand()).execute(update);
-        } else if (callbackQuery.getData().startsWith("searchString")) {
-            LOGGER.info("search uses name service");
-            getBotCommand(CommandName.SEARCH_USES_NAME_SERVICE.getNameCommand()).execute(update);
-        } else if (callbackQuery.getData().equals("return_in_menu")) {
-            getBotCommand(CommandName.START.getNameCommand()).execute(update);
-        } else if (callbackQuery.getData().equals("change_provider_details")) {
-            LOGGER.info("change provider details");
-        } else if (callbackQuery.getData().equals("newServiceFromAnExistingProvider")) {
-            LOGGER.info("add new service");
-            userService.getDto(update.getCallbackQuery().getFrom().getId())
-                    .setPositionMenu(PositionMenu.REGISTRATION_SERVICE);
-            getBotCommand("/add").execute(update);
-        } else if (callbackQuery.getData().startsWith("service_info/")) {
-            getBotCommand("/service info").execute(update);
-        }  else if ((userDto.getPositionMenu() == SEARCH_BY_CITY_NAME)) {
-            if (!getBotCommand(CommandName.SEARCH_SERVICE_BY_CITY_NAME.getNameCommand()).execute(update)) {
-                userDto.setPositionMenu(MENU_START);
-                getBotCommand(CommandName.START.getNameCommand()).execute(update);
-            }
-        } else if (userDto.getPositionMenu() == REGISTRATION_FOR_THE_SERVICES_START
-                || userDto.getPositionMenu() == REGISTRATION_FOR_THE_SERVICES_DATE
-                || userDto.getPositionMenu() == REGISTRATION_FOR_THE_SERVICES_TIME) {
-            LOGGER.info("The user has successfully selected the service");
-            setNumberOfDaysInSearchOfService(7);
-            if (getBotCommand("/RegistrationForTheServiceCommand").execute(update)) {
-                getBotCommand(CommandName.START.getNameCommand()).execute(update);
-            }
-        } else if (callbackQuery.getData().equals("add_provider")) {
-            getBotCommand("/add provider").execute(update);
-            UserDto user = userService.getDto(update.getCallbackQuery().getFrom().getId());
-            user.setPositionMenu(REGISTRATION_PROVIDER);
-        } else if (callbackQuery.getData().equals("change_role")) {
-            getBotCommand("/change_role").execute(update);
-        } else if (callbackQuery.getData().equals("next") || callbackQuery.getData().equals("back")) {
-            getBotCommand(CommandName.SEARCH_USES_NAME_SERVICE.getNameCommand()).execute(update);
-        } else if (callbackQuery.getData().equals("exit")) {
-            getBotCommand(CommandName.SEARCH_USES_NAME_SERVICE.getNameCommand()).execute(update);
-            getBotCommand(CommandName.START.getNameCommand()).execute(update);
-        } else if (callbackQuery.getData().equals("change_lang")) {
-            getBotCommand("/change_language").execute(update);
-            getBotCommand("/start").execute(update);
-        } else if (userDto.getPositionMenu() == FEEDBACK) {
-            getBotCommand(CommandName.FEEDBACK.getNameCommand()).execute(update);
+        if (userDto == null) {
             getBotCommand(CommandName.START.getNameCommand()).execute(update);
         } else {
-            getBotCommand("/start").execute(update);
+            if (update.getCallbackQuery().getData().startsWith("appoint/")) {
+                userDto.setPositionMenu(REGISTRATION_FOR_THE_SERVICES_START);
+            }
+            if (callbackQuery.getData().equals("create_service")) {
+                LOGGER.info("create_service");
+                userDto.setPositionMenu(MENU_CREATE_SERVICE);
+                if (!getBotCommand("/check provider").execute(update)) {
+                    userDto.setPositionMenu(REGISTRATION_PROVIDER);
+                }
+            } else if (callbackQuery.getData().equals("search_service")) {
+                LOGGER.info("search_menu");
+                getBotCommand(CommandName.SEARCH_MENU.getNameCommand()).execute(update);
+            } else if (callbackQuery.getData().startsWith("searchCity")) {
+                LOGGER.info("search by name");
+                getBotCommand(CommandName.SEARCH_SERVICE_BY_CITY_NAME.getNameCommand()).execute(update);
+            } else if (callbackQuery.getData().startsWith("searchId")) {
+                LOGGER.info("search by id");
+                getBotCommand(CommandName.SEARCH_BY_ID.getNameCommand()).execute(update);
+            } else if (callbackQuery.getData().startsWith("searchString")) {
+                LOGGER.info("search uses name service");
+                getBotCommand(CommandName.SEARCH_USES_NAME_SERVICE.getNameCommand()).execute(update);
+            } else if (callbackQuery.getData().equals("return_in_menu")) {
+                getBotCommand(CommandName.START.getNameCommand()).execute(update);
+            } else if (callbackQuery.getData().equals("change_provider_details")) {
+                LOGGER.info("change provider details");
+            } else if (callbackQuery.getData().equals("newServiceFromAnExistingProvider")) {
+                LOGGER.info("add new service");
+                userService.getDto(update.getCallbackQuery().getFrom().getId())
+                        .setPositionMenu(PositionMenu.REGISTRATION_SERVICE);
+                getBotCommand("/add").execute(update);
+            } else if (callbackQuery.getData().startsWith("service_info/")) {
+                getBotCommand("/service info").execute(update);
+            } else if ((userDto.getPositionMenu() == SEARCH_BY_CITY_NAME)) {
+                if (!getBotCommand(CommandName.SEARCH_SERVICE_BY_CITY_NAME.getNameCommand()).execute(update)) {
+                    userDto.setPositionMenu(MENU_START);
+                    getBotCommand(CommandName.START.getNameCommand()).execute(update);
+                }
+            } else if (userDto.getPositionMenu() == REGISTRATION_FOR_THE_SERVICES_START
+                    || userDto.getPositionMenu() == REGISTRATION_FOR_THE_SERVICES_DATE
+                    || userDto.getPositionMenu() == REGISTRATION_FOR_THE_SERVICES_TIME) {
+                LOGGER.info("The user has successfully selected the service");
+                setNumberOfDaysInSearchOfService(7);
+                if (getBotCommand("/RegistrationForTheServiceCommand").execute(update)) {
+                    getBotCommand(CommandName.START.getNameCommand()).execute(update);
+                }
+            } else if (callbackQuery.getData().equals("add_provider")) {
+                getBotCommand("/add provider").execute(update);
+                UserDto user = userService.getDto(update.getCallbackQuery().getFrom().getId());
+                user.setPositionMenu(REGISTRATION_PROVIDER);
+            } else if (callbackQuery.getData().equals("change_role")) {
+                getBotCommand("/change_role").execute(update);
+            } else if (callbackQuery.getData().equals("next") || callbackQuery.getData().equals("back")) {
+                getBotCommand(CommandName.SEARCH_USES_NAME_SERVICE.getNameCommand()).execute(update);
+            } else if (callbackQuery.getData().equals("exit")) {
+                getBotCommand(CommandName.SEARCH_USES_NAME_SERVICE.getNameCommand()).execute(update);
+                getBotCommand(CommandName.START.getNameCommand()).execute(update);
+            } else if (callbackQuery.getData().equals("change_lang")) {
+                getBotCommand("/change_language").execute(update);
+                getBotCommand("/start").execute(update);
+            } else if (userDto.getPositionMenu() == FEEDBACK) {
+                getBotCommand(CommandName.FEEDBACK.getNameCommand()).execute(update);
+                getBotCommand(CommandName.START.getNameCommand()).execute(update);
+            } else {
+                getBotCommand("/start").execute(update);
+            }
         }
     }
 
@@ -217,12 +216,12 @@ public class EqTelegramBot extends TelegramLongPollingBot {
         UserEntity entity = null;
         if (userDto == null) {
             entity = userService.getEntity(telegramId);
-        }
-        if (entity != null) {
-            userDto = UserMapper.INSTANCE.userEntityToUserDTO(entity);
-            userDto.setPositionMenu(MENU_START);
-            userDto.setPositionRegistration(PositionRegistration.DONE);
-            userService.saveDto(userDto);
+            if (entity != null) {
+                userDto = UserMapper.INSTANCE.userEntityToUserDTO(entity);
+                userDto.setPositionMenu(MENU_START);
+                userDto.setPositionRegistration(PositionRegistration.DONE);
+                userService.saveDto(userDto);
+            }
         }
         return userDto;
     }

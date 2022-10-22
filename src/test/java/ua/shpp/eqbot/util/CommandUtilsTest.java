@@ -9,12 +9,12 @@ import static org.hamcrest.MatcherAssert.assertThat;
 
 class CommandUtilsTest {
     @Test
-    public void whenCommandThenJavaClass() {
+    void whenCommandThenJavaClass() {
         assertThat(CommandUtils.buildCommandClassName("/log"), Is.is(LogBotCommand.class.getSimpleName()));
     }
 
     @Test
-    public void whenCommandEmptyThenJavaClassNoCommand() {
+    void whenCommandEmptyThenJavaClassNoCommand() {
         assertThat(CommandUtils.buildCommandClassName(""), Is.is(UnknownBotCommand.class.getSimpleName()));
         assertThat(CommandUtils.buildCommandClassName(null), Is.is(UnknownBotCommand.class.getSimpleName()));
         assertThat(CommandUtils.buildCommandClassName("/"), Is.is(UnknownBotCommand.class.getSimpleName()));
@@ -24,13 +24,13 @@ class CommandUtilsTest {
     }
 
     @Test
-    public void whenCommandTwiceThenJavaNoCommand() {
+    void whenCommandTwiceThenJavaNoCommand() {
         assertThat(CommandUtils.buildCommandClassName("/abc qwe"), Is.is("AbcQweBotCommand"));
         assertThat(CommandUtils.buildCommandClassName("/abc  qwe "), Is.is("AbcQweBotCommand"));
     }
 
     @Test
-    public void whenCommandUnderscoreThenJavaNoCommand() {
+    void whenCommandUnderscoreThenJavaNoCommand() {
         assertThat(CommandUtils.buildCommandClassName("/abc_qwe"), Is.is("AbcQweBotCommand"));
         assertThat(CommandUtils.buildCommandClassName("/abc__qwe_"), Is.is("AbcQweBotCommand"));
     }

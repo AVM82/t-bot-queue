@@ -16,9 +16,6 @@ public class FeedbackEntity {
         return idFeedback;
     }
 
-    public FeedbackEntity() {
-    }
-
     public FeedbackEntity setIdFeedback(Long idFeedback) {
         this.idFeedback = idFeedback;
         return this;
