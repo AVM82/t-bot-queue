@@ -33,7 +33,6 @@ public class UserService {
         this.validator = validator;
     }
 
-    
     public UserEntity getEntity(Long telegramId) {
         LOGGER.info("get userEntity by telegramId {}", telegramId);
         UserDto dto = getDto(telegramId);
