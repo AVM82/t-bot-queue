@@ -7,11 +7,13 @@ import java.util.Objects;
 
 public class PrevPositionDTO {
 
+    public final static int PAGE_SIZE = 5;
+
     Long telegramId;
     PositionMenu positionMenu;
     String receivedData;
-    int page = -1;
-    int pageSize = -1;
+    int page = 0;
+
 
     public PrevPositionDTO(Long telegramId, PositionMenu positionMenu, String receivedData) {
         this.telegramId = telegramId;
@@ -27,13 +29,6 @@ public class PrevPositionDTO {
         this.page = page;
     }
 
-    public int getPageSize() {
-        return pageSize;
-    }
-
-    public void setPageSize(int pageSize) {
-        this.pageSize = pageSize;
-    }
 
     public PrevPositionDTO() {
     }
@@ -76,9 +71,7 @@ public class PrevPositionDTO {
         if (page != that.page) {
             return false;
         }
-        if (pageSize != that.pageSize) {
-            return false;
-        }
+
         if (!Objects.equals(telegramId, that.telegramId)) {
             return false;
         }
@@ -94,7 +87,6 @@ public class PrevPositionDTO {
         result = 31 * result + (positionMenu != null ? positionMenu.hashCode() : 0);
         result = 31 * result + (receivedData != null ? receivedData.hashCode() : 0);
         result = 31 * result + page;
-        result = 31 * result + pageSize;
         return result;
     }
 
@@ -105,7 +97,6 @@ public class PrevPositionDTO {
                 .append("positionMenu", positionMenu)
                 .append("receivedData", receivedData)
                 .append("page", page)
-                .append("pageSize", pageSize)
                 .toString();
     }
 }

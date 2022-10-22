@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.methods.commands.SetMyCommands;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
@@ -14,6 +15,9 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboard;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
+import ua.shpp.eqbot.dto.PrevPositionDTO;
+import ua.shpp.eqbot.model.ServiceEntity;
+import ua.shpp.eqbot.paging.Paging;
 import ua.shpp.eqbot.telegrambot.EqTelegramBot;
 
 import java.util.ArrayList;
@@ -109,6 +113,35 @@ public class SendBotMessageServiceImpl implements SendBotMessageService {
             sendMessage.setReplyMarkup(curMarkup);
         }
         return sendMessage;
+    }
 
+    public List<List<InlineKeyboardButton>> createPageableKeyboard(Page<ServiceEntity> paging, PrevPositionDTO prevPositionDTO){
+        long totalElements = paging.getTotalElements();
+        List<ServiceEntity> listServices = paging.toList();
+        List<List<InlineKeyboardButton>> keyboard = new ArrayList<>();
+        listServices.forEach(service ->{
+            List<InlineKeyboardButton> serviceInfo = new ArrayList<>();
+            serviceInfo.add(InlineKeyboardButton.builder()
+                    .text(service.getName()+ " (ID: " + service.getId() + ")")
+                    .callbackData("sevice_info/"+service.getId())
+                    .build());
+            keyboard.add(serviceInfo);
+        });
+        List<InlineKeyboardButton> navigationLine = new ArrayList<>();
+        int curPage = prevPositionDTO.getPage();
+        if(prevPositionDTO.getPage()>=PrevPositionDTO.PAGE_SIZE){
+            navigationLine.add(InlineKeyboardButton.builder()
+                    .text("<<").callbackData("back").build());
+        }
+        navigationLine.add(InlineKeyboardButton.builder()
+                .text("exit").callbackData("e").build());
+        if(curPage+PrevPositionDTO.PAGE_SIZE<totalElements){
+            if(prevPositionDTO.getPage()>=PrevPositionDTO.PAGE_SIZE){
+                navigationLine.add(InlineKeyboardButton.builder()
+                        .text(">>").callbackData("next").build());
+            }
+        }
+        keyboard.add(navigationLine);
+        return keyboard;
     }
 }
