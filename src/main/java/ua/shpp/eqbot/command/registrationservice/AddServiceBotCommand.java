@@ -183,7 +183,7 @@ public class AddServiceBotCommand implements BotCommand {
     }
 
     private boolean changeFormatTime(String time, Long id) {
-        if (time.matches("(\\d|0\\d|1\\d|2[0-3]):[0-5]\\d-(\\d|0\\d|1\\d|2[0-3]):[0-5]\\d")) {
+        if (time.equals("-") || time.matches("(\\d|0\\d|1\\d|2[0-3]):[0-5]\\d-(\\d|0\\d|1\\d|2[0-3]):[0-5]\\d")) {
             return true;
         } else {
             createMessage(id, "unformatted");
