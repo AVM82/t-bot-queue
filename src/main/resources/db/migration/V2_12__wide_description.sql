@@ -1,0 +1,1 @@
+alter table services alter column description TYPE varchar(1024);

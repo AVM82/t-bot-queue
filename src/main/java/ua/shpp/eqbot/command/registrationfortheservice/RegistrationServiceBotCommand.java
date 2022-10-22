@@ -189,6 +189,7 @@ public class RegistrationServiceBotCommand implements BotCommand {
      * @return - a list of days on which there is free time for registration
      */
     private List<String> findData(List<RegistrationForTheServiceEntity> listServices, ServiceEntity serviceEntity) {
+
         List<String> freeDays = new ArrayList<>();
         EnumMap<DayOfWeek, String> schedule = getSchedule(serviceEntity);
         List<String> workTime = workTime(serviceEntity.getTimeBetweenClients(),
@@ -295,6 +296,9 @@ public class RegistrationServiceBotCommand implements BotCommand {
      */
     private List<String> workTime(String timeBetweenClients, String schedule) {
         List<String> workTime = new ArrayList<>();
+        if (schedule.equals("-")) {
+            return workTime;
+        }
         String[] str = schedule.split("-");
         String[] start = str[0].split(":");
         String[] end = str[1].split(":");

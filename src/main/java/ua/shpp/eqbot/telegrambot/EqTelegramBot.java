@@ -46,12 +46,17 @@ public class EqTelegramBot extends TelegramLongPollingBot {
 
     @Override
     public void onUpdateReceived(Update update) {
-        if (update.hasCallbackQuery()) {
-            callbackQueryHandler(update);
-        } else if (update.getMessage().hasText() && update.getMessage().isCommand()) {
-            commandHandler(update);
-        } else {
-            textHandler(update);
+        try {
+            if (update.hasCallbackQuery()) {
+                callbackQueryHandler(update);
+            } else if (update.getMessage().hasText() && update.getMessage().isCommand()) {
+                commandHandler(update);
+            } else {
+                textHandler(update);
+            }
+        } catch (Exception ex) {
+            LOGGER.warn(ex.getLocalizedMessage());
+            getBotCommand(CommandName.START.getNameCommand()).execute(update);
         }
     }
 
@@ -215,7 +220,7 @@ public class EqTelegramBot extends TelegramLongPollingBot {
     private UserDto findDtoIfPossible(Update update) {
         long telegramId = update.getCallbackQuery().getFrom().getId();
         UserDto userDto = userService.getDto(telegramId);
-        UserEntity entity = null;
+        UserEntity entity;
         if (userDto == null) {
             entity = userService.getEntity(telegramId);
             if (entity != null) {
