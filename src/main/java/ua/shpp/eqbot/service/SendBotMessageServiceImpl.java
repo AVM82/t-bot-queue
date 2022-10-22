@@ -116,30 +116,29 @@ public class SendBotMessageServiceImpl implements SendBotMessageService {
     }
 
     public List<List<InlineKeyboardButton>> createPageableKeyboard(Page<ServiceEntity> paging, PrevPositionDTO prevPositionDTO){
-        long totalElements = paging.getTotalElements();
+        int totPages = paging.getTotalPages();
         List<ServiceEntity> listServices = paging.toList();
         List<List<InlineKeyboardButton>> keyboard = new ArrayList<>();
         listServices.forEach(service ->{
             List<InlineKeyboardButton> serviceInfo = new ArrayList<>();
             serviceInfo.add(InlineKeyboardButton.builder()
                     .text(service.getName()+ " (ID: " + service.getId() + ")")
-                    .callbackData("sevice_info/"+service.getId())
+                    .callbackData("service_info/"+service.getId())
                     .build());
             keyboard.add(serviceInfo);
         });
         List<InlineKeyboardButton> navigationLine = new ArrayList<>();
         int curPage = prevPositionDTO.getPage();
-        if(prevPositionDTO.getPage()>=PrevPositionDTO.PAGE_SIZE){
+        if(prevPositionDTO.getPage()>0){
             navigationLine.add(InlineKeyboardButton.builder()
                     .text("<<").callbackData("back").build());
         }
         navigationLine.add(InlineKeyboardButton.builder()
                 .text("exit").callbackData("e").build());
-        if(curPage+PrevPositionDTO.PAGE_SIZE<totalElements){
-            if(prevPositionDTO.getPage()>=PrevPositionDTO.PAGE_SIZE){
+        if(curPage+1<totPages){
                 navigationLine.add(InlineKeyboardButton.builder()
                         .text(">>").callbackData("next").build());
-            }
+
         }
         keyboard.add(navigationLine);
         return keyboard;

@@ -87,11 +87,11 @@ public class SearchStringBotCommand implements BotCommand {
             CallbackQuery callbackQuery = update.getCallbackQuery();
             if (callbackQuery != null && callbackQuery.getData().equals("next")) {
                 LOGGER.info("next page  ========== >");
-                prevPosition.setPage(prevPosition.getPage() + PrevPositionDTO.PAGE_SIZE);
+                prevPosition.setPage(prevPosition.getPage() + 1);
                 //               LOGGER.info("next page from {} to {}", pairMap.get(chatId).getFrom(), pairMap.get(chatId).getPagingSize());
             } else if (callbackQuery != null && callbackQuery.getData().equals("back")) {
                 LOGGER.info("previous page  ========== >");
-                prevPosition.setPage(prevPosition.getPage() - PrevPositionDTO.PAGE_SIZE);
+                prevPosition.setPage(prevPosition.getPage() - 1);
 //                LOGGER.info("previous page from {} to {}", pairMap.get(chatId).getFrom(), pairMap.get(chatId).getPagingSize());
             }
             userService.putPrevPosition(prevPosition);
@@ -107,8 +107,6 @@ public class SearchStringBotCommand implements BotCommand {
 //                return true;
 //            }
 
-
-            userService.putPrevPosition(prevPosition);
 //            if (!page.isEmpty()) {
 //                LOGGER.info("Found a list of services by description LIKE {} counts: {}", likeString, 777);
 //                pairMap.get(chatId).setLast(false);
