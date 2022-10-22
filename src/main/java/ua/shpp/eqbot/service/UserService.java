@@ -33,8 +33,7 @@ public class UserService {
         this.validator = validator;
     }
 
-
-    @Cacheable(cacheNames = "cacheEntity", key = "#telegramId")
+    
     public UserEntity getEntity(Long telegramId) {
         LOGGER.info("get userEntity by telegramId {}", telegramId);
         UserDto dto = getDto(telegramId);
@@ -51,7 +50,7 @@ public class UserService {
         return prevPositionDTO;
     }
 
-    @CachePut(cacheNames = "cacheEntity")
+
     public UserEntity saveEntity(UserEntity userEntity) {
         LOGGER.info("save userEntity {}", userEntity);
         Set<ConstraintViolation<UserEntity>> violations = validator.validate(userEntity);

@@ -62,8 +62,7 @@ public class CheckProviderBotCommand implements BotCommand {
                     .text(bundleLanguage.getValue(id, "no_registration_provider")).build());
             return new AddProviderBotCommand(sendBotMessageService, providerService, bundleLanguage).execute(update);
         }
-        if (providerDto.getPositionRegistrationProvider() == PositionRegistrationProvider.DONE
-        || providerDto.getCity() != null) {
+        if (providerDto.getPositionRegistrationProvider() == PositionRegistrationProvider.DONE) {
             printListProvider(id);
             addRequest(id);
             return true;
@@ -87,6 +86,8 @@ public class CheckProviderBotCommand implements BotCommand {
         List<List<InlineKeyboardButton>> keyboard = new ArrayList<>();
         keyboard.add(createButton(id, "change_provider_details", "change_provider_details"));
         keyboard.add(createButton(id, "newServiceFromAnExistingProvider", "newServiceFromAnExistingProvider"));
+        keyboard.add(createButton(id, "register_the_client", "register_the_client"));
+        keyboard.add(createButton(id, "remove_the_customer", "remove_the_customer"));
         keyboard.add(createButton(id, "return_in_menu", "return_in_menu"));
         inlineKeyboardMarkup.setKeyboard(keyboard);
         SendMessage sendMessage = new SendMessage();
