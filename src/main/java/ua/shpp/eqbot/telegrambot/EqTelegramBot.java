@@ -111,7 +111,6 @@ public class EqTelegramBot extends TelegramLongPollingBot {
                 }
             }
         }
-
     }
 
 
@@ -127,7 +126,6 @@ public class EqTelegramBot extends TelegramLongPollingBot {
         } else {
             getBotCommand(commandIdentifier).execute(update);
         }
-
     }
 
     private BotCommand getBotCommand(String botCommand) {
@@ -141,6 +139,10 @@ public class EqTelegramBot extends TelegramLongPollingBot {
         UserDto userDto = findDtoIfPossible(update);
         if (userDto == null) {
             getBotCommand(CommandName.START.getNameCommand()).execute(update);
+            // тут пишу
+        } else if (callbackQuery.getData().equals("register_the_client")) {
+            getBotCommand(CommandName.RECORD_YOUR_USER.getNameCommand()).execute(update);
+            userDto.setPositionMenu(ADD_USERNAME_CUSTOMER);
         } else {
             if (update.getCallbackQuery().getData().startsWith("appoint/")) {
                 userDto.setPositionMenu(REGISTRATION_FOR_THE_SERVICES_START);
@@ -225,6 +227,4 @@ public class EqTelegramBot extends TelegramLongPollingBot {
         }
         return userDto;
     }
-
-
 }
