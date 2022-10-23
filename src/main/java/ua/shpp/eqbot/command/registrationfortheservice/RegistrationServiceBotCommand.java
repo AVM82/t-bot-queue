@@ -23,6 +23,7 @@ import ua.shpp.eqbot.service.ProviderService;
 import ua.shpp.eqbot.service.SendBotMessageService;
 import ua.shpp.eqbot.service.UserService;
 import ua.shpp.eqbot.stage.PositionMenu;
+import ua.shpp.eqbot.stage.icon.Icon;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
@@ -142,7 +143,7 @@ public class RegistrationServiceBotCommand implements BotCommand {
                     if (!freeDays.isEmpty()) {
                         new CreatingButtonField(sendBotMessageService, quantityPerRow,
                                 freeDays, bundleLanguage.getValue(userTelegramId, "choosing_the_date")
-                                + " '" + registrationDto.getServiceEntity().getName() + "'", userTelegramId, "");
+                                + " '" + registrationDto.getServiceEntity().getName() + "'" + Icon.CALENDAR.get(), userTelegramId, "");
                         userDto.setPositionMenu(PositionMenu.REGISTRATION_FOR_THE_SERVICES_DATE);
                     }
                     break;

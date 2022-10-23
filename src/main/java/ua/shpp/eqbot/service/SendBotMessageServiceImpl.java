@@ -17,6 +17,7 @@ import ua.shpp.eqbot.dto.PrevPositionDTO;
 import ua.shpp.eqbot.internationalization.BundleLanguage;
 import ua.shpp.eqbot.model.ServiceEntity;
 
+import ua.shpp.eqbot.stage.icon.Icon;
 import ua.shpp.eqbot.telegrambot.EqTelegramBot;
 
 import java.util.ArrayList;
@@ -111,12 +112,12 @@ public class SendBotMessageServiceImpl implements SendBotMessageService {
         int curPage = prevPositionDTO.getPage();
         if (prevPositionDTO.getPage() > 0) {
             navigationLine.add(InlineKeyboardButton.builder()
-                    .text("<<").callbackData("back").build());
+                    .text(Icon.ARROW_LEFT.get()).callbackData("back").build());
         }
         navigationLine.add(bundleLanguage.createButton(prevPositionDTO.getTelegramId(), "exit", "exit"));
         if (curPage + 1 < totPages) {
             navigationLine.add(InlineKeyboardButton.builder()
-                    .text(">>").callbackData("next").build());
+                    .text(Icon.ARROW_RIGHT.get()).callbackData("next").build());
 
         }
         keyboard.add(navigationLine);

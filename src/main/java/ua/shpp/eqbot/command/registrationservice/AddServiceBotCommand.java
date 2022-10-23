@@ -18,6 +18,7 @@ import ua.shpp.eqbot.repository.ServiceRepository;
 import ua.shpp.eqbot.service.ImageService;
 import ua.shpp.eqbot.service.SendBotMessageService;
 import ua.shpp.eqbot.stage.PositionRegistrationService;
+import ua.shpp.eqbot.stage.icon.Icon;
 
 import java.util.List;
 
@@ -68,7 +69,9 @@ public class AddServiceBotCommand implements BotCommand {
                         LOGGER.info("new service INPUT_USERNAME with message text {}", update.getMessage().getText());
                         ServiceCache.add(serviceDTO.setName(update.getMessage().getText())
                                 .setPositionRegistrationService(PositionRegistrationService.INPUT_PICTURE));
-                        createMessage(id, new String[]{"add_desc_and_avatar"});
+                        sendBotMessageService.sendMessage(String.valueOf(id), Icon.PENCIL.get() + " "
+                                + bundleLanguage.getValue(id, "add_desc_and_avatar")
+                                + " " + Icon.GALLERY.get());
                         break;
                     case INPUT_PICTURE:
                         LOGGER.info("new service INPUT_CITY with message text {}", update.getMessage().getText());
@@ -129,14 +132,17 @@ public class AddServiceBotCommand implements BotCommand {
                         if (changeFormatTime(update.getMessage().getText(), id)) {
                             ServiceCache.add(serviceDTO.setSundayWorkingHours(update.getMessage().getText())
                                     .setPositionRegistrationService(PositionRegistrationService.TIME_BETWEEN_CLIENTS));
-                            createMessage(id, new String[]{"time_between_clients", "format_between"});
+                            sendBotMessageService.sendMessage(String.valueOf(id), Icon.STOPWATCH.get() + " "
+                                    + bundleLanguage.getValue(id, "time_between_clients")
+                                    + bundleLanguage.getValue(id, "format_between"));
                         }
                         break;
                     case TIME_BETWEEN_CLIENTS:
                         LOGGER.info("new service TIME_BETWEEN_CLIENTS with message text {}", update.getMessage().getText());
                         if (changeFormatTimeBetweenClients(update.getMessage().getText(), id)) {
                             ServiceCache.add(serviceDTO.setTimeBetweenClients(update.getMessage().getText()));
-                            createMessage(id, "service_added");
+                            sendBotMessageService.sendMessage(String.valueOf(id), Icon.WHITE_CHECK_MARK.get() + " "
+                                    + bundleLanguage.getValue(id, "service_added"));
                             serviceRepository.save(convertToEntity(serviceDTO));
                             ServiceCache.remove(serviceDTO);
                             isRegistration = true;
@@ -218,6 +224,6 @@ public class AddServiceBotCommand implements BotCommand {
         for (String t : text) {
             resultText.append(bundleLanguage.getValue(id, t)).append(" ");
         }
-        sendBotMessageService.sendMessage(SendMessage.builder().text(resultText.toString()).chatId(id).build());
+        sendBotMessageService.sendMessage(SendMessage.builder().text(Icon.DATE.get() + " " + resultText.toString()).chatId(id).build());
     }
 }
