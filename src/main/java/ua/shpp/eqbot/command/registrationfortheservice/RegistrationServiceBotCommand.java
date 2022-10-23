@@ -121,12 +121,13 @@ public class RegistrationServiceBotCommand implements BotCommand {
                 case REGISTRATION_FOR_THE_SERVICES_START:
                     LOGGER.info("search for free days to sign up for the service");
                     Set<Long> blacklistForService = providerService.getByTelegramIdEntity(
-                            serviceRepository.findFirstById(serviceId).getTelegramId()).getBlacklist();
-                    if (blacklistForService.contains(userId)) {
+                            serviceRepository.findFirstById(registrationDto.getServiceEntity().getTelegramId()).getTelegramId()).getBlacklist();
+                    if (blacklistForService.contains(userTelegramId)) {
                         SendMessage sendMessage = new SendMessage();
-                        sendMessage.setText(bundleLanguage.getValue(userId, "blacklist_you_are_in_blacklist"));
-                        sendMessage.setReplyMarkup(InlineKeyboardMarkup.builder().keyboard(List.of(List.of(bundleLanguage.createButton(userId, "exit", "exit")))).build());
-                        sendMessage.setChatId(userId);
+                        sendMessage.setText(bundleLanguage.getValue(userTelegramId, "blacklist_you_are_in_blacklist"));
+                        sendMessage.setReplyMarkup(InlineKeyboardMarkup.builder().
+                                keyboard(List.of(List.of(bundleLanguage.createButton(userTelegramId, "exit", "exit")))).build());
+                        sendMessage.setChatId(userTelegramId);
                         sendBotMessageService.sendMessage(sendMessage);
                         userDto.setPositionMenu(PositionMenu.MENU_START);
                         return false;
