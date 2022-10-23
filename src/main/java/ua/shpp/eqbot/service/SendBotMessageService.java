@@ -1,14 +1,21 @@
 package ua.shpp.eqbot.service;
 
+import org.springframework.data.domain.Page;
 import org.telegram.telegrambots.meta.api.methods.commands.SetMyCommands;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.methods.send.SendPhoto;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
+import ua.shpp.eqbot.dto.PrevPositionDTO;
+import ua.shpp.eqbot.model.ServiceEntity;
+
+import java.util.List;
 
 /**
  * Service for sending messages via telegram-bot.
  */
 public interface SendBotMessageService {
+
 
     /**
      * Send message via telegram bot.
@@ -27,4 +34,6 @@ public interface SendBotMessageService {
     void sendMenu(SetMyCommands command);
 
     SendMessage sendButtonToUser(SendMessage sendMessage, String telegramId, String text);
+
+    public List<List<InlineKeyboardButton>> createPageableKeyboard(Page<ServiceEntity> paging, PrevPositionDTO prevPositionDTO);
 }

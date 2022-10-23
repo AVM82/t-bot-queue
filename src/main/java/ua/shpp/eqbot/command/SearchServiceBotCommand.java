@@ -3,8 +3,12 @@ package ua.shpp.eqbot.command;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
+import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
@@ -16,6 +20,7 @@ import ua.shpp.eqbot.model.ServiceEntity;
 import ua.shpp.eqbot.repository.ProviderRepository;
 import ua.shpp.eqbot.repository.ServiceRepository;
 import ua.shpp.eqbot.service.SendBotMessageService;
+import ua.shpp.eqbot.service.SendBotMessageServiceImpl;
 import ua.shpp.eqbot.service.UserService;
 
 import java.util.ArrayList;
@@ -48,19 +53,32 @@ public class SearchServiceBotCommand implements BotCommand {
 
     @Override
     public boolean execute(Update update) {
-        long id;
-        PrevPositionDTO prevPosition = new PrevPositionDTO();
-        prevPosition.setPositionMenu(SEARCH_BY_CITY_NAME);
+
+        long telegramId;
+
+
         if (update.hasCallbackQuery()) {
-            id = update.getCallbackQuery().getFrom().getId();
+            telegramId = update.getCallbackQuery().getFrom().getId();
         } else {
-            id = update.getMessage().getChatId();
-            prevPosition.setReceivedData("searchCity/" + update.getMessage().getText());
-            prevPosition.setTelegramId(id);
-            userService.putPrevPosition(prevPosition);
+            telegramId = update.getMessage().getChatId();
+        }
+        PrevPositionDTO prevPosition = userService.getPrevPosition(telegramId);
+        if(prevPosition == null){
+            prevPosition = new PrevPositionDTO();
+        }
+        prevPosition.setPositionMenu(SEARCH_BY_CITY_NAME);
+        prevPosition.setTelegramId(telegramId);
+        userService.putPrevPosition(prevPosition);
+        CallbackQuery callbackQuery = update.getCallbackQuery();
+        if (callbackQuery != null && callbackQuery.getData().equals("next")) {
+            LOGGER.info("next page  ========== >");
+            prevPosition.setPage(prevPosition.getPage() + 1);
+        } else if (callbackQuery != null && callbackQuery.getData().equals("back")) {
+            LOGGER.info("previous page  ========== >");
+            prevPosition.setPage(prevPosition.getPage() - 1);
         }
 
-        UserDto user = userService.getDto(id);
+        UserDto user = userService.getDto(telegramId);
 
         if (!user.getPositionMenu().equals(SEARCH_BY_CITY_NAME)) {
             LOGGER.info("Choosing a city to search for a service");
@@ -73,46 +91,54 @@ public class SearchServiceBotCommand implements BotCommand {
                     .callbackData(user.getCity())
                     .build());
             city.add(InlineKeyboardButton.builder()
-                    .text(bundleLanguage.getValue(id, "search.byCityName.anotherCity"))
+                    .text(bundleLanguage.getValue(telegramId, "search.byCityName.anotherCity"))
                     .callbackData("another_city")
                     .build());
             citySelection.add(city);
             inlineKeyboardMarkup.setKeyboard(citySelection);
 
             SendMessage sendMessage = new SendMessage();
-            sendMessage.setChatId(id);
-            sendMessage.setText(bundleLanguage.getValue(id, "search.byCityName.cityToSearch"));
+            sendMessage.setChatId(telegramId);
+            sendMessage.setText(bundleLanguage.getValue(telegramId, "search.byCityName.cityToSearch"));
             sendMessage.setReplyMarkup(inlineKeyboardMarkup);
             sendBotMessageService.sendMessage(sendMessage);
         } else {
             String city;
             if (update.hasCallbackQuery()) {
                 if (update.getCallbackQuery().getData().equals("another_city")) {
-                    sendBotMessageService.sendMessage(String.valueOf(id), bundleLanguage.getValue(id, "search.byCityName.enterTheCity"));
+                    sendBotMessageService.sendMessage(String.valueOf(telegramId), bundleLanguage.getValue(telegramId, "search.byCityName.enterTheCity"));
                     return true;
                 } else if (update.getCallbackQuery().getData().equals(user.getCity())) {
                     city = update.getCallbackQuery().getData();
                     prevPosition.setReceivedData("searchCity/" + city);
-                    prevPosition.setTelegramId(id);
+                    prevPosition.setTelegramId(telegramId);
                     userService.putPrevPosition(prevPosition);
                 } else {
-                    city = userService.getPrevPosition(id).getReceivedData().split("/")[1];
+                    city = userService.getPrevPosition(telegramId).getReceivedData().split("/")[1];
                 }
             } else {
                 city = update.getMessage().getText();
+                prevPosition.setReceivedData("searchCity/" + update.getMessage().getText());
+            }
+            List<ProviderEntity> providerEntityByCityList = providerRepository.findAllByProviderCity(city);
+            if (providerEntityByCityList.isEmpty()) {
+                LOGGER.info("No service providers were found for the user's city of registration");
+                sendBotMessageService.sendMessage(String.valueOf(telegramId),
+                        bundleLanguage.getValue(telegramId, "search.byCityName.providerNotFound"));
+                return false;
             }
 
-            return generateInlineKeyboard(id, city);
+            return generateInlineKeyboard(telegramId, city, prevPosition);
         }
         return true;
     }
 
-    private boolean generateInlineKeyboard(long id, String city) {
+    private boolean generateInlineKeyboard(long telegramId, String city, PrevPositionDTO prevPosition) {
         List<ProviderEntity> providerEntityByCityList = providerRepository.findAllByProviderCity(city);
         if (providerEntityByCityList.isEmpty()) {
             LOGGER.info("No service providers were found for the user's city of registration");
-            sendBotMessageService.sendMessage(String.valueOf(id),
-                    bundleLanguage.getValue(id, "search.byCityName.providerNotFound"));
+            sendBotMessageService.sendMessage(String.valueOf(telegramId),
+                    bundleLanguage.getValue(telegramId, "search.byCityName.providerNotFound"));
             return false;
         }
 
@@ -120,35 +146,44 @@ public class SearchServiceBotCommand implements BotCommand {
                 .map(ProviderEntity::getTelegramId)
                 .collect(Collectors.toList());
 
-        List<ServiceEntity> serviceEntityByCityList = serviceRepository.findAllByTelegramIdIn(telegramIdProviderByCityList);
+        Pageable pageable = PageRequest.of(prevPosition.getPage(), SendBotMessageServiceImpl.PAGE_SIZE);
+        Page<ServiceEntity> serviceEntityByCityList = serviceRepository.findAllByTelegramIdIn(telegramIdProviderByCityList, pageable);
         if (serviceEntityByCityList.isEmpty()) {
             LOGGER.info("No services were found for the user's city of registration");
-            sendBotMessageService.sendMessage(String.valueOf(id),
-                    bundleLanguage.getValue(id, "search.byCityName.serviceNotFound"));
+            sendBotMessageService.sendMessage(String.valueOf(telegramId),
+                    bundleLanguage.getValue(telegramId, "search.byCityName.serviceNotFound"));
             return false;
         }
-
-        LOGGER.info("Found a list of services by city of user registration");
-
         InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
-        List<List<InlineKeyboardButton>> availableServiceButtons = new ArrayList<>();
-
-        serviceEntityByCityList.forEach(serviceEntity -> {
-            List<InlineKeyboardButton> button = new ArrayList<>();
-            button.add(InlineKeyboardButton.builder()
-                    .text(serviceEntity.getName() + " (ID: " + serviceEntity.getId() + ")")
-                    .callbackData("service_info/" + serviceEntity.getId())
-                    .build());
-            availableServiceButtons.add(button);
-        });
-
-        inlineKeyboardMarkup.setKeyboard(availableServiceButtons);
-
+        inlineKeyboardMarkup.setKeyboard(sendBotMessageService.createPageableKeyboard(serviceEntityByCityList, prevPosition));
         SendMessage sendMessage = new SendMessage();
-        sendMessage.setChatId(id);
-        sendMessage.setText(String.format("%s %s", bundleLanguage.getValue(id, "search.byCityName.listOfServices"), city));
+        sendMessage.setChatId(telegramId);
+        sendMessage.setText(bundleLanguage.getValue(telegramId, "search.byCityName.listOfServices"));
         sendMessage.setReplyMarkup(inlineKeyboardMarkup);
         sendBotMessageService.sendMessage(sendMessage);
+
+
+//        LOGGER.info("Found a list of services by city of user registration");
+//
+//        InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
+//        List<List<InlineKeyboardButton>> availableServiceButtons = new ArrayList<>();
+//
+//        serviceEntityByCityList.forEach(serviceEntity -> {
+//            List<InlineKeyboardButton> button = new ArrayList<>();
+//            button.add(InlineKeyboardButton.builder()
+//                    .text(serviceEntity.getName() + " (ID: " + serviceEntity.getId() + ")")
+//                    .callbackData("service_info/" + serviceEntity.getId())
+//                    .build());
+//            availableServiceButtons.add(button);
+//        });
+//
+//        inlineKeyboardMarkup.setKeyboard(availableServiceButtons);
+
+//        SendMessage sendMessage = new SendMessage();
+//        sendMessage.setChatId(telegramId);
+//        sendMessage.setText(String.format("%s %s", bundleLanguage.getValue(telegramId, "search.byCityName.listOfServices"), city));
+//        sendMessage.setReplyMarkup(inlineKeyboardMarkup);
+//        sendBotMessageService.sendMessage(sendMessage);
         return true;
     }
 }
