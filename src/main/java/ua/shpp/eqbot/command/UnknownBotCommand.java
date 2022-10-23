@@ -5,6 +5,7 @@ import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import ua.shpp.eqbot.internationalization.BundleLanguage;
 import ua.shpp.eqbot.service.SendBotMessageService;
+import ua.shpp.eqbot.stage.icon.Icon;
 
 @Component
 public class UnknownBotCommand implements BotCommand {
@@ -23,7 +24,7 @@ public class UnknownBotCommand implements BotCommand {
     public boolean execute(Update update) {
         sendBotMessageService.sendMessage(
                 update.getMessage().getChatId().toString(),
-                bundleLanguage.getValue(update.getMessage().getChatId(), UNKNOWN_MESSAGE));
+                Icon.SHRUG.get() + bundleLanguage.getValue(update.getMessage().getChatId(), UNKNOWN_MESSAGE));
         return true;
     }
 }

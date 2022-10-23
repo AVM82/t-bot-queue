@@ -12,6 +12,7 @@ import ua.shpp.eqbot.internationalization.BundleLanguage;
 import ua.shpp.eqbot.service.ProviderService;
 import ua.shpp.eqbot.service.SendBotMessageService;
 import ua.shpp.eqbot.stage.PositionRegistrationProvider;
+import ua.shpp.eqbot.stage.icon.Icon;
 
 @Component
 public class AddProviderBotCommand implements BotCommand {
@@ -46,7 +47,7 @@ public class AddProviderBotCommand implements BotCommand {
             providerService.saveProviderDto(generateProviderFromMessage(id));
             sendBotMessageService.sendMessage(SendMessage.builder()
                     .chatId(id)
-                    .text(bundleLanguage.getValue(id, "company_name"))
+                    .text(bundleLanguage.getValue(id, "company_name") + " " + Icon.OFFICE.get())
                     .build());
         } else {
             switch (providerService.getProviderDto(id).getPositionRegistrationProvider()) {
@@ -58,7 +59,7 @@ public class AddProviderBotCommand implements BotCommand {
                         providerService.saveProviderDto(providerDto);
                         sendBotMessageService.sendMessage(SendMessage.builder()
                                 .chatId(id)
-                                .text(bundleLanguage.getValue(id, "input_city"))
+                                .text(bundleLanguage.getValue(id, "input_city") + " " + Icon.CITY.get())
                                 .build());
                     }
                     break;
@@ -69,10 +70,10 @@ public class AddProviderBotCommand implements BotCommand {
                                 .setPositionRegistrationProvider(PositionRegistrationProvider.DONE);
                         providerService.saveDtoInDataBase(providerDto);
                         isRegistration = true;
-                        sendBotMessageService.sendMessage(SendMessage.builder()
+                        /*sendBotMessageService.sendMessage(SendMessage.builder()
                                 .chatId(id)
                                 .text(bundleLanguage.getValue(id, "registered_new_provider"))
-                                .build());
+                                .build());*/
                     }
                     break;
                 default:

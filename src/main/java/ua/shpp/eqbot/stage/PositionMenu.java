@@ -14,5 +14,7 @@ public enum PositionMenu {
     FEEDBACK,
     ADD_USERNAME_CUSTOMER,
     ADD_PHONE_CUSTOMER,
-    DONE
+    DONE,
+    BLACKLIST_ADD,
+    BLACKLIST_DELETE
 }

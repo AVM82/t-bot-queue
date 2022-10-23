@@ -17,23 +17,27 @@ public class RegistrationForTheServiceDto {
         return userEntity;
     }
 
-    public void setUserEntity(UserEntity userEntity) {
+    public RegistrationForTheServiceDto setUserEntity(UserEntity userEntity) {
         this.userEntity = userEntity;
+        return this;
     }
+
     public ServiceEntity getServiceEntity() {
         return serviceEntity;
     }
 
-    public void setServiceEntity(ServiceEntity serviceEntity) {
+    public RegistrationForTheServiceDto setServiceEntity(ServiceEntity serviceEntity) {
         this.serviceEntity = serviceEntity;
+        return this;
     }
 
     public LocalDateTime getServiceRegistrationDateTime() {
         return serviceRegistrationDateTime;
     }
 
-    public void setServiceRegistrationDateTime(LocalDateTime serviceRegistrationDateTime) {
+    public RegistrationForTheServiceDto setServiceRegistrationDateTime(LocalDateTime serviceRegistrationDateTime) {
         this.serviceRegistrationDateTime = serviceRegistrationDateTime;
+        return this;
     }
 
     @Override

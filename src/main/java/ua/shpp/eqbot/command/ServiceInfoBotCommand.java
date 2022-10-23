@@ -77,7 +77,7 @@ public class ServiceInfoBotCommand implements BotCommand {
         keyboard.add(line1);
         List<InlineKeyboardButton> line2 = new ArrayList<>();
         String messageRecord = bundleLanguage.getValue(chatId, "add_record_to_service");
-        line2.add(InlineKeyboardButton.builder().text(messageRecord).callbackData("2").build());
+        line2.add(InlineKeyboardButton.builder().text(messageRecord).callbackData("register_the_client").build());
         keyboard.add(line2);
         keyboard.add(backButton(chatId));
         inlineKeyboardMarkup.setKeyboard(keyboard);
@@ -124,7 +124,7 @@ public class ServiceInfoBotCommand implements BotCommand {
     }
 
     private SendPhoto createMessage(ServiceEntity service, Long chatId, String serviceInfo) {
-        SendPhoto message = imageService.sendImageFromAWS(chatId.toString(), service.getName());
+        SendPhoto message = imageService.sendImageFromAWS(service.getTelegramId().toString(), service.getName());
         if (message == null) {
             return null;
         }

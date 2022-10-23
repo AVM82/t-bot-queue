@@ -11,7 +11,8 @@ import java.util.Set;
 
 public interface ServiceRepository extends JpaRepository<ServiceEntity, Long> {
 
-    ServiceEntity getFirstByName(String name);
+    @Query("select t from ServiceEntity t where t.telegramId=?1")
+    ServiceEntity findByTelegramId(Long telegramId);
 
     @Query("select t from ServiceEntity t where t.name = ?1 and t.telegramId=?2")
     ServiceEntity getFirstByNameAndAndTelegramId(String name, Long telegramId);
@@ -27,4 +28,5 @@ public interface ServiceRepository extends JpaRepository<ServiceEntity, Long> {
     Set<String> findAllByName();
 
     Page<ServiceEntity> findByDescriptionContainingIgnoreCaseOrNameContainingIgnoreCase(String description, String name, Pageable pageable);
+    Page<ServiceEntity> findAllByTelegramIdIn(List<Long> list, Pageable pageable);
 }
