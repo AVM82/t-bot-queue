@@ -7,6 +7,7 @@ import org.telegram.telegrambots.meta.api.methods.send.SendPhoto;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 import ua.shpp.eqbot.dto.PrevPositionDTO;
+import ua.shpp.eqbot.internationalization.BundleLanguage;
 import ua.shpp.eqbot.model.ServiceEntity;
 
 import java.util.List;
@@ -35,5 +36,5 @@ public interface SendBotMessageService {
 
     SendMessage sendButtonToUser(SendMessage sendMessage, String telegramId, String text);
 
-    public List<List<InlineKeyboardButton>> createPageableKeyboard(Page<ServiceEntity> paging, PrevPositionDTO prevPositionDTO);
+    public List<List<InlineKeyboardButton>> createPageableKeyboard(Page<ServiceEntity> paging, PrevPositionDTO prevPositionDTO, BundleLanguage bundleLanguage);
 }

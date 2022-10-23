@@ -9,5 +9,10 @@
       "name": "telegram.bot.name",
       "type": "java.lang.String",
       "description": "Description for telegram.bot.name."
+    },
+    {
+      "name": "pagingSize",
+      "type": "java.lang.String",
+      "description": "Description for pagingSize."
     }
   ] }

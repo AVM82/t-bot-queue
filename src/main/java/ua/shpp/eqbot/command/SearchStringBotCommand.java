@@ -83,7 +83,7 @@ public class SearchStringBotCommand implements BotCommand {
             Pageable firstPageWithTwoElements = PageRequest.of(prevPosition.getPage(), SendBotMessageServiceImpl.PAGE_SIZE);
             Page<ServiceEntity> page = serviceRepository.findByDescriptionContainingIgnoreCaseOrNameContainingIgnoreCase(likeString, likeString, firstPageWithTwoElements);
             InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
-            inlineKeyboardMarkup.setKeyboard(sendBotMessageService.createPageableKeyboard(page, prevPosition));
+            inlineKeyboardMarkup.setKeyboard(sendBotMessageService.createPageableKeyboard(page, prevPosition, bundleLanguage));
             SendMessage sendMessage = new SendMessage();
             sendMessage.setChatId(chatId);
             sendMessage.setText(bundleLanguage.getValue(chatId, "search.byCityName.listOfServices"));

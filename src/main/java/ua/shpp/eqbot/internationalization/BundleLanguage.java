@@ -1,6 +1,7 @@
 package ua.shpp.eqbot.internationalization;
 
 import org.springframework.stereotype.Component;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 import ua.shpp.eqbot.dto.UserDto;
 import ua.shpp.eqbot.service.UserService;
 
@@ -26,5 +27,9 @@ public class BundleLanguage {
         }
         ResourceBundle resourceBundle = ResourceBundle.getBundle("language", new Locale(language, value));
         return resourceBundle.getString(value);
+    }
+
+    public InlineKeyboardButton createButton(long telegramId, String message, String callbackData) {
+        return InlineKeyboardButton.builder().text(getValue(telegramId, message)).callbackData(callbackData).build();
     }
 }

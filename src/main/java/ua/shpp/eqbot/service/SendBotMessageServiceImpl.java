@@ -16,6 +16,7 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMar
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import ua.shpp.eqbot.dto.PrevPositionDTO;
+import ua.shpp.eqbot.internationalization.BundleLanguage;
 import ua.shpp.eqbot.model.ServiceEntity;
 
 import ua.shpp.eqbot.telegrambot.EqTelegramBot;
@@ -117,7 +118,7 @@ public class SendBotMessageServiceImpl implements SendBotMessageService {
         return sendMessage;
     }
 
-    public List<List<InlineKeyboardButton>> createPageableKeyboard(Page<ServiceEntity> paging, PrevPositionDTO prevPositionDTO) {
+    public List<List<InlineKeyboardButton>> createPageableKeyboard(Page<ServiceEntity> paging, PrevPositionDTO prevPositionDTO, BundleLanguage bundleLanguage) {
         int totPages = paging.getTotalPages();
         List<ServiceEntity> listServices = paging.toList();
         List<List<InlineKeyboardButton>> keyboard = new ArrayList<>();
@@ -135,8 +136,7 @@ public class SendBotMessageServiceImpl implements SendBotMessageService {
             navigationLine.add(InlineKeyboardButton.builder()
                     .text("<<").callbackData("back").build());
         }
-        navigationLine.add(InlineKeyboardButton.builder()
-                .text("exit").callbackData("exit").build());
+        navigationLine.add(bundleLanguage.createButton(prevPositionDTO.getTelegramId(),"exit", "exit"));
         if (curPage + 1 < totPages) {
             navigationLine.add(InlineKeyboardButton.builder()
                     .text(">>").callbackData("next").build());
