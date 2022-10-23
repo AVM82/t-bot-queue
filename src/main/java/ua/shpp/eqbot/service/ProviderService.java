@@ -13,6 +13,8 @@ import ua.shpp.eqbot.model.ProviderEntity;
 import ua.shpp.eqbot.repository.ProviderRepository;
 import ua.shpp.eqbot.stage.PositionRegistrationProvider;
 
+import java.util.HashSet;
+
 
 @Service
 public class ProviderService {
@@ -28,6 +30,7 @@ public class ProviderService {
 
     public ProviderEntity saveEntity(ProviderEntity providerEntity) {
         LOGGER.info("save provider entity {}", providerEntity);
+        providerEntity.setBlackList(new HashSet<>());
         return providerRepository.save(providerEntity);
     }
 

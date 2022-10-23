@@ -53,8 +53,7 @@ public class SettingsBotCommand implements BotCommand {
         keyboard.add(buttonsCreateAndLang);
         if (providerService.getProviderDto(telegramId) != null) {
             List<InlineKeyboardButton> blackListButtons = new ArrayList<>();
-            String blackListMessage = bundleLanguage.getValue(telegramId, "my_blacklist");
-            blackListButtons.add(InlineKeyboardButton.builder().text(blackListMessage).callbackData("blacklist/main").build());
+            blackListButtons.add(bundleLanguage.createButton(telegramId, "my_blacklist", "blacklist/main"));
             keyboard.add(blackListButtons);
         }
         List<InlineKeyboardButton> buttonShare = new ArrayList<>();
