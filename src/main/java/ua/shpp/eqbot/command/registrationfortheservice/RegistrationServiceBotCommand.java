@@ -23,6 +23,7 @@ import ua.shpp.eqbot.service.ProviderService;
 import ua.shpp.eqbot.service.SendBotMessageService;
 import ua.shpp.eqbot.service.UserService;
 import ua.shpp.eqbot.stage.PositionMenu;
+import ua.shpp.eqbot.stage.icon.Icon;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
@@ -96,8 +97,7 @@ public class RegistrationServiceBotCommand implements BotCommand {
                     if (blacklistForService.contains(userId)) {
                         SendMessage sendMessage = new SendMessage();
                         sendMessage.setText(bundleLanguage.getValue(userId, "blacklist_you_are_in_blacklist"));
-                        sendMessage.setReplyMarkup(InlineKeyboardMarkup.builder().keyboard(List.of
-                                (List.of(bundleLanguage.createButton(userId, "exit", "exit")))).build());
+                        sendMessage.setReplyMarkup(InlineKeyboardMarkup.builder().keyboard(List.of(List.of(bundleLanguage.createButton(userId, "exit", "exit")))).build());
                         sendMessage.setChatId(userId);
                         sendBotMessageService.sendMessage(sendMessage);
                         userDto.setPositionMenu(PositionMenu.MENU_START);
@@ -113,7 +113,7 @@ public class RegistrationServiceBotCommand implements BotCommand {
                     if (!freeDays.isEmpty()) {
                         new CreatingButtonField(sendBotMessageService, quantityPerRow,
                                 freeDays, bundleLanguage.getValue(userId, "choosing_the_date")
-                                + " '" + registrationDto.getServiceEntity().getName() + "'", userId, "");
+                                + " '" + registrationDto.getServiceEntity().getName() + "'" + Icon.CALENDAR.get(), userId, "");
                         userDto.setPositionMenu(PositionMenu.REGISTRATION_FOR_THE_SERVICES_DATE);
                     }
                     break;

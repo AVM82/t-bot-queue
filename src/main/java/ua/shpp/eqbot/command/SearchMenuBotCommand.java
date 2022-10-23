@@ -8,6 +8,7 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMa
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 import ua.shpp.eqbot.internationalization.BundleLanguage;
 import ua.shpp.eqbot.service.SendBotMessageService;
+import ua.shpp.eqbot.stage.icon.Icon;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,7 +44,7 @@ public class SearchMenuBotCommand implements BotCommand {
         List<InlineKeyboardButton> buttonCreate = new ArrayList<>();
 
         buttonCreate.add(InlineKeyboardButton.builder()
-                .text(bundleLanguage.getValue(chatId, "search.searchByCityName"))
+                .text(bundleLanguage.getValue(chatId, "search.searchByCityName") + " " + Icon.CITY.get())
                 .callbackData("searchCity")
                 .build());
         buttonCreate.add(InlineKeyboardButton.builder()

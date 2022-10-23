@@ -17,6 +17,7 @@ import ua.shpp.eqbot.service.ProviderService;
 import ua.shpp.eqbot.service.SendBotMessageService;
 import ua.shpp.eqbot.service.UserService;
 import ua.shpp.eqbot.stage.PositionMenu;
+import ua.shpp.eqbot.stage.icon.Icon;
 
 import java.util.*;
 
@@ -103,10 +104,10 @@ public class BlacklistBotCommand implements BotCommand {
         String message;
         HashSet<Long> blackList = provider.getBlacklist();
         if (blackList.isEmpty()) {
-            message = bundleLanguage.getValue(telegramId, "no_blacklist");
+            message = Icon.NOTEBOOK.get() + " "  + bundleLanguage.getValue(telegramId, "no_blacklist");
         } else {
             HashSet<Long> blacklist = provider.getBlacklist();
-            StringBuilder sb = new StringBuilder(bundleLanguage.getValue(telegramId, "users_in_blacklist")).append("\n");
+            StringBuilder sb = new StringBuilder(Icon.NOTEBOOK.get() + " " + bundleLanguage.getValue(telegramId, "users_in_blacklist")).append("\n");
             blacklist.forEach(userId -> {
                 sb.append("<a href=\"tg://user?id=").append(userId).append("\">");
                 UserEntity user = userService.getEntity(userId);

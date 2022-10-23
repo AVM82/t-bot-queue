@@ -3,8 +3,6 @@ package ua.shpp.eqbot.service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Scope;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.methods.commands.SetMyCommands;
@@ -19,6 +17,7 @@ import ua.shpp.eqbot.dto.PrevPositionDTO;
 import ua.shpp.eqbot.internationalization.BundleLanguage;
 import ua.shpp.eqbot.model.ServiceEntity;
 
+import ua.shpp.eqbot.stage.icon.Icon;
 import ua.shpp.eqbot.telegrambot.EqTelegramBot;
 
 import javax.validation.Valid;
@@ -134,12 +133,12 @@ public class SendBotMessageServiceImpl implements SendBotMessageService {
         int curPage = prevPositionDTO.getPage();
         if (prevPositionDTO.getPage() > 0) {
             navigationLine.add(InlineKeyboardButton.builder()
-                    .text("<<").callbackData("back").build());
+                    .text(Icon.ARROW_LEFT.get()).callbackData("back").build());
         }
         navigationLine.add(bundleLanguage.createButton(prevPositionDTO.getTelegramId(),"exit", "exit"));
         if (curPage + 1 < totPages) {
             navigationLine.add(InlineKeyboardButton.builder()
-                    .text(">>").callbackData("next").build());
+                    .text(Icon.ARROW_RIGHT.get()).callbackData("next").build());
 
         }
         keyboard.add(navigationLine);

@@ -47,7 +47,8 @@ public class SettingsBotCommand implements BotCommand {
                 .callbackData("change_role")
                 .build());
         buttonsCreateAndLang.add(InlineKeyboardButton.builder()
-                .text(bundleLanguage.getValue(telegramId, "change_language"))
+                .text(bundleLanguage.getValue(telegramId, "change_language") + " "
+                + Icon.ARROWS_COUNTERCLOCKWISE.get())
                 .callbackData("change_lang")
                 .build());
         keyboard.add(buttonsCreateAndLang);
