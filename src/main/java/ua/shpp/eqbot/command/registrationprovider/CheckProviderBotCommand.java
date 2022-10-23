@@ -12,6 +12,8 @@ import ua.shpp.eqbot.command.BotCommand;
 import ua.shpp.eqbot.dto.ProviderDto;
 import ua.shpp.eqbot.internationalization.BundleLanguage;
 import ua.shpp.eqbot.model.ProviderEntity;
+import ua.shpp.eqbot.model.ServiceEntity;
+import ua.shpp.eqbot.repository.ServiceRepository;
 import ua.shpp.eqbot.service.ProviderService;
 import ua.shpp.eqbot.service.SendBotMessageService;
 import ua.shpp.eqbot.stage.PositionRegistrationProvider;
@@ -26,15 +28,17 @@ public class CheckProviderBotCommand implements BotCommand {
     private final SendBotMessageService sendBotMessageService;
     private final ProviderService providerService;
     private final BundleLanguage bundleLanguage;
+    private final ServiceRepository serviceRepository;
 
     @Autowired
     public CheckProviderBotCommand(
             SendBotMessageService sendBotMessageService,
             ProviderService providerService,
-            BundleLanguage bundleLanguage) {
+            BundleLanguage bundleLanguage, ServiceRepository serviceRepository) {
         this.sendBotMessageService = sendBotMessageService;
         this.providerService = providerService;
         this.bundleLanguage = bundleLanguage;
+        this.serviceRepository = serviceRepository;
     }
 
     @Override
@@ -48,10 +52,11 @@ public class CheckProviderBotCommand implements BotCommand {
             return false;
         }
         ProviderDto providerDto = providerService.getProviderDto(id);
+        ServiceEntity serviceEntity = serviceRepository.findByTelegramId(id);
         if (providerDto == null) {
             LOGGER.info("the provider is not in the cache");
             ProviderEntity providerEntity = providerService.getByTelegramIdEntity(id);
-            if (providerEntity != null) {
+            if (providerEntity != null) { //|| serviceEntity == null
                 LOGGER.info("there is provider in the database");
                 providerService.saveEntityInCache(providerEntity);
                 printListProvider(id);
