@@ -15,6 +15,7 @@ import ua.shpp.eqbot.repository.ServiceRepository;
 import ua.shpp.eqbot.service.ProviderService;
 import ua.shpp.eqbot.service.SendBotMessageService;
 import ua.shpp.eqbot.service.UserService;
+import ua.shpp.eqbot.stage.icon.Icon;
 
 import java.util.List;
 
@@ -63,7 +64,7 @@ public class DeleteUserBotCommand implements BotCommand {
         userService.remove(update.getMessage().getChatId());
 
         sendBotMessageService.sendMessage(SendMessage.builder()
-                .text(bundleLanguage.getValue(update.getMessage().getChatId(), "user_deleted"))
+                .text(Icon.WHITE_CHECK_MARK.get() + bundleLanguage.getValue(update.getMessage().getChatId(), "user_deleted"))
                 .chatId(update.getMessage().getChatId())
                 .build());
 

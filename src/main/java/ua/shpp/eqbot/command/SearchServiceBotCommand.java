@@ -22,6 +22,7 @@ import ua.shpp.eqbot.repository.ServiceRepository;
 import ua.shpp.eqbot.service.SendBotMessageService;
 import ua.shpp.eqbot.service.SendBotMessageServiceImpl;
 import ua.shpp.eqbot.service.UserService;
+import ua.shpp.eqbot.stage.icon.Icon;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -99,14 +100,14 @@ public class SearchServiceBotCommand implements BotCommand {
 
             SendMessage sendMessage = new SendMessage();
             sendMessage.setChatId(telegramId);
-            sendMessage.setText(bundleLanguage.getValue(telegramId, "search.byCityName.cityToSearch"));
+            sendMessage.setText(Icon.MAG.get() + " " + bundleLanguage.getValue(telegramId, "search.byCityName.cityToSearch"));
             sendMessage.setReplyMarkup(inlineKeyboardMarkup);
             sendBotMessageService.sendMessage(sendMessage);
         } else {
             String city;
             if (update.hasCallbackQuery()) {
                 if (update.getCallbackQuery().getData().equals("another_city")) {
-                    sendBotMessageService.sendMessage(String.valueOf(telegramId), bundleLanguage.getValue(telegramId, "search.byCityName.enterTheCity"));
+                    sendBotMessageService.sendMessage(String.valueOf(telegramId), Icon.HOUSE_BUILDINGS.get() + " " +  bundleLanguage.getValue(telegramId, "search.byCityName.enterTheCity"));
                     return true;
                 } else if (update.getCallbackQuery().getData().equals(user.getCity())) {
                     city = update.getCallbackQuery().getData();
@@ -158,7 +159,7 @@ public class SearchServiceBotCommand implements BotCommand {
         inlineKeyboardMarkup.setKeyboard(sendBotMessageService.createPageableKeyboard(serviceEntityByCityList, prevPosition, bundleLanguage));
         SendMessage sendMessage = new SendMessage();
         sendMessage.setChatId(telegramId);
-        sendMessage.setText(bundleLanguage.getValue(telegramId, "search.byCityName.listOfServices"));
+        sendMessage.setText(Icon.PAGE_WITH_CURL.get() + " " + bundleLanguage.getValue(telegramId, "search.byCityName.listOfServices"));
         sendMessage.setReplyMarkup(inlineKeyboardMarkup);
         sendBotMessageService.sendMessage(sendMessage);
         return true;

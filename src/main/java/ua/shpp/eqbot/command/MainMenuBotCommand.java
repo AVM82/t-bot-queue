@@ -9,6 +9,7 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.commands.scope.BotCommandScopeDefault;
 import ua.shpp.eqbot.internationalization.BundleLanguage;
 import ua.shpp.eqbot.service.SendBotMessageService;
+import ua.shpp.eqbot.stage.icon.Icon;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,10 +32,10 @@ public class MainMenuBotCommand implements BotCommand {
     public boolean execute(Update update) {
         Long id = update.getMessage().getChatId();
         listOfCommand.add(new org.telegram.telegrambots.meta.api.objects.commands.BotCommand("/start", bundleLanguage.getValue(id, "start")));
-        listOfCommand.add(new org.telegram.telegrambots.meta.api.objects.commands.BotCommand("/help", bundleLanguage.getValue(id, "help")));
-        listOfCommand.add(new org.telegram.telegrambots.meta.api.objects.commands.BotCommand("/settings", bundleLanguage.getValue(id, "settings")));
-        listOfCommand.add(new org.telegram.telegrambots.meta.api.objects.commands.BotCommand("/delete", bundleLanguage.getValue(id, "delete")));
-        listOfCommand.add(new org.telegram.telegrambots.meta.api.objects.commands.BotCommand("/feedback", bundleLanguage.getValue(id, "feedback")));
+        listOfCommand.add(new org.telegram.telegrambots.meta.api.objects.commands.BotCommand("/help", Icon.QUESTION.get() + " " + bundleLanguage.getValue(id, "help")));
+        listOfCommand.add(new org.telegram.telegrambots.meta.api.objects.commands.BotCommand("/settings", Icon.SETTINGS.get() + " " + bundleLanguage.getValue(id, "settings")));
+        listOfCommand.add(new org.telegram.telegrambots.meta.api.objects.commands.BotCommand("/delete", Icon.NOT.get() + " " + bundleLanguage.getValue(id, "delete")));
+        listOfCommand.add(new org.telegram.telegrambots.meta.api.objects.commands.BotCommand("/feedback", Icon.THUMBSUP.get() + " " + bundleLanguage.getValue(id, "feedback")));
         sendBotMessageService.sendMenu(new SetMyCommands(listOfCommand, new BotCommandScopeDefault(), null));
         LOGGER.info("Created main menu successful.");
         return true;
