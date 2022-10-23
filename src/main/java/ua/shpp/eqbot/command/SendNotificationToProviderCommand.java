@@ -25,7 +25,7 @@ public class SendNotificationToProviderCommand implements BotCommand {
         sendMessage.setChatId(providerChatId);
         String internationalizationAnswer = bundleLanguage.getValue(providerChatId, "send_notification_to_provider");
         String[] answer = internationalizationAnswer.split("\\.");
-        sendMessage.setText(answer[0] + userName + answer[1] + serviceEntity.getName() + answer[2] + timeOfRegistration);
+        sendMessage.setText(answer[0] + userName + answer[1] + serviceEntity.getName() + answer[2] + " " + timeOfRegistration);
         String connectMessage = bundleLanguage.getValue(providerChatId, "connect_with_customer");
         sendMessage = sendBotMessageService.sendButtonToUser(sendMessage, customerTelegramId, connectMessage);
         sendBotMessageService.sendMessage(sendMessage);

@@ -116,6 +116,7 @@ public class EqTelegramBot extends TelegramLongPollingBot {
                 } else if (user.getPositionMenu() == ADD_PHONE_CUSTOMER
                         || user.getPositionMenu() == ADD_USERNAME_CUSTOMER) {
                     if (getBotCommand(CommandName.RECORD_YOUR_USER.getNameCommand()).execute(update)) {
+                        setNumberOfDaysInSearchOfService(7);
                         getBotCommand("/RegistrationForTheServiceCommand").execute(update);
                     }
                 }
@@ -175,6 +176,9 @@ public class EqTelegramBot extends TelegramLongPollingBot {
                 getBotCommand(CommandName.START.getNameCommand()).execute(update);
             } else if (callbackQuery.getData().equals("change_provider_details")) {
                 LOGGER.info("change provider details");
+            } else if (callbackQuery.getData().equals("register_the_client")) {
+                userDto.setPositionMenu(MENU_CREATE_SERVICE);
+                getBotCommand(CommandName.RECORD_YOUR_USER.getNameCommand()).execute(update);
             } else if (callbackQuery.getData().equals("newServiceFromAnExistingProvider")) {
                 LOGGER.info("add new service");
                 userService.getDto(update.getCallbackQuery().getFrom().getId())
@@ -212,8 +216,6 @@ public class EqTelegramBot extends TelegramLongPollingBot {
             } else if (userDto.getPositionMenu() == FEEDBACK) {
                 getBotCommand(CommandName.FEEDBACK.getNameCommand()).execute(update);
                 getBotCommand(CommandName.START.getNameCommand()).execute(update);
-            } else if (callbackQuery.getData().equals("register_the_client")) {
-                getBotCommand(CommandName.RECORD_YOUR_USER.getNameCommand()).execute(update);
             } else {
                 getBotCommand("/start").execute(update);
             }
