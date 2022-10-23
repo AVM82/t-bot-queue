@@ -42,6 +42,10 @@ public class StartBotCommand implements BotCommand {
         } else {
             telegramId = update.getMessage().getChatId();
         }
+        UserDto user = userService.getDto(telegramId);
+        if(!user.getPositionMenu().equals(PositionMenu.MENU_START)){
+            user.setPositionMenu(PositionMenu.MENU_START);
+        }
         createStartMenu(telegramId);
         userService.putPrevPosition(new PrevPositionDTO(telegramId, PositionMenu.MENU_START, ""));
         UserDto userDto = userService.getDto(telegramId);

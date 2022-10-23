@@ -2,10 +2,16 @@ package ua.shpp.eqbot.command;
 
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import ua.shpp.eqbot.internationalization.BundleLanguage;
 import ua.shpp.eqbot.model.ServiceEntity;
 import ua.shpp.eqbot.repository.ServiceRepository;
 import ua.shpp.eqbot.service.SendBotMessageService;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 public class SendNotificationToProviderCommand implements BotCommand {
     private final ServiceRepository serviceRepository;
@@ -26,6 +32,9 @@ public class SendNotificationToProviderCommand implements BotCommand {
         String internationalizationAnswer = bundleLanguage.getValue(providerChatId, "send_notification_to_provider");
         String[] answer = internationalizationAnswer.split("\\.");
         sendMessage.setText(answer[0] + userName + answer[1] + serviceEntity.getName() + answer[2] + timeOfRegistration);
+        sendMessage.setReplyMarkup(InlineKeyboardMarkup.builder().
+                keyboard(List.of(Collections.singletonList(bundleLanguage.createButton(providerChatId,
+                        "blacklist_add_this_user", "blacklist/add/" + customerTelegramId)))).build());
         String connectMessage = bundleLanguage.getValue(providerChatId, "connect_with_customer");
         sendMessage = sendBotMessageService.sendButtonToUser(sendMessage, customerTelegramId, connectMessage);
         sendBotMessageService.sendMessage(sendMessage);

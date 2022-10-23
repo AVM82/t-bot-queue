@@ -155,7 +155,7 @@ public class SearchServiceBotCommand implements BotCommand {
             return false;
         }
         InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
-        inlineKeyboardMarkup.setKeyboard(sendBotMessageService.createPageableKeyboard(serviceEntityByCityList, prevPosition));
+        inlineKeyboardMarkup.setKeyboard(sendBotMessageService.createPageableKeyboard(serviceEntityByCityList, prevPosition, bundleLanguage));
         SendMessage sendMessage = new SendMessage();
         sendMessage.setChatId(telegramId);
         sendMessage.setText(bundleLanguage.getValue(telegramId, "search.byCityName.listOfServices"));

@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import ua.shpp.eqbot.cache.RegistrationForTheServiceCache;
 import ua.shpp.eqbot.command.BotCommand;
 import ua.shpp.eqbot.command.SendNotificationToProviderCommand;
@@ -18,6 +19,7 @@ import ua.shpp.eqbot.model.ServiceEntity;
 import ua.shpp.eqbot.model.UserEntity;
 import ua.shpp.eqbot.repository.RegistrationForTheServiceRepository;
 import ua.shpp.eqbot.repository.ServiceRepository;
+import ua.shpp.eqbot.service.ProviderService;
 import ua.shpp.eqbot.service.SendBotMessageService;
 import ua.shpp.eqbot.service.UserService;
 import ua.shpp.eqbot.stage.PositionMenu;
@@ -38,18 +40,20 @@ public class RegistrationServiceBotCommand implements BotCommand {
     private final ServiceRepository serviceRepository;
     private final BundleLanguage bundleLanguage;
     private final UserService userService;
+    private final ProviderService providerService;
     private final int quantityPerRow;
 
     @Autowired
     public RegistrationServiceBotCommand(SendBotMessageService sendBotMessageService,
                                          RegistrationForTheServiceRepository registrationForTheServiceRepository,
                                          ServiceRepository serviceRepository, BundleLanguage bundleLanguage,
-                                         UserService userService) {
+                                         UserService userService, ProviderService providerService) {
         this.sendBotMessageService = sendBotMessageService;
         this.registrationForTheServiceRepository = registrationForTheServiceRepository;
         this.serviceRepository = serviceRepository;
         this.bundleLanguage = bundleLanguage;
         this.userService = userService;
+        this.providerService = providerService;
         quantityPerRow = 4;
     }
 
@@ -86,6 +90,15 @@ public class RegistrationServiceBotCommand implements BotCommand {
                         }
                         registrationDto = createDto(serviceId, userEntity);
                         RegistrationForTheServiceCache.add(registrationDto, userId);
+                        Set<Long> blacklistForService = providerService.getByTelegramIdEntity(userId).getBlacklist();
+                        if(blacklistForService.contains(serviceId)){
+                            SendMessage sendMessage = new SendMessage();
+                            sendMessage.setText(bundleLanguage.getValue(userId, "blacklist_you_are_in_blacklist"));
+                            sendMessage.setReplyMarkup(InlineKeyboardMarkup.builder().keyboard(List.of
+                                    (List.of(bundleLanguage.createButton(userId, "exit", "exit")))).build());
+                            sendBotMessageService.sendMessage(sendMessage);
+                            return false;
+                        }
                     }
                     LOGGER.info("menu position REGISTRATION_FOR_THE_SERVICES_START, registrationDto = {}", registrationDto);
                     date = LocalDateTime.parse(LocalDateTime.now().toLocalDate().toString() + "T00:00:00.0000");

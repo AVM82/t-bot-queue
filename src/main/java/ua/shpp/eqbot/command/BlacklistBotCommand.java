@@ -49,11 +49,14 @@ public class BlacklistBotCommand implements BotCommand {
         long telegramId = message.getChatId();
         UserDto user = userService.getDto(telegramId);
         String input = message.getText();
+        SendMessage sendMessage = new SendMessage();
         if (user.getPositionMenu().equals(PositionMenu.BLACKLIST_ADD)) {
-            addUserToBlackList(telegramId, input);
-        }else if (user.getPositionMenu().equals(PositionMenu.BLACKLIST_DELETE)){
-
+            sendMessage = addUserToBlackList(telegramId, input);
+        } else if (user.getPositionMenu().equals(PositionMenu.BLACKLIST_DELETE)) {
+            sendMessage = deleteUserFromBlacklist(telegramId, input);
         }
+        sendMessage.setChatId(telegramId);
+        sendBotMessageService.sendMessage(sendMessage);
 
     }
 
@@ -65,8 +68,7 @@ public class BlacklistBotCommand implements BotCommand {
         switch (task) {
             case "main": {
                 sendMessage = blackListMain(telegramId);
-            }
-            ;
+            };
             break;
             case "add": {
                 sendMessage = blackListAdd(telegramId, callbackQuery.getData());
@@ -74,8 +76,17 @@ public class BlacklistBotCommand implements BotCommand {
                     user.setPositionMenu(PositionMenu.BLACKLIST_ADD);
                 }
             }
+            break;
+            case "delete": {
+                sendMessage = blackListDelete(telegramId, callbackQuery.getData());
+                if (user.getPositionMenu() != PositionMenu.BLACKLIST_DELETE) {
+                    user.setPositionMenu(PositionMenu.BLACKLIST_DELETE);
+                }
+            }
+            break;
             default:
                 sendMessage = new SendMessage();
+                break;
         }
         sendMessage.setChatId(telegramId);
         sendBotMessageService.sendMessage(sendMessage);
@@ -101,6 +112,7 @@ public class BlacklistBotCommand implements BotCommand {
             sb.delete(sb.length() - 4, sb.length());
             message = sb.toString();
         }
+        sendMessage.setText(message);
         InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
         List<List<InlineKeyboardButton>> keyboard = new ArrayList<>();
         List<InlineKeyboardButton> addButton = new ArrayList<>();
@@ -110,7 +122,7 @@ public class BlacklistBotCommand implements BotCommand {
         deleteButton.add(bundleLanguage.createButton(telegramId, "delete_from_blacklist", "blacklist/delete"));
         keyboard.add(deleteButton);
         List<InlineKeyboardButton> backButton = new ArrayList<>();
-        backButton.add(bundleLanguage.createButton(telegramId, "return_back", "back"));
+        backButton.add(bundleLanguage.createButton(telegramId, "exit", "exit"));
         keyboard.add(backButton);
         inlineKeyboardMarkup.setKeyboard(keyboard);
         sendMessage.setReplyMarkup(inlineKeyboardMarkup);
@@ -120,11 +132,22 @@ public class BlacklistBotCommand implements BotCommand {
     SendMessage blackListAdd(long telegramId, String callbackData) {
         if (callbackData.split("/").length <= 2) {
             SendMessage sendMessage = new SendMessage();
-            sendMessage.setText(bundleLanguage.getValue(telegramId, "blacklist_ender_add_user"));
+            sendMessage.setText(bundleLanguage.getValue(telegramId, "blacklist_enter_add_user"));
             return sendMessage;
         } else {
             String userIdString = callbackData.split("/")[2];
             return addUserToBlackList(telegramId, userIdString);
+        }
+    }
+
+    SendMessage blackListDelete(long telegramId, String callbackData) {
+        if (callbackData.split("/").length <= 2) {
+            SendMessage sendMessage = new SendMessage();
+            sendMessage.setText(bundleLanguage.getValue(telegramId, "blacklist_enter_delete_user"));
+            return sendMessage;
+        } else {
+            String userIdString = callbackData.split("/")[2];
+            return deleteUserFromBlacklist(telegramId, userIdString);
         }
     }
 
@@ -141,13 +164,12 @@ public class BlacklistBotCommand implements BotCommand {
             } else {
                 blackList.add(userId);
                 providerService.saveEntity(provider);
-                InlineKeyboardMarkup.builder().keyboardRow(Collections.singletonList(InlineKeyboardButton.builder()
-                        .text("my_blacklist").callbackData("blacklist/main").build()));
                 sendMessage.setText(bundleLanguage.getValue(telegramId, "blacklist_user_added_to_list"));
             }
             sendMessage.setReplyMarkup(InlineKeyboardMarkup.builder()
                     .keyboardRow(Collections.singletonList(InlineKeyboardButton.builder()
-                            .text("my_blacklist").callbackData("blacklist/main").build())).build());
+                            .text(bundleLanguage.getValue(telegramId, "my_blacklist"))
+                            .callbackData("blacklist/main").build())).build());
         }
         return sendMessage;
     }
@@ -165,13 +187,12 @@ public class BlacklistBotCommand implements BotCommand {
             } else {
                 blackList.remove(userId);
                 providerService.saveEntity(provider);
-                InlineKeyboardMarkup.builder().keyboardRow(Collections.singletonList(InlineKeyboardButton.builder()
-                        .text("my_blacklist").callbackData("blacklist/main").build()));
                 sendMessage.setText(bundleLanguage.getValue(telegramId, "blacklist_user_deleted_from_list"));
             }
             sendMessage.setReplyMarkup(InlineKeyboardMarkup.builder()
                     .keyboardRow(Collections.singletonList(InlineKeyboardButton.builder()
-                            .text("my_blacklist").callbackData("blacklist/main").build())).build());
+                            .text(bundleLanguage.getValue(telegramId, "my_blacklist"))
+                            .callbackData("blacklist/main").build())).build());
         }
         return sendMessage;
     }
