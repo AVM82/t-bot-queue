@@ -12,8 +12,18 @@ public class UserDto {
     private String language;
     private PositionRegistration positionRegistration;
     private PositionMenu positionMenu;
+    private UserDto customerDto;
 
     public UserDto() {
+    }
+
+    public UserDto getCustomerDto() {
+        return customerDto;
+    }
+
+    public UserDto setCustomerDto(UserDto customerDto) {
+        this.customerDto = customerDto;
+        return this;
     }
 
     public UserDto(Long telegramId, String name) {

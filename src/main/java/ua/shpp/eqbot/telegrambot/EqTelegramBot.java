@@ -113,6 +113,11 @@ public class EqTelegramBot extends TelegramLongPollingBot {
                 } else if (user.getPositionMenu() == FEEDBACK) {
                     getBotCommand(CommandName.FEEDBACK.getNameCommand()).execute(update);
                     getBotCommand(CommandName.START.getNameCommand()).execute(update);
+                } else if (user.getPositionMenu() == ADD_PHONE_CUSTOMER
+                        || user.getPositionMenu() == ADD_USERNAME_CUSTOMER) {
+                    if (getBotCommand(CommandName.RECORD_YOUR_USER.getNameCommand()).execute(update)) {
+                        getBotCommand("/RegistrationForTheServiceCommand").execute(update);
+                    }
                 }
             }
         }
@@ -144,10 +149,6 @@ public class EqTelegramBot extends TelegramLongPollingBot {
         UserDto userDto = findDtoIfPossible(update);
         if (userDto == null) {
             getBotCommand(CommandName.START.getNameCommand()).execute(update);
-            // тут пишу
-        } else if (callbackQuery.getData().equals("register_the_client")) {
-            getBotCommand(CommandName.RECORD_YOUR_USER.getNameCommand()).execute(update);
-            userDto.setPositionMenu(ADD_USERNAME_CUSTOMER);
         } else {
             if (update.getCallbackQuery().getData().startsWith("appoint/")) {
                 userDto.setPositionMenu(REGISTRATION_FOR_THE_SERVICES_START);
@@ -211,6 +212,8 @@ public class EqTelegramBot extends TelegramLongPollingBot {
             } else if (userDto.getPositionMenu() == FEEDBACK) {
                 getBotCommand(CommandName.FEEDBACK.getNameCommand()).execute(update);
                 getBotCommand(CommandName.START.getNameCommand()).execute(update);
+            } else if (callbackQuery.getData().equals("register_the_client")) {
+                getBotCommand(CommandName.RECORD_YOUR_USER.getNameCommand()).execute(update);
             } else {
                 getBotCommand("/start").execute(update);
             }

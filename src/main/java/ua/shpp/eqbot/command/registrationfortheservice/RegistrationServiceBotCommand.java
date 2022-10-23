@@ -60,11 +60,25 @@ public class RegistrationServiceBotCommand implements BotCommand {
     @Override
     public boolean execute(Update update) {
         boolean isRegistered = false;
-        Long userId = update.getCallbackQuery().getFrom().getId();
-        UserDto userDto = userService.getDto(userId);
-        UserEntity userEntity = userService.getEntity(userId);
+        Long userTelegramId;
+        if (update.hasCallbackQuery()) {
+            userTelegramId = update.getCallbackQuery().getFrom().getId();
+        } else if (update.hasMessage()) {
+            userTelegramId = update.getMessage().getChatId();
+        } else {
+            return false;
+        }
+        UserDto userDto = userService.getDto(userTelegramId);
+        UserEntity userEntity;
+        //якщо є у юзера в dto його кліент , то вважаємо що треба зареєструвати його кліента,
+        //і до бази данних додамо не данного узера а його кліента
+        if (userDto.getCustomerDto() == null) {
+            userEntity = userService.getEntity(userTelegramId);
+        } else {
+            userEntity = userService.getEntity(userDto.getCustomerDto().getTelegramId());
+        }
         String callbackData = update.getCallbackQuery().getData();
-        if (update.getCallbackQuery().getData().equals(bundleLanguage.getValue(userId, "change_the_date"))) {
+        if (update.getCallbackQuery().getData().equals(bundleLanguage.getValue(userTelegramId, "change_the_date"))) {
             userDto.setPositionMenu(PositionMenu.REGISTRATION_FOR_THE_SERVICES_START);
         }
         long serviceId;
@@ -77,7 +91,7 @@ public class RegistrationServiceBotCommand implements BotCommand {
             switch (userDto.getPositionMenu()) {
                 case REGISTRATION_FOR_THE_SERVICES_START:
                     LOGGER.info("search for free days to sign up for the service");
-                    registrationDto = RegistrationForTheServiceCache.findByUserTelegramId(userId);
+                    registrationDto = RegistrationForTheServiceCache.findByUserTelegramId(userTelegramId);
                     if (registrationDto == null) {
                         if (callbackData.startsWith("appoint/")) {
                             serviceId = Long.parseLong(callbackData.split("/")[1]);
@@ -85,7 +99,7 @@ public class RegistrationServiceBotCommand implements BotCommand {
                             serviceId = Long.parseLong(callbackData);
                         }
                         registrationDto = createDto(serviceId, userEntity);
-                        RegistrationForTheServiceCache.add(registrationDto, userId);
+                        RegistrationForTheServiceCache.add(registrationDto, userTelegramId);
                     }
                     LOGGER.info("menu position REGISTRATION_FOR_THE_SERVICES_START, registrationDto = {}", registrationDto);
                     date = LocalDateTime.parse(LocalDateTime.now().toLocalDate().toString() + "T00:00:00.0000");
@@ -96,14 +110,14 @@ public class RegistrationServiceBotCommand implements BotCommand {
                     List<String> freeDays = findData(listServices, registrationDto.getServiceEntity());
                     if (!freeDays.isEmpty()) {
                         new CreatingButtonField(sendBotMessageService, quantityPerRow,
-                                freeDays, bundleLanguage.getValue(userId, "choosing_the_date")
-                                + " '" + registrationDto.getServiceEntity().getName() + "'", userId, "");
+                                freeDays, bundleLanguage.getValue(userTelegramId, "choosing_the_date")
+                                + " '" + registrationDto.getServiceEntity().getName() + "'", userTelegramId, "");
                         userDto.setPositionMenu(PositionMenu.REGISTRATION_FOR_THE_SERVICES_DATE);
                     }
                     break;
                 case REGISTRATION_FOR_THE_SERVICES_DATE:
                     LOGGER.info("search for free times to sign up for the service");
-                    registrationDto = RegistrationForTheServiceCache.findByUserTelegramId(userId);
+                    registrationDto = RegistrationForTheServiceCache.findByUserTelegramId(userTelegramId);
                     LOGGER.info("menu position REGISTRATION_FOR_THE_SERVICES_DATE, registrationDto = {}", registrationDto);
                     date = LocalDateTime.parse(LocalDateTime.now().toLocalDate().toString() + "T00:00:00.0000");
                     date = date.plusDays(Long.parseLong(update.getCallbackQuery().getData()) - date.getDayOfMonth());
@@ -120,30 +134,30 @@ public class RegistrationServiceBotCommand implements BotCommand {
                                 LocalDate.from(date).isEqual(ChronoLocalDate.from(LocalDateTime.now()))); //is it present day
                         new CreatingButtonField(sendBotMessageService, quantityPerRow,
                                 freeTimes, bundleLanguage
-                                .getValue(userId, "choosing_the_time")
+                                .getValue(userTelegramId, "choosing_the_time")
                                 + " '" + registrationDto.getServiceEntity().getName() + "'"
-                                + " " + registrationDto.getServiceRegistrationDateTime().toLocalDate(), userId,
-                                bundleLanguage.getValue(userId, "change_the_date"));
+                                + " " + registrationDto.getServiceRegistrationDateTime().toLocalDate(), userTelegramId,
+                                bundleLanguage.getValue(userTelegramId, "change_the_date"));
                         userDto.setPositionMenu(PositionMenu.REGISTRATION_FOR_THE_SERVICES_TIME);
                     }
                     break;
                 case REGISTRATION_FOR_THE_SERVICES_TIME:
-                    registrationDto = RegistrationForTheServiceCache.findByUserTelegramId(userId);
+                    registrationDto = RegistrationForTheServiceCache.findByUserTelegramId(userTelegramId);
                     LOGGER.info("menu position REGISTRATION_FOR_THE_SERVICES_TIME, registrationDto = {}", registrationDto);
                     date = registrationDto.getServiceRegistrationDateTime();
                     date = LocalDateTime.parse(date.toLocalDate().toString() + "T" + update.getCallbackQuery().getData());
                     registrationDto.setServiceRegistrationDateTime(date);
-                    userDto.setPositionMenu(PositionMenu.MENU_START);
+                    userDto.setPositionMenu(PositionMenu.MENU_START).setCustomerDto(null);
                     isRegistered = true;
                     RegistrationForTheServiceEntity entity = RegistrationForTheServiceMapper.INSTANCE
                             .registrationForTheServiceDtoToEntity(registrationDto);
                     LOGGER.info("menu position REGISTRATION_FOR_THE_SERVICES_TIME, registrationEntity = {}", entity); //for debug
                     registrationForTheServiceRepository.save(entity);
                     sendBotMessageService.sendMessage(SendMessage.builder()
-                            .text(bundleLanguage.getValue(userId, "registration_for_the_service_is_over")
+                            .text(bundleLanguage.getValue(userTelegramId, "registration_for_the_service_is_over")
                                     + " '" + registrationDto.getServiceEntity().getName() + "'"
                                     + " " + date.toLocalDate() + " " + date.toLocalTime())
-                            .chatId(userId)
+                            .chatId(userTelegramId)
                             .build());
                     SendNotificationToProviderCommand sendNotificationToProviderCommand =
                             new SendNotificationToProviderCommand(serviceRepository, sendBotMessageService, bundleLanguage);
@@ -151,20 +165,20 @@ public class RegistrationServiceBotCommand implements BotCommand {
                             date.toLocalDate() + " " + date.toLocalTime(),
                             update.getCallbackQuery().getFrom().getUserName(),
                             update.getCallbackQuery().getFrom().getId().toString());
-                    RegistrationForTheServiceCache.remove(userId);
+                    RegistrationForTheServiceCache.remove(userTelegramId);
                     break;
                 default:
                     break;
             }
         } catch (Exception e) {
             LOGGER.error("Registration has error. Message = {}", e.getMessage());
-            userDto.setPositionMenu(PositionMenu.MENU_START);
+            userDto.setPositionMenu(PositionMenu.MENU_START).setCustomerDto(null);
             sendBotMessageService.sendMessage(SendMessage.builder()
-                    .text(bundleLanguage.getValue(userId, "error_registration"))
-                    .chatId(userId)
+                    .text(bundleLanguage.getValue(userTelegramId, "error_registration"))
+                    .chatId(userTelegramId)
                     .build());
             isRegistered = true;
-            RegistrationForTheServiceCache.remove(userId);
+            RegistrationForTheServiceCache.remove(userTelegramId);
         }
         return isRegistered;
     }
