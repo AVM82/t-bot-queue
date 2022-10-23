@@ -12,6 +12,7 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKe
 import ua.shpp.eqbot.dto.UserDto;
 import ua.shpp.eqbot.internationalization.BundleLanguage;
 import ua.shpp.eqbot.model.ProviderEntity;
+import ua.shpp.eqbot.model.UserEntity;
 import ua.shpp.eqbot.service.ProviderService;
 import ua.shpp.eqbot.service.SendBotMessageService;
 import ua.shpp.eqbot.service.UserService;
@@ -25,6 +26,7 @@ public class BlacklistBotCommand implements BotCommand {
     private final BundleLanguage bundleLanguage;
     private final UserService userService;
     private final ProviderService providerService;
+
 
     @Autowired
     public BlacklistBotCommand(SendBotMessageService sendBotMessageService, BundleLanguage bundleLanguage, UserService userService, ProviderService providerService) {
@@ -68,7 +70,8 @@ public class BlacklistBotCommand implements BotCommand {
         switch (task) {
             case "main": {
                 sendMessage = blackListMain(telegramId);
-            };
+            }
+            ;
             break;
             case "add": {
                 sendMessage = blackListAdd(telegramId, callbackQuery.getData());
@@ -106,7 +109,11 @@ public class BlacklistBotCommand implements BotCommand {
             StringBuilder sb = new StringBuilder(bundleLanguage.getValue(telegramId, "users_in_blacklist")).append("\n");
             blacklist.forEach(userId -> {
                 sb.append("<a href=\"tg://user?id=").append(userId).append("\">");
-                sb.append("[").append(userId).append("]</a>\n");;
+                UserEntity user = userService.getEntity(userId);
+                if (user != null) {
+                    sb.append(user.getName());
+                }
+                sb.append("[").append(userId).append("]</a>\n");
             });
             message = sb.toString();
         }

@@ -29,7 +29,7 @@ public class BundleLanguage {
         return resourceBundle.getString(value);
     }
 
-    public InlineKeyboardButton createButton(long telegramId, String message, String callbackData){
+    public InlineKeyboardButton createButton(long telegramId, String message, String callbackData) {
         return InlineKeyboardButton.builder().text(getValue(telegramId, message)).callbackData(callbackData).build();
     }
 }

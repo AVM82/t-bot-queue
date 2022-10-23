@@ -82,23 +82,26 @@ public class RegistrationServiceBotCommand implements BotCommand {
                 case REGISTRATION_FOR_THE_SERVICES_START:
                     LOGGER.info("search for free days to sign up for the service");
                     registrationDto = RegistrationForTheServiceCache.findByUserTelegramId(userId);
+                    if (callbackData.startsWith("appoint/")) {
+                        serviceId = Long.parseLong(callbackData.split("/")[1]);
+                    } else {
+                        serviceId = Long.parseLong(callbackData);
+                    }
                     if (registrationDto == null) {
-                        if (callbackData.startsWith("appoint/")) {
-                            serviceId = Long.parseLong(callbackData.split("/")[1]);
-                        } else {
-                            serviceId = Long.parseLong(callbackData);
-                        }
                         registrationDto = createDto(serviceId, userEntity);
                         RegistrationForTheServiceCache.add(registrationDto, userId);
-                        Set<Long> blacklistForService = providerService.getByTelegramIdEntity(userId).getBlacklist();
-                        if(blacklistForService.contains(serviceId)){
-                            SendMessage sendMessage = new SendMessage();
-                            sendMessage.setText(bundleLanguage.getValue(userId, "blacklist_you_are_in_blacklist"));
-                            sendMessage.setReplyMarkup(InlineKeyboardMarkup.builder().keyboard(List.of
-                                    (List.of(bundleLanguage.createButton(userId, "exit", "exit")))).build());
-                            sendBotMessageService.sendMessage(sendMessage);
-                            return false;
-                        }
+                    }
+                    Set<Long> blacklistForService = providerService.getByTelegramIdEntity(
+                            serviceRepository.findFirstById(serviceId).getTelegramId()).getBlacklist();
+                    if (blacklistForService.contains(userId)) {
+                        SendMessage sendMessage = new SendMessage();
+                        sendMessage.setText(bundleLanguage.getValue(userId, "blacklist_you_are_in_blacklist"));
+                        sendMessage.setReplyMarkup(InlineKeyboardMarkup.builder().keyboard(List.of
+                                (List.of(bundleLanguage.createButton(userId, "exit", "exit")))).build());
+                        sendMessage.setChatId(userId);
+                        sendBotMessageService.sendMessage(sendMessage);
+                        userDto.setPositionMenu(PositionMenu.MENU_START);
+                        return false;
                     }
                     LOGGER.info("menu position REGISTRATION_FOR_THE_SERVICES_START, registrationDto = {}", registrationDto);
                     date = LocalDateTime.parse(LocalDateTime.now().toLocalDate().toString() + "T00:00:00.0000");

@@ -10,8 +10,7 @@ public class ProviderEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private Long telegramId;
-
-    @ElementCollection(fetch=FetchType.EAGER)
+    @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name = "providers_blacklist", joinColumns = @JoinColumn(name = "provider_id"))
     @Column(name = "user_id")
     private Set<Long> blacklist = new HashSet<>();
