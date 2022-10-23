@@ -103,13 +103,11 @@ public class BlacklistBotCommand implements BotCommand {
             message = bundleLanguage.getValue(telegramId, "no_blacklist");
         } else {
             HashSet<Long> blacklist = provider.getBlacklist();
-            StringBuilder sb = new StringBuilder(bundleLanguage.getValue(telegramId, "users_in_blacklist")).append("<br>");
+            StringBuilder sb = new StringBuilder(bundleLanguage.getValue(telegramId, "users_in_blacklist")).append("\n");
             blacklist.forEach(userId -> {
-                sb.append("<a href=\"tg://user?id=").append(userId)
-                        .append("[").append(userId).append("]").append("</a>")
-                        .append("\"><br>");
+                sb.append("<a href=\"tg://user?id=").append(userId).append("\">");
+                sb.append("[").append(userId).append("]</a>\n");;
             });
-            sb.delete(sb.length() - 4, sb.length());
             message = sb.toString();
         }
         sendMessage.setText(message);
@@ -163,6 +161,7 @@ public class BlacklistBotCommand implements BotCommand {
                 sendMessage.setText(bundleLanguage.getValue(telegramId, "blacklist_user_already_in_list"));
             } else {
                 blackList.add(userId);
+                provider.setBlacklist(blackList);
                 providerService.saveEntity(provider);
                 sendMessage.setText(bundleLanguage.getValue(telegramId, "blacklist_user_added_to_list"));
             }
@@ -186,6 +185,7 @@ public class BlacklistBotCommand implements BotCommand {
                 sendMessage.setText(bundleLanguage.getValue(telegramId, "blacklist_delete_no_id"));
             } else {
                 blackList.remove(userId);
+                provider.setBlacklist(blackList);
                 providerService.saveEntity(provider);
                 sendMessage.setText(bundleLanguage.getValue(telegramId, "blacklist_user_deleted_from_list"));
             }
