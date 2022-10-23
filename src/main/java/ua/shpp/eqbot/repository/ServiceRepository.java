@@ -27,5 +27,5 @@ public interface ServiceRepository extends JpaRepository<ServiceEntity, Long> {
     Set<String> findAllByName();
 
     Page<ServiceEntity> findByDescriptionContainingIgnoreCaseOrNameContainingIgnoreCase(String description, String name, Pageable pageable);
-    Page<ServiceEntity> findAllByTelegramIdIn(List<Long>list, Pageable pageable);
+    Page<ServiceEntity> findAllByTelegramIdIn(List<Long> list, Pageable pageable);
 }

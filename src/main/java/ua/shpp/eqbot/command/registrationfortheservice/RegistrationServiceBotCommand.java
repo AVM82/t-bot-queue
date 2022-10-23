@@ -96,8 +96,7 @@ public class RegistrationServiceBotCommand implements BotCommand {
                     if (blacklistForService.contains(userId)) {
                         SendMessage sendMessage = new SendMessage();
                         sendMessage.setText(bundleLanguage.getValue(userId, "blacklist_you_are_in_blacklist"));
-                        sendMessage.setReplyMarkup(InlineKeyboardMarkup.builder().keyboard(List.of
-                                (List.of(bundleLanguage.createButton(userId, "exit", "exit")))).build());
+                        sendMessage.setReplyMarkup(InlineKeyboardMarkup.builder().keyboard(List.of(List.of(bundleLanguage.createButton(userId, "exit", "exit")))).build());
                         sendMessage.setChatId(userId);
                         sendBotMessageService.sendMessage(sendMessage);
                         userDto.setPositionMenu(PositionMenu.MENU_START);

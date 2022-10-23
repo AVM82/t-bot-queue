@@ -68,24 +68,20 @@ public class BlacklistBotCommand implements BotCommand {
         String task = callbackQuery.getData().split("/")[1];
         SendMessage sendMessage;
         switch (task) {
-            case "main": {
+            case "main":
                 sendMessage = blackListMain(telegramId);
-            }
-            ;
             break;
-            case "add": {
+            case "add":
                 sendMessage = blackListAdd(telegramId, callbackQuery.getData());
                 if (user.getPositionMenu() != PositionMenu.BLACKLIST_ADD) {
                     user.setPositionMenu(PositionMenu.BLACKLIST_ADD);
                 }
-            }
             break;
-            case "delete": {
+            case "delete":
                 sendMessage = blackListDelete(telegramId, callbackQuery.getData());
                 if (user.getPositionMenu() != PositionMenu.BLACKLIST_DELETE) {
                     user.setPositionMenu(PositionMenu.BLACKLIST_DELETE);
                 }
-            }
             break;
             default:
                 sendMessage = new SendMessage();

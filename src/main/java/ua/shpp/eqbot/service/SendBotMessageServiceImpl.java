@@ -3,8 +3,6 @@ package ua.shpp.eqbot.service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Scope;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.methods.commands.SetMyCommands;
@@ -21,7 +19,6 @@ import ua.shpp.eqbot.model.ServiceEntity;
 
 import ua.shpp.eqbot.telegrambot.EqTelegramBot;
 
-import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -136,7 +133,7 @@ public class SendBotMessageServiceImpl implements SendBotMessageService {
             navigationLine.add(InlineKeyboardButton.builder()
                     .text("<<").callbackData("back").build());
         }
-        navigationLine.add(bundleLanguage.createButton(prevPositionDTO.getTelegramId(),"exit", "exit"));
+        navigationLine.add(bundleLanguage.createButton(prevPositionDTO.getTelegramId(), "exit", "exit"));
         if (curPage + 1 < totPages) {
             navigationLine.add(InlineKeyboardButton.builder()
                     .text(">>").callbackData("next").build());
