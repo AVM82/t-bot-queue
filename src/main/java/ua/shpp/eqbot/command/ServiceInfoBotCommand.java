@@ -124,7 +124,7 @@ public class ServiceInfoBotCommand implements BotCommand {
     }
 
     private SendPhoto createMessage(ServiceEntity service, Long chatId, String serviceInfo) {
-        SendPhoto message = imageService.sendImageFromAWS(chatId.toString(), service.getName());
+        SendPhoto message = imageService.sendImageFromAWS(service.getTelegramId().toString(), service.getName());
         if (message == null) {
             return null;
         }

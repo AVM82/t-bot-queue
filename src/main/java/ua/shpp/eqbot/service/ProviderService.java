@@ -13,6 +13,8 @@ import ua.shpp.eqbot.model.ProviderEntity;
 import ua.shpp.eqbot.repository.ProviderRepository;
 import ua.shpp.eqbot.stage.PositionRegistrationProvider;
 
+import java.util.HashSet;
+
 
 @Service
 public class ProviderService {

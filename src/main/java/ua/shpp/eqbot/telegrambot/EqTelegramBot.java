@@ -113,6 +113,8 @@ public class EqTelegramBot extends TelegramLongPollingBot {
                 } else if (user.getPositionMenu() == FEEDBACK) {
                     getBotCommand(CommandName.FEEDBACK.getNameCommand()).execute(update);
                     getBotCommand(CommandName.START.getNameCommand()).execute(update);
+                } else if (user.getPositionMenu() == BLACKLIST_ADD || user.getPositionMenu() == BLACKLIST_DELETE) {
+                    getBotCommand("/blacklist").execute(update);
                 } else if (user.getPositionMenu() == ADD_PHONE_CUSTOMER
                         || user.getPositionMenu() == ADD_USERNAME_CUSTOMER) {
                     if (getBotCommand(CommandName.RECORD_YOUR_USER.getNameCommand()).execute(update)) {
@@ -186,6 +188,8 @@ public class EqTelegramBot extends TelegramLongPollingBot {
                 getBotCommand("/add").execute(update);
             } else if (callbackQuery.getData().startsWith("service_info/")) {
                 getBotCommand("/service info").execute(update);
+            } else if (callbackQuery.getData().equals("exit")) {
+                getBotCommand("/start").execute(update);
             } else if ((userDto.getPositionMenu() == SEARCH_BY_CITY_NAME)) {
                 if (!getBotCommand(CommandName.SEARCH_SERVICE_BY_CITY_NAME.getNameCommand()).execute(update)) {
                     userDto.setPositionMenu(MENU_START);
@@ -216,6 +220,8 @@ public class EqTelegramBot extends TelegramLongPollingBot {
             } else if (userDto.getPositionMenu() == FEEDBACK) {
                 getBotCommand(CommandName.FEEDBACK.getNameCommand()).execute(update);
                 getBotCommand(CommandName.START.getNameCommand()).execute(update);
+            } else if (callbackQuery.getData().startsWith("blacklist/")) {
+                getBotCommand("/blacklist").execute(update);
             } else {
                 getBotCommand("/start").execute(update);
             }
