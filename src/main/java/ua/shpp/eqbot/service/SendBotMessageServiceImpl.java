@@ -20,7 +20,6 @@ import ua.shpp.eqbot.model.ServiceEntity;
 import ua.shpp.eqbot.stage.icon.Icon;
 import ua.shpp.eqbot.telegrambot.EqTelegramBot;
 
-import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -135,7 +134,7 @@ public class SendBotMessageServiceImpl implements SendBotMessageService {
             navigationLine.add(InlineKeyboardButton.builder()
                     .text(Icon.ARROW_LEFT.get()).callbackData("back").build());
         }
-        navigationLine.add(bundleLanguage.createButton(prevPositionDTO.getTelegramId(),"exit", "exit"));
+        navigationLine.add(bundleLanguage.createButton(prevPositionDTO.getTelegramId(), "exit", "exit"));
         if (curPage + 1 < totPages) {
             navigationLine.add(InlineKeyboardButton.builder()
                     .text(Icon.ARROW_RIGHT.get()).callbackData("next").build());
