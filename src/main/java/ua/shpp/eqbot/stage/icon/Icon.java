@@ -32,7 +32,7 @@ public enum Icon {
     HOUSE_BUILDINGS(":house_buildings:"),
     ARROW_LEFT(":arrow_left:"),
     ARROW_RIGHT(":arrow_right:"),
-    E_MAIL("e-mail"),
+    E_MAIL(":e-mail:"),
     NOTEBOOK(":notebook:"),
     SHRUG(":female_shrug:"),
     SETTINGS(":hammer_and_wrench:"),
