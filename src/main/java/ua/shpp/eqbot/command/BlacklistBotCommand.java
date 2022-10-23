@@ -1,6 +1,5 @@
 package ua.shpp.eqbot.command;
 
-import org.apache.catalina.startup.SetNextNamingRule;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.ParseMode;
@@ -18,7 +17,6 @@ import ua.shpp.eqbot.service.SendBotMessageService;
 import ua.shpp.eqbot.service.UserService;
 import ua.shpp.eqbot.stage.PositionMenu;
 
-import javax.persistence.criteria.CriteriaBuilder;
 import java.util.*;
 
 @Component
@@ -89,11 +87,11 @@ public class BlacklistBotCommand implements BotCommand {
         sendMessage.setChatId(telegramId);
         ProviderEntity provider = providerService.getByTelegramIdEntity(telegramId);
         String message;
-        HashSet<Long> blackList = provider.getBlackList();
+        HashSet<Long> blackList = provider.getBlacklist();
         if (blackList.isEmpty()) {
             message = bundleLanguage.getValue(telegramId, "no_blacklist");
         } else {
-            HashSet<Long> blacklist = provider.getBlackList();
+            HashSet<Long> blacklist = provider.getBlacklist();
             StringBuilder sb = new StringBuilder(bundleLanguage.getValue(telegramId, "users_in_blacklist")).append("<br>");
             blacklist.forEach(userId -> {
                 sb.append("<a href=\"tg://user?id=").append(userId)
@@ -137,7 +135,7 @@ public class BlacklistBotCommand implements BotCommand {
         } else {
             long userId = Long.parseLong(userIdString);
             ProviderEntity provider = providerService.getByTelegramIdEntity(telegramId);
-            HashSet<Long> blackList = provider.getBlackList();
+            HashSet<Long> blackList = provider.getBlacklist();
             if (blackList.contains(userId)) {
                 sendMessage.setText(bundleLanguage.getValue(telegramId, "blacklist_user_already_in_list"));
             } else {
@@ -146,6 +144,30 @@ public class BlacklistBotCommand implements BotCommand {
                 InlineKeyboardMarkup.builder().keyboardRow(Collections.singletonList(InlineKeyboardButton.builder()
                         .text("my_blacklist").callbackData("blacklist/main").build()));
                 sendMessage.setText(bundleLanguage.getValue(telegramId, "blacklist_user_added_to_list"));
+            }
+            sendMessage.setReplyMarkup(InlineKeyboardMarkup.builder()
+                    .keyboardRow(Collections.singletonList(InlineKeyboardButton.builder()
+                            .text("my_blacklist").callbackData("blacklist/main").build())).build());
+        }
+        return sendMessage;
+    }
+
+    SendMessage deleteUserFromBlacklist(long telegramId, String userIdString) {
+        SendMessage sendMessage = new SendMessage();
+        if (!userIdString.matches("\\d*")) {
+            sendMessage.setText(bundleLanguage.getValue(telegramId, "blacklist_invalid_input"));
+        } else {
+            long userId = Long.parseLong(userIdString);
+            ProviderEntity provider = providerService.getByTelegramIdEntity(telegramId);
+            HashSet<Long> blackList = provider.getBlacklist();
+            if (!blackList.contains(userId)) {
+                sendMessage.setText(bundleLanguage.getValue(telegramId, "blacklist_delete_no_id"));
+            } else {
+                blackList.remove(userId);
+                providerService.saveEntity(provider);
+                InlineKeyboardMarkup.builder().keyboardRow(Collections.singletonList(InlineKeyboardButton.builder()
+                        .text("my_blacklist").callbackData("blacklist/main").build()));
+                sendMessage.setText(bundleLanguage.getValue(telegramId, "blacklist_user_deleted_from_list"));
             }
             sendMessage.setReplyMarkup(InlineKeyboardMarkup.builder()
                     .keyboardRow(Collections.singletonList(InlineKeyboardButton.builder()

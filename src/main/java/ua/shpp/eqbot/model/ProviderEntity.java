@@ -11,17 +11,19 @@ public class ProviderEntity {
     private Long id;
     private Long telegramId;
 
-    @ElementCollection
-    private HashSet<Long> blackList;
+    @ElementCollection(fetch=FetchType.EAGER)
+    @CollectionTable(name = "providers_blacklist", joinColumns = @JoinColumn(name = "provider_id"))
+    @Column(name = "user_id")
+    private Set<Long> blacklist = new HashSet<>();
     private String name;
     private String providerCity;
 
-    public HashSet<Long> getBlackList() {
-        return blackList;
+    public HashSet<Long> getBlacklist() {
+        return new HashSet<>(blacklist);
     }
 
-    public void setBlackList(HashSet<Long> blackList) {
-        this.blackList = blackList;
+    public void setBlacklist(HashSet<Long> blackList) {
+        this.blacklist = blackList;
     }
 
     public ProviderEntity() {

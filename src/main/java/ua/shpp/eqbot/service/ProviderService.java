@@ -30,7 +30,6 @@ public class ProviderService {
 
     public ProviderEntity saveEntity(ProviderEntity providerEntity) {
         LOGGER.info("save provider entity {}", providerEntity);
-        providerEntity.setBlackList(new HashSet<>());
         return providerRepository.save(providerEntity);
     }
 
