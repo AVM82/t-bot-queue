@@ -121,7 +121,7 @@ public class RegistrationServiceBotCommand implements BotCommand {
                 case REGISTRATION_FOR_THE_SERVICES_START:
                     LOGGER.info("search for free days to sign up for the service");
                     Set<Long> blacklistForService = providerService.getByTelegramIdEntity(
-                            serviceRepository.findFirstById(registrationDto.getServiceEntity().getTelegramId()).getTelegramId()).getBlacklist();
+                            serviceRepository.findFirstById(registrationDto.getServiceEntity().getId()).getTelegramId()).getBlacklist();
                     if (blacklistForService.contains(userTelegramId)) {
                         SendMessage sendMessage = new SendMessage();
                         sendMessage.setText(bundleLanguage.getValue(userTelegramId, "blacklist_you_are_in_blacklist"));

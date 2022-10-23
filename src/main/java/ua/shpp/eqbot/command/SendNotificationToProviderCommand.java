@@ -30,7 +30,6 @@ public class SendNotificationToProviderCommand implements BotCommand {
         String internationalizationAnswer = bundleLanguage.getValue(providerChatId, "send_notification_to_provider");
         String[] answer = internationalizationAnswer.split("\\.");
         sendMessage.setText(answer[0] + userName + answer[1] + serviceEntity.getName() + answer[2] + " " + timeOfRegistration);
-        sendMessage.setText(answer[0] + userName + answer[1] + serviceEntity.getName() + answer[2] + timeOfRegistration);
         sendMessage.setReplyMarkup(InlineKeyboardMarkup.builder().
                 keyboard(List.of(Collections.singletonList(bundleLanguage.createButton(providerChatId,
                         "blacklist_add_this_user", "blacklist/add/" + customerTelegramId)))).build());
