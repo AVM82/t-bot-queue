@@ -35,6 +35,9 @@ public enum Icon {
     E_MAIL("e-mail"),
     NOTEBOOK(":notebook:"),
     SHRUG(":female_shrug:"),
+    SETTINGS(":hammer_and_wrench:"),
+    THUMBSUP(":thumbsup:"),
+    QUESTION(":question:"),
     NOT(":x:");
 
 
