@@ -94,26 +94,6 @@ public class SendBotMessageServiceImpl implements SendBotMessageService {
         }
     }
 
-    @Override
-    public SendMessage sendButtonToUser(SendMessage sendMessage, String telegramId, String text) {
-        InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
-        List<List<InlineKeyboardButton>> keyboard = new ArrayList<>();
-        List<InlineKeyboardButton> line = new ArrayList<>();
-        line.add(InlineKeyboardButton.builder().text(text).url("tg://user?id=" + telegramId).build());
-        keyboard.add(line);
-        inlineKeyboardMarkup.setKeyboard(keyboard);
-        ReplyKeyboard replyMarkup = sendMessage.getReplyMarkup();
-        if (!(replyMarkup instanceof InlineKeyboardMarkup)) {
-            sendMessage.setReplyMarkup(inlineKeyboardMarkup);
-        } else {
-            InlineKeyboardMarkup curMarkup = (InlineKeyboardMarkup) replyMarkup;
-            List<List<InlineKeyboardButton>> curKeyboard = curMarkup.getKeyboard();
-            curKeyboard.add(line);
-            curMarkup.setKeyboard(curKeyboard);
-            sendMessage.setReplyMarkup(curMarkup);
-        }
-        return sendMessage;
-    }
 
     public List<List<InlineKeyboardButton>> createPageableKeyboard(Page<ServiceEntity> paging, PrevPositionDTO prevPositionDTO, BundleLanguage bundleLanguage) {
         int totPages = paging.getTotalPages();
