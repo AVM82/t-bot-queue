@@ -34,7 +34,5 @@ public interface SendBotMessageService {
 
     void sendMenu(SetMyCommands command);
 
-    SendMessage sendButtonToUser(SendMessage sendMessage, String telegramId, String text);
-
-    public List<List<InlineKeyboardButton>> createPageableKeyboard(Page<ServiceEntity> paging, PrevPositionDTO prevPositionDTO, BundleLanguage bundleLanguage);
+    List<List<InlineKeyboardButton>> createPageableKeyboard(Page<ServiceEntity> paging, PrevPositionDTO prevPositionDTO, BundleLanguage bundleLanguage);
 }

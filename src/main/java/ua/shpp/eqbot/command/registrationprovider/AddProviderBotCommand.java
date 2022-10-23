@@ -70,10 +70,10 @@ public class AddProviderBotCommand implements BotCommand {
                                 .setPositionRegistrationProvider(PositionRegistrationProvider.DONE);
                         providerService.saveDtoInDataBase(providerDto);
                         isRegistration = true;
-                        sendBotMessageService.sendMessage(SendMessage.builder()
+                        /*sendBotMessageService.sendMessage(SendMessage.builder()
                                 .chatId(id)
-                                .text(bundleLanguage.getValue(id, "registered_new_provider") + " " + Icon.WHITE_CHECK_MARK.get())
-                                .build());
+                                .text(bundleLanguage.getValue(id, "registered_new_provider"))
+                                .build());*/
                     }
                     break;
                 default:
