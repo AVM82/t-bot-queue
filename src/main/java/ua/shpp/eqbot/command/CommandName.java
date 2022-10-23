@@ -22,7 +22,8 @@ public enum CommandName {
     SERVICE_INFO("/service info"),
     FEEDBACK("/feedback"),
     RECORD_YOUR_USER("/RecordYourUser"),
-    NO("nocommand");
+    NO("nocommand"),
+    BLACKLIST("blacklist");
 
     private final String nameCommand;
 

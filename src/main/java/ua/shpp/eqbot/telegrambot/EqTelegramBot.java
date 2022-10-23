@@ -213,7 +213,10 @@ public class EqTelegramBot extends TelegramLongPollingBot {
             } else if (userDto.getPositionMenu() == FEEDBACK) {
                 getBotCommand(CommandName.FEEDBACK.getNameCommand()).execute(update);
                 getBotCommand(CommandName.START.getNameCommand()).execute(update);
-            } else {
+            } else if (callbackQuery.getData().startsWith("blacklist/")){
+                getBotCommand("/blacklist").execute(update);
+            }
+            else {
                 getBotCommand("/start").execute(update);
             }
         }

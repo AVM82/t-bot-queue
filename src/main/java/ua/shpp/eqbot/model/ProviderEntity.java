@@ -1,7 +1,7 @@
 package ua.shpp.eqbot.model;
 
 import javax.persistence.*;
-import java.util.Objects;
+import java.util.*;
 
 @Entity
 @Table(name = "provider_entity")
@@ -10,8 +10,22 @@ public class ProviderEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private Long telegramId;
+
+    @ElementCollection
+    private HashSet<Long> blackList;
     private String name;
     private String providerCity;
+
+    public HashSet<Long> getBlackList() {
+        return blackList;
+    }
+
+    public void setBlackList(HashSet<Long> blackList) {
+        this.blackList = blackList;
+    }
+
+    public ProviderEntity() {
+    }
 
     public Long getId() {
         return id;
